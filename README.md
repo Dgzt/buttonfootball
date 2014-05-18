@@ -8,7 +8,6 @@ Requirements:
 
  * CMake (>= 2.8) [link](http://www.cmake.org/)
  * Emscripten [link](http://emscripten.org)
- * SDL (>= 1.2) [link](http://www.libsdl.org/)
 
 ##Complie:
 
