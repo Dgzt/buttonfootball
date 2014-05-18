@@ -3,13 +3,15 @@ buttonfootball
 
 A button football online game.
 
-##Requirements:
-  -<a href="http://www.cmake.org/">CMake 2.8</a></br>
-  -<a href="http://emscripten.org">Emscripten</a></br>
+Requirements:
+-------------
+
+*CMake 2.8 [link](http://www.cmake.org/)
+*Emscripten [link](http://emscripten.org)
 
 ##Complie:
 
-  -Create a 'build' directory in the root directory. Change directory to the 'build'.</br>
-  -$ cmake ..</br>
-  -$ make</br>
-  -Open the buttonfootball.html in a browser.</br>
+*Create a 'build' directory in the root directory. Change directory to the 'build'.
+*$ cmake ..
+*$ make
+*Open the buttonfootball.html in a browser.
