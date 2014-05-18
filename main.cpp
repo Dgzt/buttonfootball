@@ -22,12 +22,35 @@
 * The main file.
 */
 #include <iostream>
+#include <SDL.h>
 
 /*!
  * The main function.
  */
-int main(){
+int 
+main(){
   std::cout << "Hello World!" << std::endl;
+  
+  //Initialize the SDL library.
+  SDL_Init(SDL_INIT_VIDEO);
+  
+  //Setup the video mode.
+  SDL_Surface *screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
+
+  if (SDL_MUSTLOCK( screen ) ){ 
+    SDL_LockSurface(screen);
+  }
+  
+  //Code for here.
+
+  if ( SDL_MUSTLOCK( screen ) ){ 
+    SDL_UnlockSurface(screen);
+  }
+  
+  //Swaps screen buffers.
+  SDL_Flip(screen);
+
+  //SDL_Quit();
   
   return 0;
 }
