@@ -42,8 +42,8 @@ main(){
   //}
   
   //OpenGL info.
-  std::cout << "Renderer: " << glGetString (GL_RENDERER) << std::endl;
-  std::cout << "Version: " << glGetString (GL_VERSION) << std::endl;
+  //std::cout << "Renderer: " << glGetString (GL_RENDERER) << std::endl;
+  //std::cout << "Version: " << glGetString (GL_VERSION) << std::endl;
 
   //if ( SDL_MUSTLOCK( screen ) ){ 
   //  SDL_UnlockSurface(screen);
