@@ -23,32 +23,34 @@
 */
 #include <iostream>
 #include <SDL.h>
+#include <SDL_opengl.h>
 
 /*!
  * The main function.
  */
 int 
 main(){
-  std::cout << "Hello World!" << std::endl;
   
   //Initialize the SDL library.
   SDL_Init(SDL_INIT_VIDEO);
   
   //Setup the video mode.
-  SDL_Surface *screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
+  SDL_Surface *screen = SDL_SetVideoMode(800, 600, 32, SDL_OPENGL);
 
-  if (SDL_MUSTLOCK( screen ) ){ 
-    SDL_LockSurface(screen);
-  }
+  //if (SDL_MUSTLOCK( screen ) ){ 
+  //  SDL_LockSurface(screen);
+  //}
   
-  //Code for here.
+  //OpenGL info.
+  std::cout << "Renderer: " << glGetString (GL_RENDERER) << std::endl;
+  std::cout << "Version: " << glGetString (GL_VERSION) << std::endl;
 
-  if ( SDL_MUSTLOCK( screen ) ){ 
-    SDL_UnlockSurface(screen);
-  }
+  //if ( SDL_MUSTLOCK( screen ) ){ 
+  //  SDL_UnlockSurface(screen);
+  //}
   
   //Swaps screen buffers.
-  SDL_Flip(screen);
+  //SDL_Flip(screen);
 
   //SDL_Quit();
   
