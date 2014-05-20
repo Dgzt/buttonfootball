@@ -3,7 +3,12 @@
 #include <iostream>
 #include "mainwindow.h"
 
+// The name of the application
 const char APPLICATION_NAME[] = "Button Football";
+
+// The width and height of the main window
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
 
 MainWindow::MainWindow()
 {
@@ -18,7 +23,7 @@ MainWindow::MainWindow()
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     // Create our window centered at 512x512 resolution
-    mainwindow = SDL_CreateWindow( APPLICATION_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    mainwindow = SDL_CreateWindow( APPLICATION_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (!mainwindow){
         sdldie("Unable to create window");
     }
