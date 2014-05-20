@@ -19,22 +19,27 @@
 *
 * @section DESCRIPTION
 *
-* The main file.
+* The main window.
 */
 
-#include "mainwindow.h"
-#include <iostream>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-/*!
- * The main function.
- */
-int 
-main(){
+#include <SDL.h>
+class string;
 
-    MainWindow mainWindow;
+class MainWindow
+{
+    SDL_Window *mainwindow; /* Our window handle */
+    SDL_GLContext maincontext; /* Our opengl context handle */
 
-    mainWindow.mainLoop();
+    void sdldie( const char* msg );
 
+public:
+    MainWindow();
+    ~MainWindow();
 
-    return 0;
-}
+    void mainLoop();
+};
+
+#endif // MAINWINDOW_H

@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES( ${SDL2_INCLUDE_DIR} )
 
 SET( ButtonFootball_Sources
     main.cpp
+    mainwindow.cpp
 )
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )
