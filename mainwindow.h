@@ -35,6 +35,10 @@ class MainWindow
 
     void sdldie( const char* msg );
 
+    void resizeWindow( int width, int height );
+
+    void drawTable();
+
 public:
     MainWindow();
     ~MainWindow();

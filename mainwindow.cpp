@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <GLES2/gl2.h>
+#include <GL/gl.h>
 #include <iostream>
 #include "mainwindow.h"
 
@@ -37,6 +37,10 @@ MainWindow::MainWindow()
     // Clear our buffer with a black background
     glClearColor ( 0.0, 0.0, 0.0, 1.0 );
     glClear ( GL_COLOR_BUFFER_BIT );
+
+    resizeWindow( WINDOW_WIDTH, WINDOW_HEIGHT );
+    drawTable();
+
     // Swap our back buffer to the front
     SDL_GL_SwapWindow(mainwindow);
 }
@@ -55,17 +59,45 @@ void MainWindow::sdldie( const char* msg ){
     exit(1);
 }
 
+void MainWindow::resizeWindow( int width, int height ){
+    std::cout << "Rewized window to: " << width << " x " << height << std::endl;
+
+    glViewport( 0, 0, width, height );
+}
+
+void MainWindow::drawTable(){
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+
+    glShadeModel(GL_SMOOTH);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Grey
+    glColor3f(0.5f, 0.5f, 0.5f);
+
+    glBegin(GL_QUADS );
+        glVertex2f( -0.5, 0.5 );
+        glVertex2f(  0.5, 0.5 );
+        glVertex2f(  0.5, -0.5 );
+        glVertex2f( -0.5, -0.5 );
+    glEnd();
+
+    SDL_GL_SwapWindow(mainwindow);
+}
+
 void MainWindow::mainLoop()
 {
-    // Show window while not click to the close button
     SDL_Event event;
     bool done = false;
 
     while( !done ){
-        while( SDL_PollEvent( &event ) ){
+        SDL_WaitEvent(&event);
+        do{
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
-        }
+        }while(SDL_PollEvent(&event));
+
     }
 }
