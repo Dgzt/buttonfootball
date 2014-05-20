@@ -25,6 +25,8 @@
 #include <SDL.h>
 #include <GLES3/gl3.h>
 
+const char APPLICATION_NAME[] = "Button Football";
+
 void
 sdldie( std::string msg ){
     std::cout << msg << ": " << SDL_GetError() << std::endl;
@@ -52,7 +54,7 @@ main(){
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     // Create our window centered at 512x512 resolution
-    mainwindow = SDL_CreateWindow("PROGRAM_NAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    mainwindow = SDL_CreateWindow( APPLICATION_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (!mainwindow){
         sdldie("Unable to create window");
     }
@@ -63,25 +65,23 @@ main(){
     // This makes our buffer swap syncronized with the monitor's vertical refresh
     SDL_GL_SetSwapInterval(1);
 
-    // Clear our buffer with a red background
-    glClearColor ( 1.0, 0.0, 0.0, 1.0 );
+    // Clear our buffer with a black background
+    glClearColor ( 0.0, 0.0, 0.0, 1.0 );
     glClear ( GL_COLOR_BUFFER_BIT );
     // Swap our back buffer to the front
     SDL_GL_SwapWindow(mainwindow);
-    // Wait 2 seconds
-    SDL_Delay(2000);
 
-    // Same as above, but green
-    glClearColor ( 0.0, 1.0, 0.0, 1.0 );
-    glClear ( GL_COLOR_BUFFER_BIT );
-    SDL_GL_SwapWindow(mainwindow);
-    SDL_Delay(2000);
+    // Show window while not click to the close button
+    SDL_Event event;
+    bool done = false;
 
-    // Same as above, but blue
-    glClearColor ( 0.0, 0.0, 1.0, 1.0 );
-    glClear ( GL_COLOR_BUFFER_BIT );
-    SDL_GL_SwapWindow(mainwindow);
-    SDL_Delay(2000);
+    while( !done ){
+        while( SDL_PollEvent( &event ) ){
+            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+                done = true;
+            }
+        }
+    }
 
     // Delete our opengl context, destroy our window, and shutdown SDL
     SDL_GL_DeleteContext(maincontext);
