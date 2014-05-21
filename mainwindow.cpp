@@ -23,7 +23,7 @@ MainWindow::MainWindow()
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     // Create our window centered at 512x512 resolution
-    mainwindow = SDL_CreateWindow( APPLICATION_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    mainwindow = SDL_CreateWindow( APPLICATION_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!mainwindow){
         sdldie("Unable to create window");
     }
@@ -39,7 +39,7 @@ MainWindow::MainWindow()
     glClear ( GL_COLOR_BUFFER_BIT );
 
     resizeWindow( WINDOW_WIDTH, WINDOW_HEIGHT );
-    drawTable();
+    drawTable(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Swap our back buffer to the front
     SDL_GL_SwapWindow(mainwindow);
@@ -60,12 +60,15 @@ void MainWindow::sdldie( const char* msg ){
 }
 
 void MainWindow::resizeWindow( int width, int height ){
-    std::cout << "Rewized window to: " << width << " x " << height << std::endl;
-
     glViewport( 0, 0, width, height );
+
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    glOrtho( 0.0,width,0.0,height,0.0,1.0 );
+
 }
 
-void MainWindow::drawTable(){
+void MainWindow::drawTable( int width, int height ){
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
@@ -76,14 +79,32 @@ void MainWindow::drawTable(){
     // Grey
     glColor3f(0.5f, 0.5f, 0.5f);
 
-    glBegin(GL_QUADS );
-        glVertex2f( -0.5, 0.5 );
-        glVertex2f(  0.5, 0.5 );
-        glVertex2f(  0.5, -0.5 );
-        glVertex2f( -0.5, -0.5 );
-    glEnd();
+    int tableWidth = 184;
+    int tableHeight = 120;
 
-    SDL_GL_SwapWindow(mainwindow);
+    int newTableWidth;
+    int newTableHeight;
+
+    double rate = (double)width/rate;
+    if( (double)tableWidth/tableHeight > rate ){
+        newTableWidth = width;
+        newTableHeight = tableHeight*((double)width/tableWidth);
+    }else{
+        newTableWidth = tableWidth*((double)height/tableHeight);
+        newTableHeight = height;
+    }
+
+    int leftX = (width-newTableWidth)/2;
+    int rightX = width-(width-newTableWidth)/2;
+    int topY = (height-newTableHeight)/2;
+    int bottomY = height - (height-newTableHeight)/2;
+
+    glBegin(GL_QUADS );
+        glVertex2f( leftX, topY );
+        glVertex2f( rightX, topY );
+        glVertex2f( rightX, bottomY );
+        glVertex2f( leftX, bottomY );
+    glEnd();
 }
 
 void MainWindow::mainLoop()
@@ -97,6 +118,14 @@ void MainWindow::mainLoop()
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
+
+            if( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED ){
+                resizeWindow(event.window.data1,event.window.data2);
+                drawTable( event.window.data1, event.window.data2 );
+                SDL_GL_SwapWindow(mainwindow);
+            }
+
+
         }while(SDL_PollEvent(&event));
 
     }
