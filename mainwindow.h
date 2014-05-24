@@ -26,12 +26,31 @@
 #define MAINWINDOW_H
 
 #include <SDL.h>
+#include <GL/gl.h>
+
+typedef struct Vertex {
+    GLfloat x;
+    GLfloat y;
+} Vertex;
+
+/*typedef struct Color {
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+    GLubyte a;
+} Color;*/
+
 class string;
 
 class MainWindow
 {
     SDL_Window *mainwindow; /* Our window handle */
     SDL_GLContext maincontext; /* Our opengl context handle */
+
+    //
+    GLuint tableId;
+    float tableData[];
+    //
 
     void sdldie( const char* msg );
 

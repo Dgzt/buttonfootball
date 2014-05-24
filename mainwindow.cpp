@@ -1,5 +1,4 @@
-#include <SDL.h>
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <iostream>
 #include "mainwindow.h"
 
@@ -23,7 +22,12 @@ MainWindow::MainWindow()
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     // Create our window centered at 512x512 resolution
-    mainwindow = SDL_CreateWindow( APPLICATION_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    mainwindow = SDL_CreateWindow( APPLICATION_NAME,
+                                   SDL_WINDOWPOS_CENTERED,
+                                   SDL_WINDOWPOS_CENTERED,
+                                   WINDOW_WIDTH,
+                                   WINDOW_HEIGHT,
+                                   SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!mainwindow){
         sdldie("Unable to create window");
     }
@@ -31,15 +35,24 @@ MainWindow::MainWindow()
     // Create our opengl context and attach it to our window
     maincontext = SDL_GL_CreateContext(mainwindow);
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    glewInit();
+
     // This makes our buffer swap syncronized with the monitor's vertical refresh
     SDL_GL_SetSwapInterval(1);
 
-    // Clear our buffer with a black background
-    glClearColor ( 0.0, 0.0, 0.0, 1.0 );
-    glClear ( GL_COLOR_BUFFER_BIT );
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    resizeWindow( WINDOW_WIDTH, WINDOW_HEIGHT );
-    drawTable(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glClearColor( 0, 0, 0, 0 );
+
+#ifndef __EMSCRIPTEN__
+    glEnable( GL_TEXTURE_2D ); // Need this to display a texture XXX unnecessary in OpenGL ES 2.0/WebGL
+#endif
+
+    resizeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    drawTable( WINDOW_WIDTH, WINDOW_HEIGHT );
 
     // Swap our back buffer to the front
     SDL_GL_SwapWindow(mainwindow);
@@ -62,23 +75,21 @@ void MainWindow::sdldie( const char* msg ){
 void MainWindow::resizeWindow( int width, int height ){
     glViewport( 0, 0, width, height );
 
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    glOrtho( 0.0,width,0.0,height,0.0,1.0 );
-
-}
-
-void MainWindow::drawTable( int width, int height ){
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
-    glShadeModel(GL_SMOOTH);
+    // Clear the screen before drawing
+    glClear( GL_COLOR_BUFFER_BIT );
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Projection to the table
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    glOrtho( 0.0,width,0.0,height,0.0,1.0 );
+}
 
-    // Grey
-    glColor3f(0.5f, 0.5f, 0.5f);
-
+void MainWindow::drawTable( int width, int height )
+{
+    // The size of table.
     int tableWidth = 184;
     int tableHeight = 120;
 
@@ -94,17 +105,30 @@ void MainWindow::drawTable( int width, int height ){
         newTableHeight = height;
     }
 
-    int leftX = (width-newTableWidth)/2;
-    int rightX = width-(width-newTableWidth)/2;
-    int topY = (height-newTableHeight)/2;
-    int bottomY = height - (height-newTableHeight)/2;
+    GLfloat leftX = (width-newTableWidth)/2;
+    GLfloat rightX = width-(width-newTableWidth)/2;
+    GLfloat topY = (height-newTableHeight)/2;
+    GLfloat bottomY = height - (height-newTableHeight)/2;
 
-    glBegin(GL_QUADS );
-        glVertex2f( leftX, topY );
-        glVertex2f( rightX, topY );
-        glVertex2f( rightX, bottomY );
-        glVertex2f( leftX, bottomY );
-    glEnd();
+    Vertex vertices[4] = {
+        {leftX,topY},
+        {rightX,topY},
+        {rightX,bottomY},
+        {leftX,bottomY}
+    };
+
+    glClear( GL_COLOR_BUFFER_BIT );
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    //glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+    glColor3f(0.5f, 0.5f, 0.5f);
+    glDrawArrays(GL_QUADS, 0, 4);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void MainWindow::mainLoop()
