@@ -19,35 +19,39 @@
 *
 * @section DESCRIPTION
 *
-* The main window.
+* The table.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef TABLE_H
+#define TABLE_H
 
-#include <SDL.h>
+#include <GL/gl.h>
+#include "vertex.h"
 
-class Table;
-
-class MainWindow
+class Table
 {
-    SDL_Window *mainwindow; /* Our window handle */
-    SDL_GLContext maincontext; /* Our opengl context handle */
+    // The vertex buffer object id
+    GLuint tableVBO;
 
-    // The table.
-    Table *table;
+    // The position of top left, top right, bottom right and bottom left point on the window.
+    Vertex pos[4];
 
-    void sdldie( const char* msg );
-
-    void resizeWindow( int width, int height );
-
-    void drawTable( int width, int height );
 
 public:
-    MainWindow();
-    ~MainWindow();
+    Table();
 
-    void mainLoop();
+    /**
+     * Recalculate the positions on the window.
+     *
+     * @param width The new width value.
+     * @param height The new height value.
+     */
+    void resize( int width, int height );
+
+    /**
+     * Draw the object to the window.
+     */
+    void draw();
 };
 
-#endif // MAINWINDOW_H
+#endif // TABLE_H

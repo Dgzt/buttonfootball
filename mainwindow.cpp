@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <iostream>
+#include "table.h"
 #include "mainwindow.h"
 
 // The name of the application
@@ -50,6 +51,10 @@ MainWindow::MainWindow()
     glEnable( GL_TEXTURE_2D ); // Need this to display a texture XXX unnecessary in OpenGL ES 2.0/WebGL
 #endif
 
+    //
+    table = new Table;
+    //
+
     resizeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     drawTable( WINDOW_WIDTH, WINDOW_HEIGHT );
@@ -60,6 +65,8 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+    delete table;
+
     // Delete our opengl context, destroy our window, and shutdown SDL
     SDL_GL_DeleteContext(maincontext);
     SDL_DestroyWindow(mainwindow);
@@ -85,47 +92,18 @@ void MainWindow::resizeWindow( int width, int height ){
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
     glOrtho( 0.0,width,0.0,height,0.0,1.0 );
+
+    table->resize( width, height );
 }
 
 void MainWindow::drawTable( int width, int height )
 {
-    // The size of table.
-    int tableWidth = 184;
-    int tableHeight = 120;
-
-    int newTableWidth;
-    int newTableHeight;
-
-    double rate = (double)width/rate;
-    if( (double)tableWidth/tableHeight > rate ){
-        newTableWidth = width;
-        newTableHeight = tableHeight*((double)width/tableWidth);
-    }else{
-        newTableWidth = tableWidth*((double)height/tableHeight);
-        newTableHeight = height;
-    }
-
-    GLfloat leftX = (width-newTableWidth)/2;
-    GLfloat rightX = width-(width-newTableWidth)/2;
-    GLfloat topY = (height-newTableHeight)/2;
-    GLfloat bottomY = height - (height-newTableHeight)/2;
-
-    Vertex vertices[4] = {
-        {leftX,topY},
-        {rightX,topY},
-        {rightX,bottomY},
-        {leftX,bottomY}
-    };
-
     glClear( GL_COLOR_BUFFER_BIT );
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    glVertexPointer(2, GL_FLOAT, 0, vertices);
-    //glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-    glColor3f(0.5f, 0.5f, 0.5f);
-    glDrawArrays(GL_QUADS, 0, 4);
+    table->draw();
 
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);

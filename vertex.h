@@ -19,35 +19,22 @@
 *
 * @section DESCRIPTION
 *
-* The main window.
+* The vertex.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef VERTEX_H
+#define VERTEX_H
 
-#include <SDL.h>
+typedef struct Vertex {
+    GLfloat x;
+    GLfloat y;
+} Vertex;
 
-class Table;
+/*typedef struct Color {
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+    GLubyte a;
+} Color;*/
 
-class MainWindow
-{
-    SDL_Window *mainwindow; /* Our window handle */
-    SDL_GLContext maincontext; /* Our opengl context handle */
-
-    // The table.
-    Table *table;
-
-    void sdldie( const char* msg );
-
-    void resizeWindow( int width, int height );
-
-    void drawTable( int width, int height );
-
-public:
-    MainWindow();
-    ~MainWindow();
-
-    void mainLoop();
-};
-
-#endif // MAINWINDOW_H
+#endif // VERTEX_H
