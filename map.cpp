@@ -2,19 +2,21 @@
 #include <iostream>
 #include "map.h"
 
-const float MAP_WIDTH = 168.0;
-const float MAP_HEIGHT = 105.0;
+const float MAP_WIDTH = 167.0;
+const float MAP_HEIGHT = 104.0;
+
+const float BORDER = 1.0;
 
 Map::Map()
 {
-    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &whiteMapVBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glGenBuffers(1, &greenMapVBO);
 }
 
 void Map::resize( float x, float y, float width, float height, float scale )
 {
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // green map
 
     float newWidth = MAP_WIDTH * scale;
     float newHeight = MAP_HEIGHT * scale;
@@ -24,23 +26,51 @@ void Map::resize( float x, float y, float width, float height, float scale )
     GLfloat topY = y + height - (height - newHeight)/2;
     GLfloat bottomY = y + (height - newHeight)/2;
 
-    pos[0].x = leftX;   pos[0].y = topY;
-    pos[1].x = rightX;  pos[1].y = topY;
-    pos[2].x = rightX;  pos[2].y = bottomY;
-    pos[3].x = leftX;   pos[3].y = bottomY;
+    greenMapPos[0].x = leftX;   greenMapPos[0].y = topY;
+    greenMapPos[1].x = rightX;  greenMapPos[1].y = topY;
+    greenMapPos[2].x = rightX;  greenMapPos[2].y = bottomY;
+    greenMapPos[3].x = leftX;   greenMapPos[3].y = bottomY;
 
-    glBufferData( GL_ARRAY_BUFFER, sizeof(pos), pos, GL_STATIC_DRAW );
+    glBindBuffer(GL_ARRAY_BUFFER, greenMapVBO);
+
+    glBufferData( GL_ARRAY_BUFFER, sizeof(greenMapPos), greenMapPos, GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    // white map
+
+    float newBorder = BORDER * scale;
+
+    whiteMapPos[0].x = leftX - newBorder;   whiteMapPos[0].y = topY + newBorder;
+    whiteMapPos[1].x = rightX + newBorder;  whiteMapPos[1].y = topY + newBorder;
+    whiteMapPos[2].x = rightX + newBorder;  whiteMapPos[2].y = bottomY - newBorder;
+    whiteMapPos[3].x = leftX - newBorder;   whiteMapPos[3].y = bottomY - newBorder;
+
+    glBindBuffer( GL_ARRAY_BUFFER, whiteMapVBO );
+
+    glBufferData( GL_ARRAY_BUFFER, sizeof(whiteMapPos), whiteMapPos, GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
 void Map::draw()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // white
+    glBindBuffer(GL_ARRAY_BUFFER, whiteMapVBO);
 
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
     glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_QUADS, 0, sizeof(pos) / sizeof(Vertex) );
+    glDrawArrays( GL_QUADS, 0, sizeof(whiteMapPos) / sizeof(Vertex) );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+
+    // green
+    glBindBuffer(GL_ARRAY_BUFFER, greenMapVBO);
+
+    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
+    glColor3f( 0.0, 1.0, 0.0 );
+    glDrawArrays( GL_QUADS, 0, sizeof(greenMapPos) / sizeof(Vertex) );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }

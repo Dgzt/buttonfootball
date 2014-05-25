@@ -6,9 +6,13 @@
 
 class Map
 {
-    GLuint vbo;
+    GLuint whiteMapVBO;
 
-    Vertex pos[4];
+    GLuint greenMapVBO;
+
+    Vertex whiteMapPos[4];
+
+    Vertex greenMapPos[4];
 
 public:
     Map();
