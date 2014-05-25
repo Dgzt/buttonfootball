@@ -14,6 +14,7 @@ SET( ButtonFootball_Sources
     main.cpp
     mainwindow.cpp
     table.cpp
+    map.cpp
 )
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )

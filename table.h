@@ -28,6 +28,8 @@
 #include <GL/gl.h>
 #include "vertex.h"
 
+class Map;
+
 class Table
 {
     // The vertex buffer object id
@@ -36,9 +38,11 @@ class Table
     // The position of top left, top right, bottom right and bottom left point on the window.
     Vertex pos[4];
 
+    Map *map;
 
 public:
     Table();
+    ~Table();
 
     /**
      * Recalculate the positions on the window.
