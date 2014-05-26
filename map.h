@@ -8,7 +8,11 @@ class Map
 {
     GLuint mapVBO;
 
+    GLuint leftSector16VBO;
+
     Vertex mapPos[4];
+
+    Vertex leftSector16Pos[4];
 
     void setMapSize( const float &parentX,
                      const float &parentY,
@@ -16,6 +20,13 @@ class Map
                      const float &parentHeight,
                      const float &width,
                      const float &height);
+
+    void setLeftSector16Size( const float &mapX,
+                              const float &mapY,
+                              const float &mapHeight,
+                              const float &width,
+                              const float &height);
+
 
 public:
     Map();
