@@ -7,70 +7,62 @@ const float MAP_HEIGHT = 104.0;
 
 const float BORDER = 1.0;
 
+const float SECTOR_16_WIDTH = 30.0;
+const float SECTOR_16_HEIGHT = 60.0;
+
 Map::Map()
 {
-    glGenBuffers(1, &whiteMapVBO);
+    glGenBuffers(1, &mapVBO);
 
-    glGenBuffers(1, &greenMapVBO);
+    // Set the lines to smooth.
+    glEnable(GL_LINE_SMOOTH);
+}
+
+void Map::setMapSize(const float &parentX, const float &parentY, const float &parentWidth, const float &parentHeight, const float &width, const float &height)
+{
+    // Green part of map
+
+    GLfloat leftX = parentX + (parentWidth - width)/2;
+    GLfloat rightX = parentX + parentWidth - (parentWidth - width)/2;
+    GLfloat topY = parentY + parentHeight - (parentHeight - height)/2;
+    GLfloat bottomY = parentY + (parentHeight - height)/2;
+
+    mapPos[0].x = leftX;   mapPos[0].y = topY;
+    mapPos[1].x = rightX;  mapPos[1].y = topY;
+    mapPos[2].x = rightX;  mapPos[2].y = bottomY;
+    mapPos[3].x = leftX;   mapPos[3].y = bottomY;
+
+    glBindBuffer(GL_ARRAY_BUFFER, mapVBO);
+
+    glBufferData( GL_ARRAY_BUFFER, sizeof(mapPos), mapPos, GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
 void Map::resize( float x, float y, float width, float height, float scale )
 {
-    // green map
+    float newMapWidth = MAP_WIDTH * scale;
+    float newMapHeight = MAP_HEIGHT * scale;
 
-    float newWidth = MAP_WIDTH * scale;
-    float newHeight = MAP_HEIGHT * scale;
+    setMapSize(x, y, width, height, newMapWidth, newMapHeight);
 
-    GLfloat leftX = x + (width - newWidth)/2;
-    GLfloat rightX = x + width - (width - newWidth)/2;
-    GLfloat topY = y + height - (height - newHeight)/2;
-    GLfloat bottomY = y + (height - newHeight)/2;
-
-    greenMapPos[0].x = leftX;   greenMapPos[0].y = topY;
-    greenMapPos[1].x = rightX;  greenMapPos[1].y = topY;
-    greenMapPos[2].x = rightX;  greenMapPos[2].y = bottomY;
-    greenMapPos[3].x = leftX;   greenMapPos[3].y = bottomY;
-
-    glBindBuffer(GL_ARRAY_BUFFER, greenMapVBO);
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(greenMapPos), greenMapPos, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    // white map
-
-    float newBorder = BORDER * scale;
-
-    whiteMapPos[0].x = leftX - newBorder;   whiteMapPos[0].y = topY + newBorder;
-    whiteMapPos[1].x = rightX + newBorder;  whiteMapPos[1].y = topY + newBorder;
-    whiteMapPos[2].x = rightX + newBorder;  whiteMapPos[2].y = bottomY - newBorder;
-    whiteMapPos[3].x = leftX - newBorder;   whiteMapPos[3].y = bottomY - newBorder;
-
-    glBindBuffer( GL_ARRAY_BUFFER, whiteMapVBO );
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(whiteMapPos), whiteMapPos, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    // Set the size of the borders
+    glLineWidth(BORDER*scale);
 }
 
 void Map::draw()
 {
-    // white
-    glBindBuffer(GL_ARRAY_BUFFER, whiteMapVBO);
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_QUADS, 0, sizeof(whiteMapPos) / sizeof(Vertex) );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-
-    // green
-    glBindBuffer(GL_ARRAY_BUFFER, greenMapVBO);
+    // Map
+    glBindBuffer(GL_ARRAY_BUFFER, mapVBO);
 
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
     glColor3f( 0.0, 1.0, 0.0 );
-    glDrawArrays( GL_QUADS, 0, sizeof(greenMapPos) / sizeof(Vertex) );
+    glDrawArrays( GL_QUADS, 0, sizeof(mapPos) / sizeof(Vertex) );
+
+    // White line
+    glColor3f( 1.0, 1.0, 1.0 );
+    glDrawArrays( GL_LINE_LOOP, 0, sizeof(mapPos) / sizeof(Vertex) );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
 }

@@ -6,13 +6,16 @@
 
 class Map
 {
-    GLuint whiteMapVBO;
+    GLuint mapVBO;
 
-    GLuint greenMapVBO;
+    Vertex mapPos[4];
 
-    Vertex whiteMapPos[4];
-
-    Vertex greenMapPos[4];
+    void setMapSize( const float &parentX,
+                     const float &parentY,
+                     const float &parentWidth,
+                     const float &parentHeight,
+                     const float &width,
+                     const float &height);
 
 public:
     Map();
