@@ -24,8 +24,8 @@ void Map::setMapSize(const float &parentX, const float &parentY, const float &pa
 
     GLfloat leftX = parentX + (parentWidth - width)/2;
     GLfloat rightX = parentX + parentWidth - (parentWidth - width)/2;
-    GLfloat topY = parentY + parentHeight - (parentHeight - height)/2;
-    GLfloat bottomY = parentY + (parentHeight - height)/2;
+    GLfloat topY = parentY - (parentHeight - height)/2;
+    GLfloat bottomY = parentY - parentHeight + (parentHeight - height)/2;
 
     mapPos[0].x = leftX;   mapPos[0].y = topY;
     mapPos[1].x = rightX;  mapPos[1].y = topY;

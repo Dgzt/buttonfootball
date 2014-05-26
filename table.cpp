@@ -56,7 +56,7 @@ void Table::resize(int width, int height)
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    map->resize( pos[3].x, pos[3].y, newTableWidth, newTableHeight, newTableWidth / TABLE_WIDTH );
+    map->resize( pos[0].x, pos[0].y, newTableWidth, newTableHeight, newTableWidth / TABLE_WIDTH );
 }
 
 void Table::draw()
