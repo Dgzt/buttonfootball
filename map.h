@@ -10,9 +10,13 @@ class Map
 
     GLuint leftSector16VBO;
 
+    GLuint rightSector16VBO;
+
     Vertex mapPos[4];
 
     Vertex leftSector16Pos[4];
+
+    Vertex rightSector16Pos[4];
 
     void setMapSize( const float &parentX,
                      const float &parentY,
@@ -26,6 +30,13 @@ class Map
                               const float &mapHeight,
                               const float &width,
                               const float &height);
+
+    void setRightSector16Size( const float &mapX,
+                               const float &mapY,
+                               const float &mapWidth,
+                               const float &mapHeight,
+                               const float &width,
+                               const float &height);
 
 
 public:

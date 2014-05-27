@@ -12,7 +12,9 @@ const float SECTOR_16_HEIGHT = 60.0;
 
 Map::Map()
 {
-    glGenBuffers(1, &mapVBO);
+    glGenBuffers( 1, &mapVBO );
+    glGenBuffers( 1, &leftSector16VBO);
+    glGenBuffers( 1, &rightSector16VBO );
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
@@ -56,6 +58,25 @@ void Map::setLeftSector16Size(const float &mapX, const float &mapY, const float 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
+void Map::setRightSector16Size(const float &mapX, const float &mapY, const float &mapWidth, const float &mapHeight, const float &width, const float &height)
+{
+    GLfloat leftX = mapX + mapWidth - width;
+    GLfloat rightX = mapX + mapWidth;
+    GLfloat topY = mapY - ( mapHeight - height ) / 2;
+    GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
+
+    rightSector16Pos[0].x = leftX;  rightSector16Pos[0].y = topY;
+    rightSector16Pos[1].x = rightX; rightSector16Pos[1].y = topY;
+    rightSector16Pos[2].x = rightX; rightSector16Pos[2].y = bottomY;
+    rightSector16Pos[3].x = leftX;  rightSector16Pos[3].y = bottomY;
+
+    glBindBuffer( GL_ARRAY_BUFFER, rightSector16VBO );
+
+    glBufferData( GL_ARRAY_BUFFER, sizeof(rightSector16Pos), rightSector16Pos, GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+}
+
 void Map::resize( float x, float y, float width, float height, float scale )
 {
     float newMapWidth = MAP_WIDTH * scale;
@@ -67,6 +88,8 @@ void Map::resize( float x, float y, float width, float height, float scale )
     float newSector16Height = SECTOR_16_HEIGHT * scale;
 
     setLeftSector16Size(mapPos[0].x, mapPos[0].y, newMapHeight, newSector16Width, newSector16Height);
+
+    setRightSector16Size(mapPos[0].x, mapPos[0].y, newMapWidth, newMapHeight, newSector16Width, newSector16Height);
 
     // Set the size of the borders
     glLineWidth(BORDER*scale);
@@ -87,11 +110,19 @@ void Map::draw()
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
-    //Left sector 16
+    // Left sector 16
     glBindBuffer( GL_ARRAY_BUFFER, leftSector16VBO );
 
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
     glColor3f( 1.0, 1.0, 1.0 );
     glDrawArrays( GL_LINE_LOOP, 0, sizeof(leftSector16Pos) / sizeof(Vertex) );
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    // Right sector 16
+    glBindBuffer( GL_ARRAY_BUFFER, rightSector16VBO );
+
+    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
+    glColor3f( 1.0, 1.0, 1.0 );
+    glDrawArrays( GL_LINE_LOOP, 0, sizeof(rightSector16Pos) / sizeof(Vertex) );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
