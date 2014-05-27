@@ -19,6 +19,7 @@ Map::Map()
     glGenBuffers( 1, &leftSector16VBO);
     glGenBuffers( 1, &rightSector16VBO );
     glGenBuffers( 1, &leftSector5VBO );
+    glGenBuffers( 1, &rightSector5VBO );
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
@@ -83,7 +84,7 @@ void Map::setRightSector16Size(const float &mapX, const float &mapY, const float
 
 void Map::setLeftSector5Size(const float &mapX, const float &mapY, const float &mapHeight, const float &width, const float &height)
 {
-    GLfloat leftX = leftSector16Pos[0].x;
+    GLfloat leftX = mapX;
     GLfloat rightX = leftX + width;
     GLfloat topY = mapY - ( mapHeight - height ) / 2;
     GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
@@ -96,6 +97,25 @@ void Map::setLeftSector5Size(const float &mapX, const float &mapY, const float &
     glBindBuffer( GL_ARRAY_BUFFER, leftSector5VBO );
 
     glBufferData( GL_ARRAY_BUFFER, sizeof(leftSector5Pos), leftSector5Pos, GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+}
+
+void Map::setRightSector5Size(const float &mapX, const float &mapY, const float &mapWidth, const float &mapHeight, const float &width, const float &height)
+{
+    GLfloat leftX = mapX + mapWidth - width;
+    GLfloat rightX = mapX + mapWidth;
+    GLfloat topY = mapY - ( mapHeight - height ) / 2;
+    GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
+
+    rightSector5Pos[0].x = leftX;  rightSector5Pos[0].y = topY;
+    rightSector5Pos[1].x = rightX; rightSector5Pos[1].y = topY;
+    rightSector5Pos[2].x = rightX; rightSector5Pos[2].y = bottomY;
+    rightSector5Pos[3].x = leftX;  rightSector5Pos[3].y = bottomY;
+
+    glBindBuffer( GL_ARRAY_BUFFER, rightSector5VBO );
+
+    glBufferData( GL_ARRAY_BUFFER, sizeof(rightSector5Pos), rightSector5Pos, GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
@@ -118,6 +138,8 @@ void Map::resize( float x, float y, float width, float height, float scale )
     float newSector5Height = SECTOR_5_HEIGHT * scale;
 
     setLeftSector5Size( mapPos[0].x, mapPos[0].y, newMapHeight, newSector5Width, newSector5Height );
+
+    setRightSector5Size( mapPos[0].x, mapPos[0].y, newMapWidth, newMapHeight, newSector5Width, newSector5Height );
 
     // Set the size of the borders
     glLineWidth(BORDER*scale);
@@ -160,5 +182,13 @@ void Map::draw()
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
     glColor3f( 1.0, 1.0, 1.0 );
     glDrawArrays( GL_LINE_LOOP, 0, sizeof(leftSector5Pos) / sizeof(Vertex) );
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    // Right sector 5
+    glBindBuffer( GL_ARRAY_BUFFER, rightSector5VBO );
+
+    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
+    glColor3f( 1.0, 1.0, 1.0 );
+    glDrawArrays( GL_LINE_LOOP, 0, sizeof(rightSector5Pos) / sizeof(Vertex) );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
