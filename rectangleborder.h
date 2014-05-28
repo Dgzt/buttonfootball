@@ -9,6 +9,7 @@ class RectangleBorder
 
 public:
     RectangleBorder();
+    virtual ~RectangleBorder();
 
     void resize( const float &x,
                  const float &y,

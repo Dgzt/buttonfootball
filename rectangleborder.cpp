@@ -11,6 +11,11 @@ RectangleBorder::RectangleBorder()
     glGenBuffers( 1, &vbo );
 }
 
+RectangleBorder::~RectangleBorder()
+{
+    glDeleteBuffers( 1, &vbo );
+}
+
 void RectangleBorder::resize(const float &x, const float &y, const float &width, const float &height)
 {
     Vertex vertices[4];

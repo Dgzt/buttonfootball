@@ -33,6 +33,8 @@ Map::~Map()
     delete rightSector16;
     delete leftSector5;
     delete rightSector5;
+
+    glDeleteBuffers( 1, &mapVBO );
 }
 
 void Map::resize( float parentX, float parentY, float parentWidth, float parentHeight, float scale )
