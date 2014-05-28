@@ -4,63 +4,29 @@
 #include <GL/gl.h>
 #include "vertex.h"
 
+class RectangleBorder;
+
 class Map
 {
     GLuint mapVBO;
 
-    GLuint leftSector16VBO;
-
-    GLuint rightSector16VBO;
-
-    GLuint leftSector5VBO;
-
-    GLuint rightSector5VBO;
-
     Vertex mapPos[4];
 
-    Vertex leftSector16Pos[4];
+    RectangleBorder *leftSector16;
+    RectangleBorder *rightSector16;
+    RectangleBorder *leftSector5;
+    RectangleBorder *rightSector5;
 
-    Vertex rightSector16Pos[4];
-
-    Vertex leftSector5Pos[4];
-
-    Vertex rightSector5Pos[4];
-
-    void setMapSize( const float &parentX,
-                     const float &parentY,
+    void setMapSize( const float &x,
+                     const float &y,
                      const float &parentWidth,
                      const float &parentHeight,
                      const float &width,
                      const float &height);
 
-    void setLeftSector16Size( const float &mapX,
-                              const float &mapY,
-                              const float &mapHeight,
-                              const float &width,
-                              const float &height);
-
-    void setRightSector16Size( const float &mapX,
-                               const float &mapY,
-                               const float &mapWidth,
-                               const float &mapHeight,
-                               const float &width,
-                               const float &height);
-
-    void setLeftSector5Size( const float &mapX,
-                             const float &mapY,
-                             const float &mapHeight,
-                             const float &width,
-                             const float &height);
-
-    void setRightSector5Size( const float &mapX,
-                              const float &mapY,
-                              const float &mapWidth,
-                              const float &mapHeight,
-                              const float &width,
-                              const float &height);
-
 public:
     Map();
+    virtual ~Map();
 
     void resize( float x, float y, float width, float height, float scale );
 

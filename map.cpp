@@ -1,5 +1,6 @@
 #include "GL/glew.h"
 #include <iostream>
+#include "rectangleborder.h"
 #include "map.h"
 
 const float MAP_WIDTH = 167.0;
@@ -16,13 +17,22 @@ const float SECTOR_5_HEIGHT = 30.0;
 Map::Map()
 {
     glGenBuffers( 1, &mapVBO );
-    glGenBuffers( 1, &leftSector16VBO);
-    glGenBuffers( 1, &rightSector16VBO );
-    glGenBuffers( 1, &leftSector5VBO );
-    glGenBuffers( 1, &rightSector5VBO );
+
+    leftSector16 = new RectangleBorder();
+    rightSector16 = new RectangleBorder();
+    leftSector5 = new RectangleBorder();
+    rightSector5 = new RectangleBorder();
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
+}
+
+Map::~Map()
+{
+    delete leftSector16;
+    delete rightSector16;
+    delete leftSector5;
+    delete rightSector5;
 }
 
 void Map::setMapSize(const float &parentX, const float &parentY, const float &parentWidth, const float &parentHeight, const float &width, const float &height)
@@ -44,82 +54,6 @@ void Map::setMapSize(const float &parentX, const float &parentY, const float &pa
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
-void Map::setLeftSector16Size(const float &mapX, const float &mapY, const float &mapHeight, const float &width, const float &height)
-{
-    GLfloat leftX = mapX;
-    GLfloat rightX = mapX + width;
-    GLfloat topY = mapY - ( mapHeight - height ) / 2;
-    GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
-
-    leftSector16Pos[0].x = leftX;  leftSector16Pos[0].y = topY;
-    leftSector16Pos[1].x = rightX; leftSector16Pos[1].y = topY;
-    leftSector16Pos[2].x = rightX; leftSector16Pos[2].y = bottomY;
-    leftSector16Pos[3].x = leftX;  leftSector16Pos[3].y = bottomY;
-
-    glBindBuffer( GL_ARRAY_BUFFER, leftSector16VBO );
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(leftSector16Pos), leftSector16Pos, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
-
-void Map::setRightSector16Size(const float &mapX, const float &mapY, const float &mapWidth, const float &mapHeight, const float &width, const float &height)
-{
-    GLfloat leftX = mapX + mapWidth - width;
-    GLfloat rightX = mapX + mapWidth;
-    GLfloat topY = mapY - ( mapHeight - height ) / 2;
-    GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
-
-    rightSector16Pos[0].x = leftX;  rightSector16Pos[0].y = topY;
-    rightSector16Pos[1].x = rightX; rightSector16Pos[1].y = topY;
-    rightSector16Pos[2].x = rightX; rightSector16Pos[2].y = bottomY;
-    rightSector16Pos[3].x = leftX;  rightSector16Pos[3].y = bottomY;
-
-    glBindBuffer( GL_ARRAY_BUFFER, rightSector16VBO );
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(rightSector16Pos), rightSector16Pos, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
-
-void Map::setLeftSector5Size(const float &mapX, const float &mapY, const float &mapHeight, const float &width, const float &height)
-{
-    GLfloat leftX = mapX;
-    GLfloat rightX = leftX + width;
-    GLfloat topY = mapY - ( mapHeight - height ) / 2;
-    GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
-
-    leftSector5Pos[0].x = leftX;  leftSector5Pos[0].y = topY;
-    leftSector5Pos[1].x = rightX; leftSector5Pos[1].y = topY;
-    leftSector5Pos[2].x = rightX; leftSector5Pos[2].y = bottomY;
-    leftSector5Pos[3].x = leftX;  leftSector5Pos[3].y = bottomY;
-
-    glBindBuffer( GL_ARRAY_BUFFER, leftSector5VBO );
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(leftSector5Pos), leftSector5Pos, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
-
-void Map::setRightSector5Size(const float &mapX, const float &mapY, const float &mapWidth, const float &mapHeight, const float &width, const float &height)
-{
-    GLfloat leftX = mapX + mapWidth - width;
-    GLfloat rightX = mapX + mapWidth;
-    GLfloat topY = mapY - ( mapHeight - height ) / 2;
-    GLfloat bottomY = mapY - mapHeight + ( mapHeight - height ) / 2;
-
-    rightSector5Pos[0].x = leftX;  rightSector5Pos[0].y = topY;
-    rightSector5Pos[1].x = rightX; rightSector5Pos[1].y = topY;
-    rightSector5Pos[2].x = rightX; rightSector5Pos[2].y = bottomY;
-    rightSector5Pos[3].x = leftX;  rightSector5Pos[3].y = bottomY;
-
-    glBindBuffer( GL_ARRAY_BUFFER, rightSector5VBO );
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(rightSector5Pos), rightSector5Pos, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
-
 void Map::resize( float x, float y, float width, float height, float scale )
 {
     float newMapWidth = MAP_WIDTH * scale;
@@ -127,19 +61,19 @@ void Map::resize( float x, float y, float width, float height, float scale )
 
     setMapSize(x, y, width, height, newMapWidth, newMapHeight);
 
-    float newSector16Width = SECTOR_16_WIDTH * scale;
-    float newSector16Height = SECTOR_16_HEIGHT * scale;
+    float sector16Width = SECTOR_16_WIDTH * scale;
+    float sector16Height = SECTOR_16_HEIGHT * scale;
+    float sector16Y = mapPos[0].y - ( newMapHeight - sector16Height ) / 2;
 
-    setLeftSector16Size(mapPos[0].x, mapPos[0].y, newMapHeight, newSector16Width, newSector16Height);
+    leftSector16->resize( mapPos[0].x, sector16Y, sector16Width, sector16Height );
+    rightSector16->resize( mapPos[0].x + newMapWidth - sector16Width, sector16Y, sector16Width, sector16Height);
 
-    setRightSector16Size(mapPos[0].x, mapPos[0].y, newMapWidth, newMapHeight, newSector16Width, newSector16Height);
+    float sector5Width = SECTOR_5_WIDTH * scale;
+    float sector5Height = SECTOR_5_HEIGHT * scale;
+    float sector5Y = mapPos[0].y - ( newMapHeight - sector5Height ) / 2;
 
-    float newSector5Width = SECTOR_5_WIDTH * scale;
-    float newSector5Height = SECTOR_5_HEIGHT * scale;
-
-    setLeftSector5Size( mapPos[0].x, mapPos[0].y, newMapHeight, newSector5Width, newSector5Height );
-
-    setRightSector5Size( mapPos[0].x, mapPos[0].y, newMapWidth, newMapHeight, newSector5Width, newSector5Height );
+    leftSector5->resize( mapPos[0].x, sector5Y, sector5Width, sector5Height );
+    rightSector5->resize( mapPos[0].x + newMapWidth - sector5Width, sector5Y, sector5Width, sector5Height );
 
     // Set the size of the borders
     glLineWidth(BORDER*scale);
@@ -160,35 +94,8 @@ void Map::draw()
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
-    // Left sector 16
-    glBindBuffer( GL_ARRAY_BUFFER, leftSector16VBO );
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, sizeof(leftSector16Pos) / sizeof(Vertex) );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    // Right sector 16
-    glBindBuffer( GL_ARRAY_BUFFER, rightSector16VBO );
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, sizeof(rightSector16Pos) / sizeof(Vertex) );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    // Left sector 5
-    glBindBuffer( GL_ARRAY_BUFFER, leftSector5VBO );
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, sizeof(leftSector5Pos) / sizeof(Vertex) );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    // Right sector 5
-    glBindBuffer( GL_ARRAY_BUFFER, rightSector5VBO );
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, sizeof(rightSector5Pos) / sizeof(Vertex) );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    leftSector16->draw();
+    rightSector16->draw();
+    leftSector5->draw();
+    rightSector5->draw();
 }
