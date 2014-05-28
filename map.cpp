@@ -35,45 +35,45 @@ Map::~Map()
     delete rightSector5;
 }
 
-void Map::setMapSize(const float &parentX, const float &parentY, const float &parentWidth, const float &parentHeight, const float &width, const float &height)
+void Map::resize( float parentX, float parentY, float parentWidth, float parentHeight, float scale )
 {
-    GLfloat leftX = parentX + (parentWidth - width)/2;
-    GLfloat rightX = parentX + parentWidth - (parentWidth - width)/2;
-    GLfloat topY = parentY - (parentHeight - height)/2;
-    GLfloat bottomY = parentY - parentHeight + (parentHeight - height)/2;
+    // Map
+    float mapWidth = MAP_WIDTH * scale;
+    float mapHeight = MAP_HEIGHT * scale;
 
-    mapPos[0].x = leftX;   mapPos[0].y = topY;
-    mapPos[1].x = rightX;  mapPos[1].y = topY;
-    mapPos[2].x = rightX;  mapPos[2].y = bottomY;
-    mapPos[3].x = leftX;   mapPos[3].y = bottomY;
+    GLfloat leftMapX = parentX + (parentWidth - mapWidth)/2;
+    GLfloat rightMapX = parentX + parentWidth - (parentWidth - mapWidth)/2;
+    GLfloat topMapY = parentY - (parentHeight - mapHeight)/2;
+    GLfloat bottomMapY = parentY - parentHeight + (parentHeight - mapHeight)/2;
+
+    Vertex mapVertices[4];
+
+    mapVertices[0].x = leftMapX;   mapVertices[0].y = topMapY;
+    mapVertices[1].x = rightMapX;  mapVertices[1].y = topMapY;
+    mapVertices[2].x = rightMapX;  mapVertices[2].y = bottomMapY;
+    mapVertices[3].x = leftMapX;   mapVertices[3].y = bottomMapY;
 
     glBindBuffer(GL_ARRAY_BUFFER, mapVBO);
 
-    glBufferData( GL_ARRAY_BUFFER, sizeof(mapPos), mapPos, GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, sizeof(mapVertices), mapVertices, GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
 
-void Map::resize( float x, float y, float width, float height, float scale )
-{
-    float newMapWidth = MAP_WIDTH * scale;
-    float newMapHeight = MAP_HEIGHT * scale;
-
-    setMapSize(x, y, width, height, newMapWidth, newMapHeight);
-
+    // Sector 16
     float sector16Width = SECTOR_16_WIDTH * scale;
     float sector16Height = SECTOR_16_HEIGHT * scale;
-    float sector16Y = mapPos[0].y - ( newMapHeight - sector16Height ) / 2;
+    float sector16Y = topMapY - ( mapHeight - sector16Height ) / 2;
 
-    leftSector16->resize( mapPos[0].x, sector16Y, sector16Width, sector16Height );
-    rightSector16->resize( mapPos[0].x + newMapWidth - sector16Width, sector16Y, sector16Width, sector16Height);
+    leftSector16->resize( leftMapX, sector16Y, sector16Width, sector16Height );
+    rightSector16->resize( leftMapX + mapWidth - sector16Width, sector16Y, sector16Width, sector16Height);
 
+    // Sector 5
     float sector5Width = SECTOR_5_WIDTH * scale;
     float sector5Height = SECTOR_5_HEIGHT * scale;
-    float sector5Y = mapPos[0].y - ( newMapHeight - sector5Height ) / 2;
+    float sector5Y = topMapY - ( mapHeight - sector5Height ) / 2;
 
-    leftSector5->resize( mapPos[0].x, sector5Y, sector5Width, sector5Height );
-    rightSector5->resize( mapPos[0].x + newMapWidth - sector5Width, sector5Y, sector5Width, sector5Height );
+    leftSector5->resize( leftMapX, sector5Y, sector5Width, sector5Height );
+    rightSector5->resize( leftMapX + mapWidth - sector5Width, sector5Y, sector5Width, sector5Height );
 
     // Set the size of the borders
     glLineWidth(BORDER*scale);
@@ -81,16 +81,16 @@ void Map::resize( float x, float y, float width, float height, float scale )
 
 void Map::draw()
 {
-    // Map
     glBindBuffer(GL_ARRAY_BUFFER, mapVBO);
 
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
+    // Green map
     glColor3f( 0.0, 1.0, 0.0 );
-    glDrawArrays( GL_QUADS, 0, sizeof(mapPos) / sizeof(Vertex) );
+    glDrawArrays( GL_QUADS, 0, 4 );
 
     // White line
     glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, sizeof(mapPos) / sizeof(Vertex) );
+    glDrawArrays( GL_LINE_LOOP, 0, 4 );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
