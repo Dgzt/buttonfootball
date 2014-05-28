@@ -5,6 +5,7 @@
 #include "vertex.h"
 
 class RectangleBorder;
+class CircleBorder;
 
 class Map
 {
@@ -14,6 +15,8 @@ class Map
     RectangleBorder *rightSector16;
     RectangleBorder *leftSector5;
     RectangleBorder *rightSector5;
+
+    CircleBorder *centralCircle;
 
 public:
     Map();

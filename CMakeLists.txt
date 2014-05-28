@@ -16,6 +16,7 @@ SET( ButtonFootball_Sources
     table.cpp
     map.cpp
     rectangleborder.cpp
+    circleborder.cpp
 )
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )

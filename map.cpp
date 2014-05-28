@@ -1,6 +1,7 @@
 #include "GL/glew.h"
 #include <iostream>
 #include "rectangleborder.h"
+#include "circleborder.h"
 #include "map.h"
 
 const float MAP_WIDTH = 167.0;
@@ -14,6 +15,8 @@ const float SECTOR_16_HEIGHT = 60.0;
 const float SECTOR_5_WIDTH = 11.0;
 const float SECTOR_5_HEIGHT = 30.0;
 
+const float BIG_CIRCLE_RADIUS = 16.0;
+
 Map::Map()
 {
     glGenBuffers( 1, &mapVBO );
@@ -22,6 +25,8 @@ Map::Map()
     rightSector16 = new RectangleBorder();
     leftSector5 = new RectangleBorder();
     rightSector5 = new RectangleBorder();
+
+    centralCircle = new CircleBorder();
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
@@ -33,6 +38,8 @@ Map::~Map()
     delete rightSector16;
     delete leftSector5;
     delete rightSector5;
+
+    delete centralCircle;
 
     glDeleteBuffers( 1, &mapVBO );
 }
@@ -77,6 +84,11 @@ void Map::resize( float parentX, float parentY, float parentWidth, float parentH
     leftSector5->resize( leftMapX, sector5Y, sector5Width, sector5Height );
     rightSector5->resize( leftMapX + mapWidth - sector5Width, sector5Y, sector5Width, sector5Height );
 
+    // Central big circle
+    float bigCircleRadius = BIG_CIRCLE_RADIUS * scale;
+
+    centralCircle->resize( leftMapX + mapWidth / 2, topMapY - mapHeight / 2, bigCircleRadius );
+
     // Set the size of the borders
     glLineWidth(BORDER*scale);
 }
@@ -100,4 +112,6 @@ void Map::draw()
     rightSector16->draw();
     leftSector5->draw();
     rightSector5->draw();
+
+    centralCircle->draw();
 }
