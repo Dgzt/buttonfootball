@@ -36,6 +36,7 @@ Map::Map()
     halfLine = new Line;
 
     leftCircle11 = new CircleBorder;
+    rightCircle11 = new CircleBorder;
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
@@ -53,6 +54,7 @@ Map::~Map()
     delete halfLine;
 
     delete leftCircle11;
+    delete rightCircle11;
 
     glDeleteBuffers( 1, &mapVBO );
 }
@@ -115,6 +117,11 @@ void Map::resize( float parentX, float parentY, float parentWidth, float parentH
 
     leftCircle11->resize( leftCircle11X, circle11Y, circle11Radius );
 
+    // Right circle 11
+    float rightCircle11X = leftMapX + mapWidth - circle11Distance;
+
+    rightCircle11->resize( rightCircle11X, circle11Y, circle11Radius );
+
     // Set the size of the borders
     glLineWidth(BORDER*scale);
 }
@@ -144,4 +151,6 @@ void Map::draw()
     halfLine->draw();
 
     leftCircle11->draw();
+
+    rightCircle11->draw();
 }

@@ -23,6 +23,8 @@ class Map
 
     CircleBorder *leftCircle11;
 
+    CircleBorder *rightCircle11;
+
 public:
     Map();
     virtual ~Map();
