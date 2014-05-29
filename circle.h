@@ -1,18 +1,20 @@
-#ifndef CIRCLEBORDER_H
-#define CIRCLEBORDER_H
+#ifndef CIRCLE_H
+#define CIRCLE_H
 
 #include <GL/gl.h>
 #include "vertex.h"
 
-class CircleBorder
+class Circle
 {
     GLuint vbo;
+
+    GLenum type;
 
     int verticesNum;
 
 public:
-    CircleBorder();
-    virtual ~CircleBorder();
+    Circle( bool fill );
+    virtual ~Circle();
 
     void resize( const float &x,
                  const float &y,
@@ -22,4 +24,4 @@ public:
 
 };
 
-#endif // CIRCLEBORDER_H
+#endif // CIRCLE_H

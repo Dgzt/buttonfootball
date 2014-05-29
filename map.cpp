@@ -1,7 +1,7 @@
 #include "GL/glew.h"
 #include <iostream>
 #include "rectangleborder.h"
-#include "circleborder.h"
+#include "circle.h"
 #include "line.h"
 #include "map.h"
 
@@ -31,12 +31,12 @@ Map::Map()
     leftSector5 = new RectangleBorder;
     rightSector5 = new RectangleBorder;
 
-    centralCircle = new CircleBorder;
+    centralCircle = new Circle( false );
 
     halfLine = new Line;
 
-    leftCircle11 = new CircleBorder;
-    rightCircle11 = new CircleBorder;
+    leftCircle11 = new Circle( true );
+    rightCircle11 = new Circle( true );
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);

@@ -3,8 +3,14 @@
 #include "vertex.h"
 #include "line.h"
 
+/**
+ * The amount of vertices.
+ */
 const unsigned int VERTICES_NUM = 2;
 
+/**
+ * The size of vertices.
+ */
 const unsigned int VERTICES_SIZE = VERTICES_NUM * sizeof(Vertex);
 
 Line::Line()

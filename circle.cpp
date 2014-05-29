@@ -2,21 +2,27 @@
 #include <vector>
 #include <math.h>
 #include <iostream>
-#include "circleborder.h"
+#include "circle.h"
 
 #define degreesToRadians(angleDegrees) (angleDegrees * M_PI / 180.0)
 
-CircleBorder::CircleBorder()
+Circle::Circle( bool fill )
 {
+    if( fill ){
+        type = GL_POLYGON;
+    }else{
+        type = GL_LINE_LOOP;
+    }
+
     glGenBuffers( 1, &vbo );
 }
 
-CircleBorder::~CircleBorder()
+Circle::~Circle()
 {
     glDeleteBuffers( 1, &vbo );
 }
 
-void CircleBorder::resize(const float &x, const float &y, const float &r)
+void Circle::resize(const float &x, const float &y, const float &r)
 {
     std::vector<Vertex> vertices;
 
@@ -43,12 +49,12 @@ void CircleBorder::resize(const float &x, const float &y, const float &r)
     vertices.clear();
 }
 
-void CircleBorder::draw()
+void Circle::draw()
 {
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
     glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, verticesNum );
+    glDrawArrays( type, 0, verticesNum );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }

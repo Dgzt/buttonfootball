@@ -16,7 +16,7 @@ SET( ButtonFootball_Sources
     table.cpp
     map.cpp
     rectangleborder.cpp
-    circleborder.cpp
+    circle.cpp
     line.cpp
 )
 
