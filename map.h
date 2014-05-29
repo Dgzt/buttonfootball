@@ -6,6 +6,7 @@
 
 class RectangleBorder;
 class CircleBorder;
+class Line;
 
 class Map
 {
@@ -17,6 +18,8 @@ class Map
     RectangleBorder *rightSector5;
 
     CircleBorder *centralCircle;
+
+    Line *halfLine;
 
 public:
     Map();

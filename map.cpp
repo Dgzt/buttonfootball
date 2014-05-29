@@ -2,6 +2,7 @@
 #include <iostream>
 #include "rectangleborder.h"
 #include "circleborder.h"
+#include "line.h"
 #include "map.h"
 
 const float MAP_WIDTH = 167.0;
@@ -21,12 +22,14 @@ Map::Map()
 {
     glGenBuffers( 1, &mapVBO );
 
-    leftSector16 = new RectangleBorder();
-    rightSector16 = new RectangleBorder();
-    leftSector5 = new RectangleBorder();
-    rightSector5 = new RectangleBorder();
+    leftSector16 = new RectangleBorder;
+    rightSector16 = new RectangleBorder;
+    leftSector5 = new RectangleBorder;
+    rightSector5 = new RectangleBorder;
 
-    centralCircle = new CircleBorder();
+    centralCircle = new CircleBorder;
+
+    halfLine = new Line;
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
@@ -40,6 +43,8 @@ Map::~Map()
     delete rightSector5;
 
     delete centralCircle;
+
+    delete halfLine;
 
     glDeleteBuffers( 1, &mapVBO );
 }
@@ -89,6 +94,12 @@ void Map::resize( float parentX, float parentY, float parentWidth, float parentH
 
     centralCircle->resize( leftMapX + mapWidth / 2, topMapY - mapHeight / 2, bigCircleRadius );
 
+    // Half line
+    float halfMapX = leftMapX + ( mapWidth / 2 );
+
+    halfLine->resize( halfMapX, topMapY, halfMapX, bottomMapY );
+
+
     // Set the size of the borders
     glLineWidth(BORDER*scale);
 }
@@ -114,4 +125,6 @@ void Map::draw()
     rightSector5->draw();
 
     centralCircle->draw();
+
+    halfLine->draw();
 }

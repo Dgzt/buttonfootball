@@ -25,7 +25,7 @@ void RectangleBorder::resize(const float &x, const float &y, const float &width,
     vertices[2].x = x + width;  vertices[2].y = y - height;
     vertices[3].x = x;          vertices[3].y = y - height;
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
     glBufferData( GL_ARRAY_BUFFER, VERTICES_SIZE, vertices, GL_STATIC_DRAW );
 
