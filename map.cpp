@@ -8,7 +8,7 @@
 const float MAP_WIDTH = 167.0;
 const float MAP_HEIGHT = 104.0;
 
-const float BORDER = 1.0;
+const float BORDER = 0.3f;
 
 const float SECTOR_16_WIDTH = 30.0;
 const float SECTOR_16_HEIGHT = 60.0;
