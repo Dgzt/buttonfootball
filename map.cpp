@@ -18,7 +18,7 @@ const float SECTOR_5_HEIGHT = 30.0;
 
 const float BIG_CIRCLE_RADIUS = 16.0;
 
-const float CIRCLE_11_RADIUS = 0.5f;
+const float SMALL_CIRCLE_RADIUS = 0.5f;
 const float CIRCLE_11_DISTANCE = 20.5f;
 
 
@@ -31,12 +31,14 @@ Map::Map()
     leftSector5 = new RectangleBorder;
     rightSector5 = new RectangleBorder;
 
-    centralCircle = new Circle( false );
+    bigCentralCircle = new Circle( false );
 
     halfLine = new Line;
 
     leftCircle11 = new Circle( true );
     rightCircle11 = new Circle( true );
+
+    smallCentralCircle = new Circle( true ),
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
@@ -49,12 +51,14 @@ Map::~Map()
     delete leftSector5;
     delete rightSector5;
 
-    delete centralCircle;
+    delete bigCentralCircle;
 
     delete halfLine;
 
     delete leftCircle11;
     delete rightCircle11;
+
+    delete smallCentralCircle;
 
     glDeleteBuffers( 1, &mapVBO );
 }
@@ -102,7 +106,7 @@ void Map::resize( float parentX, float parentY, float parentWidth, float parentH
     // Central big circle
     float bigCircleRadius = BIG_CIRCLE_RADIUS * scale;
 
-    centralCircle->resize( leftMapX + mapWidth / 2, topMapY - mapHeight / 2, bigCircleRadius );
+    bigCentralCircle->resize( leftMapX + mapWidth / 2, topMapY - mapHeight / 2, bigCircleRadius );
 
     // Half line
     float halfMapX = leftMapX + ( mapWidth / 2 );
@@ -110,17 +114,23 @@ void Map::resize( float parentX, float parentY, float parentWidth, float parentH
     halfLine->resize( halfMapX, topMapY, halfMapX, bottomMapY );
 
     // Left circle 11
-    float circle11Distance = CIRCLE_11_DISTANCE * scale;
-    float circle11Radius = CIRCLE_11_RADIUS * scale;
-    float circle11Y = topMapY - mapHeight / 2;
-    float leftCircle11X = leftMapX + circle11Distance;
+    float smallCircleDistance = CIRCLE_11_DISTANCE * scale;
+    float smallCircleRadius = SMALL_CIRCLE_RADIUS * scale;
+    float smallCircleY = topMapY - mapHeight / 2;
+    float leftSmallCircleX = leftMapX + smallCircleDistance;
 
-    leftCircle11->resize( leftCircle11X, circle11Y, circle11Radius );
+    leftCircle11->resize( leftSmallCircleX, smallCircleY, smallCircleRadius );
 
     // Right circle 11
-    float rightCircle11X = leftMapX + mapWidth - circle11Distance;
+    float rightSmallCircleX = leftMapX + mapWidth - smallCircleDistance;
 
-    rightCircle11->resize( rightCircle11X, circle11Y, circle11Radius );
+    rightCircle11->resize( rightSmallCircleX, smallCircleY, smallCircleRadius );
+
+    // Central small circle
+    float centralSmallCircleX = leftMapX + ( mapWidth / 2 );
+    float centralSmallCircleY = topMapY - ( mapHeight / 2 );
+
+    smallCentralCircle->resize( centralSmallCircleX, centralSmallCircleY, smallCircleRadius );
 
     // Set the size of the borders
     glLineWidth(BORDER*scale);
@@ -146,11 +156,13 @@ void Map::draw()
     leftSector5->draw();
     rightSector5->draw();
 
-    centralCircle->draw();
+    bigCentralCircle->draw();
 
     halfLine->draw();
 
     leftCircle11->draw();
 
     rightCircle11->draw();
+
+    smallCentralCircle->draw();
 }

@@ -17,13 +17,15 @@ class Map
     RectangleBorder *leftSector5;
     RectangleBorder *rightSector5;
 
-    Circle *centralCircle;
+    Circle *bigCentralCircle;
 
     Line *halfLine;
 
     Circle *leftCircle11;
 
     Circle *rightCircle11;
+
+    Circle *smallCentralCircle;
 
 public:
     Map();
