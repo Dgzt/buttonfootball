@@ -4,7 +4,7 @@
 #include <iostream>
 #include "circleborder.h"
 
-const float PI = 3.141592;
+#define degreesToRadians(angleDegrees) (angleDegrees * M_PI / 180.0)
 
 CircleBorder::CircleBorder()
 {
@@ -20,10 +20,13 @@ void CircleBorder::resize(const float &x, const float &y, const float &r)
 {
     std::vector<Vertex> vertices;
 
-    for( float angle = 0; angle < 8*PI*2; angle+=0.01 ){
+    for( int i = 0; i < 360; i+=15 ){
+
+        float angle = degreesToRadians(i);
+
         Vertex v;
         v.x = x + sin( angle ) * r;
-        v.y = y + cos ( angle ) * r;
+        v.y = y + cos( angle ) * r;
 
        vertices.push_back( v );
     }
@@ -33,7 +36,7 @@ void CircleBorder::resize(const float &x, const float &y, const float &r)
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    glBufferData( GL_ARRAY_BUFFER, verticesNum, &vertices[0], GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, verticesNum*sizeof(Vertex), &vertices[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
