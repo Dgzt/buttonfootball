@@ -21,6 +21,8 @@ class Map
 
     Line *halfLine;
 
+    CircleBorder *leftCircle11;
+
 public:
     Map();
     virtual ~Map();
