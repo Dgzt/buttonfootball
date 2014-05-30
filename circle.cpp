@@ -6,7 +6,14 @@
 
 #define degreesToRadians(angleDegrees) (angleDegrees * M_PI / 180.0)
 
-Circle::Circle( bool fill )
+/**
+ * The default starting degrees.
+ */
+const float DEFAULT_DEGREES = 90;
+
+Circle::Circle( bool fill ) :
+    startDegrees( 0 ),
+    endDegrees( 360 )
 {
     if( fill ){
         type = GL_POLYGON;
@@ -14,6 +21,14 @@ Circle::Circle( bool fill )
         type = GL_LINE_LOOP;
     }
 
+    glGenBuffers( 1, &vbo );
+}
+
+Circle::Circle(float startDegrees, float endDegrees) :
+    type( GL_LINE_STRIP ),
+    startDegrees( startDegrees ),
+    endDegrees( endDegrees + 10 )
+{
     glGenBuffers( 1, &vbo );
 }
 
@@ -26,7 +41,7 @@ void Circle::resize(const float &x, const float &y, const float &r)
 {
     std::vector<Vertex> vertices;
 
-    for( int i = 0; i < 360; i+=15 ){
+    for( int i = DEFAULT_DEGREES + startDegrees; i < DEFAULT_DEGREES + endDegrees; i+=15 ){
 
         float angle = degreesToRadians(i);
 
