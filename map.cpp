@@ -46,6 +46,9 @@ Map::Map()
     bottomLeftCornerArc = new Circle( 270, 360 );
     bottomRightCornerArc = new Circle( 180, 270 );
 
+    bigLeftArc = new Circle( 305, 415 );
+    bigRightArc = new Circle( 125, 235 );
+
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);
 }
@@ -70,6 +73,9 @@ Map::~Map()
     delete topRightCornerArc;
     delete bottomLeftCornerArc;
     delete bottomRightCornerArc;
+
+    delete bigLeftArc;
+    delete bigLeftArc;
 
     glDeleteBuffers( 1, &mapVBO );
 }
@@ -151,6 +157,10 @@ void Map::resize( float parentX, float parentY, float parentWidth, float parentH
     bottomLeftCornerArc->resize( leftMapX, bottomMapY, cornerArcRadius );
     bottomRightCornerArc->resize( rightMapX, bottomMapY, cornerArcRadius );
 
+    // Big left arc
+    bigLeftArc->resize( leftSmallCircleX, smallCircleY, bigCircleRadius );
+    bigRightArc->resize( rightSmallCircleX, smallCircleY, bigCircleRadius );
+
     // Set the size of the borders
     glLineWidth(BORDER*scale);
 }
@@ -189,4 +199,7 @@ void Map::draw()
     topRightCornerArc->draw();
     bottomLeftCornerArc->draw();
     bottomRightCornerArc->draw();
+
+    bigLeftArc->draw();
+    bigRightArc->draw();
 }

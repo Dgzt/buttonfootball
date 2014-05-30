@@ -32,6 +32,9 @@ class Map
     Circle *bottomLeftCornerArc;
     Circle *bottomRightCornerArc;
 
+    Circle *bigLeftArc;
+    Circle *bigRightArc;
+
 public:
     Map();
     virtual ~Map();

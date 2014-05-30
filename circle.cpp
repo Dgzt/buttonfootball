@@ -27,7 +27,7 @@ Circle::Circle( bool fill ) :
 Circle::Circle(float startDegrees, float endDegrees) :
     type( GL_LINE_STRIP ),
     startDegrees( startDegrees ),
-    endDegrees( endDegrees + 10 )
+    endDegrees( endDegrees +5 )
 {
     glGenBuffers( 1, &vbo );
 }
@@ -41,7 +41,7 @@ void Circle::resize(const float &x, const float &y, const float &r)
 {
     std::vector<Vertex> vertices;
 
-    for( int i = DEFAULT_DEGREES + startDegrees; i < DEFAULT_DEGREES + endDegrees; i+=15 ){
+    for( int i = DEFAULT_DEGREES + startDegrees; i < DEFAULT_DEGREES + endDegrees; i+=5 ){
 
         float angle = degreesToRadians(i);
 
