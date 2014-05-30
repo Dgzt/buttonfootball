@@ -2,7 +2,7 @@
 #define CIRCLE_H
 
 #include <GL/gl.h>
-#include "vertex.h"
+#include "../vertex.h"
 
 class Circle
 {

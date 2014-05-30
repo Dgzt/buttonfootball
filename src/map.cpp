@@ -1,8 +1,8 @@
 #include "GL/glew.h"
 #include <iostream>
-#include "rectangleborder.h"
-#include "circle.h"
-#include "line.h"
+#include "shape/rectangleborder.h"
+#include "shape/circle.h"
+#include "shape/line.h"
 #include "map.h"
 
 const float MAP_WIDTH = 167.0;

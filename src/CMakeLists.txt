@@ -3,9 +3,9 @@ SET( ButtonFootball_Sources
     mainwindow.cpp
     table.cpp
     map.cpp
-    rectangleborder.cpp
-    circle.cpp
-    line.cpp
+    shape/rectangleborder.cpp
+    shape/circle.cpp
+    shape/line.cpp
 )
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )

@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 #include <iostream>
-#include "vertex.h"
+#include "../vertex.h"
 #include "line.h"
 
 /**

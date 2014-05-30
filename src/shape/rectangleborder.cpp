@@ -1,5 +1,5 @@
 #include "GL/glew.h"
-#include "vertex.h"
+#include "../vertex.h"
 #include "rectangleborder.h"
 
 const int VERTICES_NUM = 4;
