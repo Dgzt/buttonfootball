@@ -75,7 +75,7 @@ Map::~Map()
     delete bottomRightCornerArc;
 
     delete bigLeftArc;
-    delete bigLeftArc;
+    delete bigRightArc;
 
     glDeleteBuffers( 1, &mapVBO );
 }
