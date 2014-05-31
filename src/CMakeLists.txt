@@ -3,6 +3,7 @@ SET( ButtonFootball_Sources
     mainwindow.cpp
     table.cpp
     map.cpp
+    shape/abstractshape.cpp
     shape/rectangleborder.cpp
     shape/circle.cpp
     shape/line.cpp

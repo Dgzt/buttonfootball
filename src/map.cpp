@@ -32,14 +32,14 @@ Map::Map()
     leftSector5 = new RectangleBorder;
     rightSector5 = new RectangleBorder;
 
-    bigCentralCircle = new Circle( false );
+    bigCentralCircle = new Circle( GL_LINE_LOOP );
 
     halfLine = new Line;
 
-    leftCircle11 = new Circle( true );
-    rightCircle11 = new Circle( true );
+    leftCircle11 = new Circle( GL_POLYGON );
+    rightCircle11 = new Circle( GL_POLYGON);
 
-    smallCentralCircle = new Circle( true );
+    smallCentralCircle = new Circle( GL_POLYGON );
 
     topLeftCornerArc = new Circle( 0, 90 );
     topRightCornerArc = new Circle( 90, 180 );

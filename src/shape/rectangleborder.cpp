@@ -1,20 +1,25 @@
-#include "GL/glew.h"
-#include "../vertex.h"
+/*!
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "rectangleborder.h"
 
 const int VERTICES_NUM = 4;
 
-const int VERTICES_SIZE = VERTICES_NUM * sizeof(Vertex);
-
-RectangleBorder::RectangleBorder()
-{
-    glGenBuffers( 1, &vbo );
-}
-
-RectangleBorder::~RectangleBorder()
-{
-    glDeleteBuffers( 1, &vbo );
-}
+RectangleBorder::RectangleBorder() :
+    AbstractShape( GL_LINE_LOOP, VERTICES_NUM )
+{}
 
 void RectangleBorder::resize(const float &x, const float &y, const float &width, const float &height)
 {
@@ -25,19 +30,5 @@ void RectangleBorder::resize(const float &x, const float &y, const float &width,
     vertices[2].x = x + width;  vertices[2].y = y - height;
     vertices[3].x = x;          vertices[3].y = y - height;
 
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    glBufferData( GL_ARRAY_BUFFER, VERTICES_SIZE, vertices, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
-
-void RectangleBorder::draw()
-{
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINE_LOOP, 0, VERTICES_NUM );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    AbstractShape::resize( vertices );
 }

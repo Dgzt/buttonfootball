@@ -1,6 +1,18 @@
-#include <GL/glew.h>
-#include <iostream>
-#include "../vertex.h"
+/*!
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "line.h"
 
 /**
@@ -8,38 +20,13 @@
  */
 const unsigned int VERTICES_NUM = 2;
 
-/**
- * The size of vertices.
- */
-const unsigned int VERTICES_SIZE = VERTICES_NUM * sizeof(Vertex);
-
-Line::Line()
-{
-    glGenBuffers( 1, &vbo );
-}
-
-Line::~Line()
-{
-    glDeleteBuffers( 1, &vbo );
-}
+Line::Line() :
+    AbstractShape( GL_LINES, VERTICES_NUM )
+{}
 
 void Line::resize(const float &x1, const float &y1, const float &x2, const float &y2)
 {
     Vertex vertices[2] = { x1, y1, x2, y2 };
 
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    glBufferData( GL_ARRAY_BUFFER, VERTICES_SIZE, vertices, GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-}
-
-void Line::draw()
-{
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
-    glDrawArrays( GL_LINES, 0, VERTICES_NUM );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    AbstractShape::resize( vertices );
 }
