@@ -25,16 +25,11 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
+#include <GL/gl.h>
+
 typedef struct Vertex {
     GLfloat x;
     GLfloat y;
 } Vertex;
-
-/*typedef struct Color {
-    GLubyte r;
-    GLubyte g;
-    GLubyte b;
-    GLubyte a;
-} Color;*/
 
 #endif // VERTEX_H

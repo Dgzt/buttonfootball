@@ -35,7 +35,7 @@ public:
      * Constructor.
      * Initialize the border of rectangle.
      */
-    RectangleBorder();
+    RectangleBorder( const Color &color );
 
     /*!
      * Resize the shape.

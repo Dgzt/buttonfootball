@@ -27,6 +27,7 @@
 
 #include <GL/gl.h>
 #include "../vertex.h"
+#include "../color.h"
 
 class AbstractShape
 {
@@ -39,6 +40,11 @@ class AbstractShape
      * Thy type of shape. Example: GL_LINE_LOOP.
      */
     GLenum type;
+
+    /*!
+     * The color.
+     */
+    Color color;
 
     /*!
      * The amount of verties.
@@ -73,16 +79,18 @@ public:
      *
      * @param type The type of shape.
      * @param verticesNum The amount of vertices.
+     * @param color The color of shape.
      */
-    AbstractShape( GLenum type, int verticesNum );
+    AbstractShape( GLenum type, int verticesNum, const Color &color );
 
     /*!
      * Constructor.
      * Init the shape.
      *
      * @param type The type of shape.
+     * @param color The color of shape.
      */
-    AbstractShape( GLenum type );
+    AbstractShape( GLenum type, const Color &color );
 
     /*!
      * The desctructor.

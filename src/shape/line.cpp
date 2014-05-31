@@ -20,8 +20,8 @@
  */
 const unsigned int VERTICES_NUM = 2;
 
-Line::Line() :
-    AbstractShape( GL_LINES, VERTICES_NUM )
+Line::Line( const Color &color ) :
+    AbstractShape( GL_LINES, VERTICES_NUM, color )
 {}
 
 void Line::resize(const float &x1, const float &y1, const float &x2, const float &y2)

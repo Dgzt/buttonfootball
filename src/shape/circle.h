@@ -46,16 +46,18 @@ public:
      * If the type is GL_LINE_LOOP then border of circle.
      *
      * @param type Type of the circle.
+     * @param color The color of circle.
      */
-    Circle( GLenum type );
+    Circle( GLenum type, const Color &color );
 
     /*!
      * Arc.
      *
      * @param startDegrees The start degrees.
      * @param endDegrees The end degrees.
+     * @param color The color of arc.
      */
-    Circle( float startDegrees, float endDegrees );
+    Circle( float startDegrees, float endDegrees, const Color &color );
 
     /*!
      * Resize the shape.

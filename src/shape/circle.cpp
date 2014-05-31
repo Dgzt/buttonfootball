@@ -27,14 +27,14 @@
  */
 const float DEFAULT_DEGREES = 90;
 
-Circle::Circle( GLenum type ) :
-    AbstractShape( type ),
+Circle::Circle( GLenum type, const Color &color ) :
+    AbstractShape( type, color ),
     startDegrees( 0 ),
     endDegrees( 360 )
 {}
 
-Circle::Circle(float startDegrees, float endDegrees) :
-    AbstractShape( GL_LINE_STRIP ),
+Circle::Circle( float startDegrees, float endDegrees, const Color &color ) :
+    AbstractShape( GL_LINE_STRIP, color ),
     startDegrees( startDegrees ),
     endDegrees( endDegrees +5 )
 {}

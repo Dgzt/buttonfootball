@@ -23,31 +23,33 @@ const float CIRCLE_11_DISTANCE = 20.5f;
 
 const float CORNER_ARC_RADIUS = 3.1f;
 
+const Color WHITE_COLOR = { 1.0f, 1.0f, 1.0f };
+
 Map::Map()
 {
     glGenBuffers( 1, &mapVBO );
 
-    leftSector16 = new RectangleBorder;
-    rightSector16 = new RectangleBorder;
-    leftSector5 = new RectangleBorder;
-    rightSector5 = new RectangleBorder;
+    leftSector16 = new RectangleBorder( WHITE_COLOR );
+    rightSector16 = new RectangleBorder( WHITE_COLOR );
+    leftSector5 = new RectangleBorder( WHITE_COLOR );
+    rightSector5 = new RectangleBorder( WHITE_COLOR );
 
-    bigCentralCircle = new Circle( GL_LINE_LOOP );
+    bigCentralCircle = new Circle( GL_LINE_LOOP, WHITE_COLOR );
 
-    halfLine = new Line;
+    halfLine = new Line(  WHITE_COLOR );
 
-    leftCircle11 = new Circle( GL_POLYGON );
-    rightCircle11 = new Circle( GL_POLYGON);
+    leftCircle11 = new Circle( GL_POLYGON, WHITE_COLOR );
+    rightCircle11 = new Circle( GL_POLYGON, WHITE_COLOR );
 
-    smallCentralCircle = new Circle( GL_POLYGON );
+    smallCentralCircle = new Circle( GL_POLYGON, WHITE_COLOR );
 
-    topLeftCornerArc = new Circle( 0, 90 );
-    topRightCornerArc = new Circle( 90, 180 );
-    bottomLeftCornerArc = new Circle( 270, 360 );
-    bottomRightCornerArc = new Circle( 180, 270 );
+    topLeftCornerArc = new Circle( 0, 90, WHITE_COLOR );
+    topRightCornerArc = new Circle( 90, 180, WHITE_COLOR );
+    bottomLeftCornerArc = new Circle( 270, 360, WHITE_COLOR );
+    bottomRightCornerArc = new Circle( 180, 270, WHITE_COLOR );
 
-    bigLeftArc = new Circle( 305, 415 );
-    bigRightArc = new Circle( 125, 235 );
+    bigLeftArc = new Circle( 305, 415, WHITE_COLOR );
+    bigRightArc = new Circle( 125, 235, WHITE_COLOR );
 
     // Set the lines to smooth.
     glEnable(GL_LINE_SMOOTH);

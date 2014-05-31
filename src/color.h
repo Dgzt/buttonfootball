@@ -19,35 +19,19 @@
 *
 * @section DESCRIPTION
 *
-* The line shape.
+* The color.
 */
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef COLOR_H
+#define COLOR_H
 
-#include "abstractshape.h"
+#include <GL/gl.h>
 
-class Line : public AbstractShape
-{
+typedef struct Color {
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+    //GLubyte a;
+} Color;
 
-public:
-    /*!
-     * Constructor.
-     */
-    Line( const Color &color );
-
-    /*!
-     * Resize the line.
-     *
-     * @param x1 The first x coordinate.
-     * @param y1 The first y coordinate.
-     * @param x2 The second x coordinate.
-     * @param y2 The second y coordinate.
-     */
-    void resize( const float &x1,
-                 const float &y1,
-                 const float &x2,
-                 const float &y2);
-};
-
-#endif // LINE_H
+#endif // COLOR_H

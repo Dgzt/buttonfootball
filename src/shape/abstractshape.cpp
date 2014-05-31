@@ -16,15 +16,17 @@
 #include <GL/glew.h>
 #include "abstractshape.h"
 
-AbstractShape::AbstractShape( GLenum type, int verticesNum ) :
+AbstractShape::AbstractShape( GLenum type, int verticesNum, const Color &color ) :
     type( type ),
-    verticesNum( verticesNum )
+    verticesNum( verticesNum ),
+    color( color )
 {
     generateVBO();
 }
 
-AbstractShape::AbstractShape(GLenum type) :
-    type( type )
+AbstractShape::AbstractShape(GLenum type, const Color &color) :
+    type( type ),
+    color( color )
 {
     generateVBO();
 }
@@ -60,7 +62,7 @@ void AbstractShape::draw()
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
     glVertexPointer( 2, GL_FLOAT, sizeof(Vertex), NULL );
-    glColor3f( 1.0, 1.0, 1.0 );
+    glColor3f( color.r, color.g, color.b );
     glDrawArrays( type, 0, verticesNum );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }

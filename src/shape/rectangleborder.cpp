@@ -17,8 +17,8 @@
 
 const int VERTICES_NUM = 4;
 
-RectangleBorder::RectangleBorder() :
-    AbstractShape( GL_LINE_LOOP, VERTICES_NUM )
+RectangleBorder::RectangleBorder( const Color &color ) :
+    AbstractShape( GL_LINE_LOOP, VERTICES_NUM, color )
 {}
 
 void RectangleBorder::resize(const float &x, const float &y, const float &width, const float &height)
