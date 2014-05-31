@@ -1,21 +1,17 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <GL/gl.h>
-#include "vertex.h"
+#include "shape/rectangle.h"
 
-class RectangleBorder;
 class Circle;
 class Line;
 
-class Map
+class Map : public Rectangle
 {
-    GLuint mapVBO;
-
-    RectangleBorder *leftSector16;
-    RectangleBorder *rightSector16;
-    RectangleBorder *leftSector5;
-    RectangleBorder *rightSector5;
+    Rectangle *leftSector16;
+    Rectangle *rightSector16;
+    Rectangle *leftSector5;
+    Rectangle *rightSector5;
 
     Circle *bigCentralCircle;
 
@@ -37,7 +33,7 @@ class Map
 
 public:
     Map();
-    virtual ~Map();
+    ~Map();
 
     void resize( float parentX, float parentY, float parentWidth, float parentHeight, float scale );
 

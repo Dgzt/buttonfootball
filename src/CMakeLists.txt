@@ -4,7 +4,7 @@ SET( ButtonFootball_Sources
     table.cpp
     map.cpp
     shape/abstractshape.cpp
-    shape/rectangleborder.cpp
+    shape/rectangle.cpp
     shape/circle.cpp
     shape/line.cpp
 )

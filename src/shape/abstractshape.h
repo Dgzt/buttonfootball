@@ -97,6 +97,8 @@ public:
      */
     ~AbstractShape();
 
+    GLuint getVbo(){ return vbo; }
+
     /*!
      * Draw the shape.
      */

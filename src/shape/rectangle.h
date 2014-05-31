@@ -19,23 +19,27 @@
 *
 * @section DESCRIPTION
 *
-* The line shape.
+* The rectangle shape.
 */
 
-#ifndef RECTANGLEBORDER_H
-#define RECTANGLEBORDER_H
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
 
 #include "abstractshape.h"
 
-class RectangleBorder : public AbstractShape
+class Rectangle : public AbstractShape
 {
 
 public:
     /*!
      * Constructor.
-     * Initialize the border of rectangle.
+     * If the type is 'GL_QUADS' then filled rectangle.
+     * If the type is 'GL_LINE_LOOP' then border of the rectangle.
+     *
+     * @param type The type of the rectangle.
+     * @param color The color of the rectangle.
      */
-    RectangleBorder( const Color &color );
+    Rectangle( const GLenum &type, const Color &color );
 
     /*!
      * Resize the shape.
@@ -52,4 +56,4 @@ public:
 
 };
 
-#endif // RECTANGLEBORDER_H
+#endif // RECTANGLE_H

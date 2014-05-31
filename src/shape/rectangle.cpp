@@ -13,15 +13,15 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "rectangleborder.h"
+#include "rectangle.h"
 
 const int VERTICES_NUM = 4;
 
-RectangleBorder::RectangleBorder( const Color &color ) :
-    AbstractShape( GL_LINE_LOOP, VERTICES_NUM, color )
+Rectangle::Rectangle( const GLenum &type, const Color &color ) :
+    AbstractShape( type, VERTICES_NUM, color )
 {}
 
-void RectangleBorder::resize(const float &x, const float &y, const float &width, const float &height)
+void Rectangle::resize(const float &x, const float &y, const float &width, const float &height)
 {
     Vertex vertices[4];
 
