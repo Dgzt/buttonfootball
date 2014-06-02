@@ -28,9 +28,9 @@
 #include <GL/gl.h>
 
 typedef struct Color {
-    GLubyte r;
-    GLubyte g;
-    GLubyte b;
+    GLfloat r;
+    GLfloat g;
+    GLfloat b;
     //GLubyte a;
 } Color;
 

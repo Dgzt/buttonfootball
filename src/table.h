@@ -25,34 +25,37 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <GL/gl.h>
-#include "vertex.h"
+#include "shape/rectangle.h"
 
 class Map;
 
-class Table
+class Table : public Rectangle
 {
-    // The vertex buffer object id
-    GLuint tableVBO;
-
-    // The position of top left, top right, bottom right and bottom left point on the window.
-    Vertex pos[4];
-
+    /*!
+     * The map.
+     */
     Map *map;
 
 public:
+    /*!
+     * Constructor.
+     */
     Table();
+
+    /*!
+     * Destructor.
+     */
     ~Table();
 
-    /**
+    /*!
      * Recalculate the positions on the window.
      *
-     * @param width The new width value.
-     * @param height The new height value.
+     * @param width The new width value of window.
+     * @param height The new height value of window.
      */
-    void resize( int width, int height );
+    void resize( const int &windowWidth, const int &windowHeight );
 
-    /**
+    /*!
      * Draw the object to the window.
      */
     void draw();

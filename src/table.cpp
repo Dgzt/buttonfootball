@@ -1,17 +1,40 @@
-#include <GL/glew.h>
-#include <iostream>
+/*!
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "color.h"
 #include "map.h"
 #include "table.h"
 
+/*!
+ * The width of table.
+ */
 const float TABLE_WIDTH = 184.0;
+
+/*!
+ * The height of table.
+ */
 const float TABLE_HEIGHT = 120.0;
 
-Table::Table()
+/*!
+ * The color of table.
+ */
+const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
+
+Table::Table() :
+    Rectangle( GL_QUADS, GREY_COLOR )
 {
-    glGenBuffers(1, &tableVBO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, tableVBO);
-
     map = new Map;
 }
 
@@ -20,55 +43,32 @@ Table::~Table()
     delete map;
 }
 
-void Table::resize(int width, int height)
+void Table::resize(const int &windowWidth, const int &windowHeight)
 {
-    float newTableWidth;
-    float newTableHeight;
+    float tableWidth;
+    float tableHeight;
 
-    float rate = (double)width/height;
+    float rate = (double)windowWidth/windowHeight;
 
     if( TABLE_WIDTH/TABLE_HEIGHT > rate ){
-        newTableWidth = width;
-        newTableHeight = TABLE_HEIGHT*(width/TABLE_WIDTH);
+        tableWidth = windowWidth;
+        tableHeight = TABLE_HEIGHT*(windowWidth/TABLE_WIDTH);
     }else{
-        newTableWidth = TABLE_WIDTH*(height/TABLE_HEIGHT);
-        newTableHeight = height;
+        tableWidth = TABLE_WIDTH*(windowHeight/TABLE_HEIGHT);
+        tableHeight = windowHeight;
     }
 
-    /*GLfloat leftX = (width-newTableWidth)/2;
-    GLfloat rightX = width-(width-newTableWidth)/2;
-    GLfloat topY = (height-newTableHeight)/2;
-    GLfloat bottomY = height - (height-newTableHeight)/2;*/
+    GLfloat x = (windowWidth-tableWidth)/2;
+    GLfloat y = windowHeight - (windowHeight-tableHeight)/2;
 
-    GLfloat leftX = (width-newTableWidth)/2;
-    GLfloat rightX = width-(width-newTableWidth)/2;
-    GLfloat topY = height - (height-newTableHeight)/2;
-    GLfloat bottomY = (height-newTableHeight)/2;
+    Rectangle::resize( x, y, tableWidth, tableHeight );
 
-    pos[0].x = leftX;  pos[0].y = topY;
-    pos[1].x = rightX; pos[1].y = topY;
-    pos[2].x = rightX; pos[2].y = bottomY;
-    pos[3].x = leftX;  pos[3].y = bottomY;
-
-    glBindBuffer(GL_ARRAY_BUFFER, tableVBO);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(pos), pos, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    map->resize( pos[0].x, pos[0].y, newTableWidth, newTableHeight, newTableWidth / TABLE_WIDTH );
+    map->resize( x, y, tableWidth, tableHeight, tableWidth / TABLE_WIDTH );
 }
 
 void Table::draw()
 {
-    glBindBuffer( GL_ARRAY_BUFFER, tableVBO );
-
-    glVertexPointer(2, GL_FLOAT, sizeof(Vertex), NULL);
-    //glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-    glColor3f(0.5f, 0.5f, 0.5f);
-    glDrawArrays(GL_QUADS, 0, sizeof(pos) / sizeof(Vertex));
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    Rectangle::draw();
 
     map->draw();
 }
