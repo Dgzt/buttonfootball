@@ -41,7 +41,7 @@ class MainWindow
 
     void resizeWindow( int width, int height );
 
-    void drawTable( int width, int height );
+    void drawTable();
 
 public:
     MainWindow();

@@ -10,6 +10,9 @@ const char APPLICATION_NAME[] = "Button Football";
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
+// The default frame per sec
+const float DEFAULT_FPS = 40;
+
 MainWindow::MainWindow()
 {
     // Initialize SDL's Video subsystem
@@ -57,7 +60,7 @@ MainWindow::MainWindow()
 
     resizeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    drawTable( WINDOW_WIDTH, WINDOW_HEIGHT );
+    drawTable();
 
     // Swap our back buffer to the front
     SDL_GL_SwapWindow(mainwindow);
@@ -96,7 +99,7 @@ void MainWindow::resizeWindow( int width, int height ){
     table->resize( width, height );
 }
 
-void MainWindow::drawTable( int width, int height )
+void MainWindow::drawTable()
 {
     glClear( GL_COLOR_BUFFER_BIT );
 
@@ -113,22 +116,26 @@ void MainWindow::mainLoop()
 {
     SDL_Event event;
     bool done = false;
+    Uint32 start;
 
     while( !done ){
-        SDL_WaitEvent(&event);
-        do{
+        start = SDL_GetTicks();
+
+        while( SDL_PollEvent( &event ) ){
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
 
             if( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED ){
                 resizeWindow(event.window.data1,event.window.data2);
-                drawTable( event.window.data1, event.window.data2 );
-                SDL_GL_SwapWindow(mainwindow);
             }
+        }
 
+        drawTable();
+        SDL_GL_SwapWindow(mainwindow);
 
-        }while(SDL_PollEvent(&event));
-
+        if( 1000.0/DEFAULT_FPS > SDL_GetTicks() - start ){
+            SDL_Delay( 1000.0/DEFAULT_FPS - ( SDL_GetTicks() - start ) );
+        }
     }
 }
