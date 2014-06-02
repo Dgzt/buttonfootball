@@ -43,7 +43,7 @@ Table::~Table()
     delete map;
 }
 
-void Table::resize(const int &windowWidth, const int &windowHeight)
+void Table::resize(const float &windowWidth, const float &windowHeight)
 {
     float tableWidth;
     float tableHeight;

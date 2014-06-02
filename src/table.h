@@ -53,7 +53,7 @@ public:
      * @param width The new width value of window.
      * @param height The new height value of window.
      */
-    void resize( const int &windowWidth, const int &windowHeight );
+    void resize( const float &windowWidth, const float &windowHeight );
 
     /*!
      * Draw the object to the window.
