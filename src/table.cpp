@@ -41,7 +41,7 @@ Table::Table() :
 {
     map = new Map;
 
-    world = new b2World(b2Vec2( 0.0, 9.81 ));
+    world = new b2World(b2Vec2( 0.0, 0.0 ));
     addBox2DWalls();
 
     // add a ball

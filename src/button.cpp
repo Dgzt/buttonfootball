@@ -27,6 +27,7 @@ Button::Button( Table *parent, b2World *box2DWorld, const float x, const float y
     b2FixtureDef fixturedef;
     fixturedef.shape=&shape;
     fixturedef.density=1.0;
+    fixturedef.friction = 10;
     fixturedef.restitution=0.4;
     body->CreateFixture(&fixturedef);
 }
