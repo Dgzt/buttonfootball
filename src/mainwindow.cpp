@@ -134,8 +134,12 @@ void MainWindow::mainLoop()
         drawTable();
         SDL_GL_SwapWindow(mainwindow);
 
+        table->stepBox2D( 1.0/DEFAULT_FPS );
+
         if( 1000.0/DEFAULT_FPS > SDL_GetTicks() - start ){
             SDL_Delay( 1000.0/DEFAULT_FPS - ( SDL_GetTicks() - start ) );
         }
+
+
     }
 }

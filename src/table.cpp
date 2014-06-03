@@ -16,6 +16,7 @@
 #include <Box2D/Box2D.h>
 #include "color.h"
 #include "map.h"
+#include "button.h"
 #include "table.h"
 
 /*!
@@ -40,13 +41,20 @@ Table::Table() :
 {
     map = new Map;
 
-    world = new b2World(b2Vec2());
+    world = new b2World(b2Vec2( -50.0, 0.0 ));
     addBox2DWalls();
+
+    // add a ball
+    tmpButton = new Button( this, world, 18, 118 );
 }
 
 Table::~Table()
 {
     delete map;
+
+    //
+    delete tmpButton;
+    //
 
     delete world;
 }
@@ -70,16 +78,16 @@ void Table::addWall(int x, int y, int width, int height)
 void Table::addBox2DWalls()
 {
     // Add top wall
-    addWall( 0, 0 - WALL_SIZE, TABLE_WIDTH, WALL_SIZE );
+    addWall( TABLE_WIDTH / 2, 0 - WALL_SIZE / 2, TABLE_WIDTH, WALL_SIZE );
 
     // Add right wall
-    addWall( TABLE_WIDTH + WALL_SIZE, 0, WALL_SIZE, TABLE_HEIGHT );
+    addWall( TABLE_WIDTH + WALL_SIZE / 2, TABLE_HEIGHT / 2, WALL_SIZE, TABLE_HEIGHT );
 
     // Add bottom wall
-    addWall( 0, TABLE_HEIGHT + WALL_SIZE, TABLE_WIDTH, WALL_SIZE );
+    addWall( TABLE_WIDTH / 2, TABLE_HEIGHT + WALL_SIZE / 2, TABLE_WIDTH, WALL_SIZE );
 
     // Add left wall
-    addWall( 0 - WALL_SIZE, 0, WALL_SIZE, TABLE_HEIGHT );
+    addWall( 0 - WALL_SIZE / 2, TABLE_HEIGHT / 2, WALL_SIZE, TABLE_HEIGHT );
 }
 
 void Table::resize(const float &windowWidth, const float &windowHeight)
@@ -97,12 +105,16 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
         tableHeight = windowHeight;
     }
 
-    GLfloat x = (windowWidth-tableWidth)/2;
-    GLfloat y = windowHeight - (windowHeight-tableHeight)/2;
+    x = (windowWidth-tableWidth)/2;
+    y = windowHeight - (windowHeight-tableHeight)/2;
+    scale = tableWidth / TABLE_WIDTH;
 
     Rectangle::resize( x, y, tableWidth, tableHeight );
 
-    map->resize( x, y, tableWidth, tableHeight, tableWidth / TABLE_WIDTH );
+    map->resize( x, y, tableWidth, tableHeight, scale );
+
+    //
+    tmpButton->resize();
 }
 
 void Table::draw()
@@ -110,4 +122,11 @@ void Table::draw()
     Rectangle::draw();
 
     map->draw();
+
+    tmpButton->draw();
+}
+
+void Table::stepBox2D( float step )
+{
+    world->Step( step, 8, 3 );
 }

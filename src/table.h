@@ -29,15 +29,24 @@
 
 class Map;
 class b2World;
+class Button;
 
 class Table : public Rectangle
 {
+    GLfloat x;
+
+    GLfloat y;
+
+    float scale;
+
     /*!
      * The map.
      */
     Map *map;
 
     b2World* world;
+
+    Button *tmpButton;
 
     void addWall( int x, int y, int width, int height );
 
@@ -54,6 +63,10 @@ public:
      */
     ~Table();
 
+    GLfloat getX(){ return x; }
+    GLfloat getY(){ return y; }
+    GLfloat getScale(){ return scale; }
+
     /*!
      * Recalculate the positions on the window.
      *
@@ -66,6 +79,8 @@ public:
      * Draw the object to the window.
      */
     void draw();
+
+    void stepBox2D( float step );
 };
 
 #endif // TABLE_H
