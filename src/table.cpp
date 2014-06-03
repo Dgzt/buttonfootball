@@ -41,11 +41,11 @@ Table::Table() :
 {
     map = new Map;
 
-    world = new b2World(b2Vec2( -50.0, 0.0 ));
+    world = new b2World(b2Vec2( 0.0, 9.81 ));
     addBox2DWalls();
 
     // add a ball
-    tmpButton = new Button( this, world, 18, 118 );
+    tmpButton = new Button( this, world, TABLE_WIDTH/2, TABLE_HEIGHT / 2 );
 }
 
 Table::~Table()
