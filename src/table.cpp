@@ -13,6 +13,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <Box2D/Box2D.h>
 #include "color.h"
 #include "map.h"
 #include "table.h"
@@ -32,15 +33,53 @@ const float TABLE_HEIGHT = 120.0;
  */
 const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
 
+const int WALL_SIZE = 10;
+
 Table::Table() :
     Rectangle( GL_QUADS, GREY_COLOR )
 {
     map = new Map;
+
+    world = new b2World(b2Vec2());
+    addBox2DWalls();
 }
 
 Table::~Table()
 {
     delete map;
+
+    delete world;
+}
+
+void Table::addWall(int x, int y, int width, int height)
+{
+    b2BodyDef bodydef;
+    bodydef.position.Set(x,y);
+
+    b2Body* body=world->CreateBody(&bodydef);
+
+    b2PolygonShape shape;
+    shape.SetAsBox(width/2,height/2);
+
+    b2FixtureDef fixturedef;
+    fixturedef.shape=&shape;
+    fixturedef.density=1.0;
+    body->CreateFixture(&fixturedef);
+}
+
+void Table::addBox2DWalls()
+{
+    // Add top wall
+    addWall( 0, 0 - WALL_SIZE, TABLE_WIDTH, WALL_SIZE );
+
+    // Add right wall
+    addWall( TABLE_WIDTH + WALL_SIZE, 0, WALL_SIZE, TABLE_HEIGHT );
+
+    // Add bottom wall
+    addWall( 0, TABLE_HEIGHT + WALL_SIZE, TABLE_WIDTH, WALL_SIZE );
+
+    // Add left wall
+    addWall( 0 - WALL_SIZE, 0, WALL_SIZE, TABLE_HEIGHT );
 }
 
 void Table::resize(const float &windowWidth, const float &windowHeight)

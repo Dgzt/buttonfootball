@@ -28,6 +28,7 @@
 #include "shape/rectangle.h"
 
 class Map;
+class b2World;
 
 class Table : public Rectangle
 {
@@ -35,6 +36,12 @@ class Table : public Rectangle
      * The map.
      */
     Map *map;
+
+    b2World* world;
+
+    void addWall( int x, int y, int width, int height );
+
+    void addBox2DWalls();
 
 public:
     /*!
