@@ -45,16 +45,13 @@ Table::Table() :
     addBox2DWalls();
 
     // add a ball
-    tmpButton = new Button( this, world, TABLE_WIDTH/2, TABLE_HEIGHT / 2 );
+    //tmpButton = new Button( this, world, TABLE_WIDTH/2, TABLE_HEIGHT / 2 );
+    addButtons();
 }
 
 Table::~Table()
 {
     delete map;
-
-    //
-    delete tmpButton;
-    //
 
     delete world;
 }
@@ -90,6 +87,33 @@ void Table::addBox2DWalls()
     addWall( 0 - WALL_SIZE / 2, TABLE_HEIGHT / 2, WALL_SIZE, TABLE_HEIGHT );
 }
 
+void Table::addButtons()
+{
+    // Add player buttons
+
+    float buttonDistanceX = TABLE_WIDTH / 2 /4;
+    float buttonDistanceY = TABLE_HEIGHT / 5;
+
+    // Add defends
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, buttonDistanceX, (i+1) * buttonDistanceY );
+        playerButtons.push_back( button );
+    }
+
+    // Add midfielders
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, 2*buttonDistanceX, (i+1) * buttonDistanceY );
+        playerButtons.push_back( button );
+    }
+
+    // Add forwards
+    Button *forwardButton1 = new Button( this, world, 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY );
+    playerButtons.push_back( forwardButton1 );
+
+    Button *forwardButton2 = new Button( this, world, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY );
+    playerButtons.push_back( forwardButton2 );
+}
+
 void Table::resize(const float &windowWidth, const float &windowHeight)
 {
     float tableWidth;
@@ -114,7 +138,9 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
     map->resize( x, y, tableWidth, tableHeight, scale );
 
     //
-    tmpButton->resize();
+    for( int i = 0; i < playerButtons.size(); ++i ){
+        playerButtons[i]->resize();
+    }
 }
 
 void Table::draw()
@@ -123,7 +149,9 @@ void Table::draw()
 
     map->draw();
 
-    tmpButton->draw();
+    for( int i = 0; i < playerButtons.size(); ++i ){
+        playerButtons[i]->draw();
+    }
 }
 
 void Table::stepBox2D( float step )

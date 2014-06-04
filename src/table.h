@@ -26,6 +26,7 @@
 #define TABLE_H
 
 #include "shape/rectangle.h"
+#include <vector>
 
 class Map;
 class b2World;
@@ -46,11 +47,14 @@ class Table : public Rectangle
 
     b2World* world;
 
-    Button *tmpButton;
+    //Button *tmpButton;
+    std::vector<Button*> playerButtons;
 
     void addWall( int x, int y, int width, int height );
 
     void addBox2DWalls();
+
+    void addButtons();
 
 public:
     /*!
