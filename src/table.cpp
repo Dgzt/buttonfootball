@@ -19,21 +19,19 @@
 #include "button.h"
 #include "table.h"
 
-/*!
- * The width of table.
- */
+// The width of the table.
 const float TABLE_WIDTH = 184.0;
 
-/*!
- * The height of table.
- */
+// The height of the table.
 const float TABLE_HEIGHT = 120.0;
 
-/*!
- * The color of table.
- */
+// Color of the table.
 const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
 
+// Color of the player button.
+const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
+
+// The size of walls.
 const int WALL_SIZE = 10;
 
 Table::Table() :
@@ -44,8 +42,7 @@ Table::Table() :
     world = new b2World(b2Vec2( 0.0, 0.0 ));
     addBox2DWalls();
 
-    // add a ball
-    //tmpButton = new Button( this, world, TABLE_WIDTH/2, TABLE_HEIGHT / 2 );
+    // Add buttons
     addButtons();
 }
 
@@ -96,21 +93,21 @@ void Table::addButtons()
 
     // Add defends
     for( int i = 0; i < 4; ++i ){
-        Button *button = new Button( this, world, buttonDistanceX, (i+1) * buttonDistanceY );
+        Button *button = new Button( this, world, RED_COLOR, buttonDistanceX, (i+1) * buttonDistanceY );
         playerButtons.push_back( button );
     }
 
     // Add midfielders
     for( int i = 0; i < 4; ++i ){
-        Button *button = new Button( this, world, 2*buttonDistanceX, (i+1) * buttonDistanceY );
+        Button *button = new Button( this, world, RED_COLOR, 2*buttonDistanceX, (i+1) * buttonDistanceY );
         playerButtons.push_back( button );
     }
 
     // Add forwards
-    Button *forwardButton1 = new Button( this, world, 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY );
+    Button *forwardButton1 = new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY );
     playerButtons.push_back( forwardButton1 );
 
-    Button *forwardButton2 = new Button( this, world, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY );
+    Button *forwardButton2 = new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY );
     playerButtons.push_back( forwardButton2 );
 }
 

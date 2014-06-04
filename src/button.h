@@ -18,7 +18,7 @@ class Button : public Circle
     float y;
 
 public:
-    Button( Table *parent, b2World *box2DWorld, const float x, const float y  );
+    Button( Table *parent, b2World *box2DWorld, Color color, const float x, const float y  );
 
     void resize();
 

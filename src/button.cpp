@@ -6,10 +6,8 @@
 
 const float BUTTON_RADIUS = 2.5f;
 
-const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
-
-Button::Button( Table *parent, b2World *box2DWorld, const float x, const float y ) :
-    Circle( GL_POLYGON, RED_COLOR ),
+Button::Button( Table *parent, b2World *box2DWorld, Color color, const float x, const float y ) :
+    Circle( GL_POLYGON, color ),
     parent( parent ),
     x(x),
     y(y)
