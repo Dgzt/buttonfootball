@@ -31,6 +31,9 @@ const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
 // Color of the player button.
 const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
 
+// Color of the player button.
+const Color BLUE_COLOR = { 0.0f, 0.0f, 1.0f };
+
 // The size of walls.
 const int WALL_SIZE = 10;
 
@@ -87,7 +90,6 @@ void Table::addBox2DWalls()
 void Table::addButtons()
 {
     // Add player buttons
-
     float buttonDistanceX = TABLE_WIDTH / 2 /4;
     float buttonDistanceY = TABLE_HEIGHT / 5;
 
@@ -104,11 +106,26 @@ void Table::addButtons()
     }
 
     // Add forwards
-    Button *forwardButton1 = new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY );
-    playerButtons.push_back( forwardButton1 );
+    playerButtons.push_back( new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY ) );
+    playerButtons.push_back( new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
 
-    Button *forwardButton2 = new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY );
-    playerButtons.push_back( forwardButton2 );
+    // Add opponent buttons
+
+    // Add defends
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, BLUE_COLOR, TABLE_WIDTH - buttonDistanceX, (i+1) * buttonDistanceY );
+        playerButtons.push_back( button );
+    }
+
+    // Add midfielders
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 2*buttonDistanceX, (i+1) * buttonDistanceY );
+        playerButtons.push_back( button );
+    }
+
+    // Add forwards
+    playerButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY ) );
+    playerButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
 }
 
 void Table::resize(const float &windowWidth, const float &windowHeight)

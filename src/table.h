@@ -47,8 +47,9 @@ class Table : public Rectangle
 
     b2World* world;
 
-    //Button *tmpButton;
     std::vector<Button*> playerButtons;
+
+    std::vector<Button*> opponentButtons;
 
     void addWall( int x, int y, int width, int height );
 
