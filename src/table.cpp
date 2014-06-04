@@ -114,18 +114,18 @@ void Table::addButtons()
     // Add defends
     for( int i = 0; i < 4; ++i ){
         Button *button = new Button( this, world, BLUE_COLOR, TABLE_WIDTH - buttonDistanceX, (i+1) * buttonDistanceY );
-        playerButtons.push_back( button );
+        opponentButtons.push_back( button );
     }
 
     // Add midfielders
     for( int i = 0; i < 4; ++i ){
         Button *button = new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 2*buttonDistanceX, (i+1) * buttonDistanceY );
-        playerButtons.push_back( button );
+        opponentButtons.push_back( button );
     }
 
     // Add forwards
-    playerButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY ) );
-    playerButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
+    opponentButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY ) );
+    opponentButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
 }
 
 void Table::resize(const float &windowWidth, const float &windowHeight)
@@ -155,6 +155,10 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
     for( int i = 0; i < playerButtons.size(); ++i ){
         playerButtons[i]->resize();
     }
+
+    for( int i = 0; i < opponentButtons.size(); ++i ){
+        opponentButtons[i]->resize();
+    }
 }
 
 void Table::draw()
@@ -165,6 +169,10 @@ void Table::draw()
 
     for( int i = 0; i < playerButtons.size(); ++i ){
         playerButtons[i]->draw();
+    }
+
+    for( int i = 0; i < opponentButtons.size(); ++i ){
+        opponentButtons[i]->draw();
     }
 }
 
