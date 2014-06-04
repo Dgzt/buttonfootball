@@ -129,6 +129,14 @@ void MainWindow::mainLoop()
             if( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED ){
                 resizeWindow(event.window.data1,event.window.data2);
             }
+
+            if( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+                std::cout << "Button down" << std::endl;
+            }
+
+            if( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT ){
+                std::cout << "Button up" << std::endl;
+            }
         }
 
         drawTable();
