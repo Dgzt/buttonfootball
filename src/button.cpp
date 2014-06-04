@@ -19,8 +19,8 @@ Button::Button( Table *parent, b2World *box2DWorld, Color color, const float x, 
 
     body = box2DWorld->CreateBody(&bodydef);
 
-    b2PolygonShape shape;
-    shape.SetAsBox(BUTTON_RADIUS,BUTTON_RADIUS);
+    b2CircleShape shape;
+    shape.m_radius = BUTTON_RADIUS;
 
     b2FixtureDef fixturedef;
     fixturedef.shape=&shape;
