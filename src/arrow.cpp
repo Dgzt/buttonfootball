@@ -1,9 +1,4 @@
 /*!
-* @file
-* @author Zsuro Tibor <zsurotibor@gmail.com>
-*
-* @section LICENSE
-*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -16,41 +11,26 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*
-* @section DESCRIPTION
-*
-* The main window.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <iostream>
+#include "arrow.h"
 
-#include <SDL.h>
+const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
 
-class Table;
+Arrow::Arrow() :
+    Line( RED_COLOR ),
+    visible( false )
+{}
 
-class MainWindow
+void Arrow::setEnd( const float &x2, const float &y2)
 {
-    SDL_Window *mainwindow; /* Our window handle */
-    SDL_GLContext maincontext; /* Our opengl context handle */
+    Line::resize( x1, y1, x2, y2 );
+}
 
-    int width;
-    int height;
-
-    // The table.
-    Table *table;
-
-    void sdldie( const char* msg );
-
-    void resizeWindow( int width, int height );
-
-    void drawTable();
-
-public:
-    MainWindow();
-    ~MainWindow();
-
-    void mainLoop();
-};
-
-#endif // MAINWINDOW_H
+void Arrow::draw()
+{
+    if( visible ){
+        Line::draw();
+    }
+}

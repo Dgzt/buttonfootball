@@ -8,6 +8,7 @@ SET( ButtonFootball_Sources
     shape/circle.cpp
     shape/line.cpp
     button.cpp
+    arrow.cpp
 )
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )

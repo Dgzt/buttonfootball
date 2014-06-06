@@ -14,9 +14,11 @@
 */
 
 #include <Box2D/Box2D.h>
+#include <iostream>
 #include "color.h"
 #include "map.h"
 #include "button.h"
+#include "arrow.h"
 #include "table.h"
 
 // The width of the table.
@@ -42,11 +44,13 @@ Table::Table() :
 {
     map = new Map;
 
-    world = new b2World(b2Vec2( 0.0, 0.0 ));
+    world = new b2World(b2Vec2( 0.0f, 0.0f ));
     addBox2DWalls();
 
     // Add buttons
     addButtons();
+
+    arrow = new Arrow;
 }
 
 Table::~Table()
@@ -54,9 +58,11 @@ Table::~Table()
     delete map;
 
     delete world;
+
+    delete arrow;
 }
 
-void Table::addWall(int x, int y, int width, int height)
+void Table::addWall( const int &x, const int &y, const int &width, const int &height)
 {
     b2BodyDef bodydef;
     bodydef.position.Set(x,y);
@@ -144,14 +150,14 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
     }
 
     x = (windowWidth-tableWidth)/2;
-    y = windowHeight - (windowHeight-tableHeight)/2;
+    GLfloat y = windowHeight - (windowHeight-tableHeight)/2;
+    bottom = (windowHeight-tableHeight)/2;
     scale = tableWidth / TABLE_WIDTH;
 
     Rectangle::resize( x, y, tableWidth, tableHeight );
 
     map->resize( x, y, tableWidth, tableHeight, scale );
 
-    //
     for( int i = 0; i < playerButtons.size(); ++i ){
         playerButtons[i]->resize();
     }
@@ -174,9 +180,33 @@ void Table::draw()
     for( int i = 0; i < opponentButtons.size(); ++i ){
         opponentButtons[i]->draw();
     }
+
+    arrow->draw();
 }
 
-void Table::stepBox2D( float step )
+void Table::stepBox2D( const float &step )
 {
     world->Step( step, 8, 3 );
+}
+
+void Table::buttonDown( const unsigned int &x, const unsigned int &y)
+{
+    for( int i = 0; i < playerButtons.size(); ++i ){
+        if( playerButtons[i]->contains( x,y ) ){
+            std::cout << playerButtons[i]->getX() << " x " << playerButtons[i]->getY() << std::endl;
+            arrow->setStart( playerButtons[i]->getX(), playerButtons[i]->getY() );
+            arrow->setEnd( playerButtons[i]->getX(), playerButtons[i]->getY() );
+            arrow->setVisible( true );
+        }
+    }
+}
+
+void Table::buttonMove( const unsigned int &x, const unsigned int &y)
+{
+    arrow->setEnd( x, y );
+}
+
+void Table::buttonUp()
+{
+    arrow->setVisible( false );
 }
