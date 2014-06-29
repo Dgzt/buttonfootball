@@ -14,23 +14,45 @@
 */
 
 #include <iostream>
+#include <Box2D/Box2D.h>
+#include "button.h"
 #include "arrow.h"
 
 const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
 
 Arrow::Arrow() :
-    Line( RED_COLOR ),
-    visible( false )
+    Line( RED_COLOR )
 {}
+
+void Arrow::setButton(Button *button)
+{
+    this->button = button;
+
+    setEnd( button->getX(), button->getY() );
+}
 
 void Arrow::setEnd( const float &x2, const float &y2)
 {
-    Line::resize( x1, y1, x2, y2 );
+    this->x2 = x2;
+    this->y2 = y2;
+
+    Line::resize( button->getX(), button->getY(), x2, y2 );
 }
 
 void Arrow::draw()
 {
-    if( visible ){
+    if( button ){
         Line::draw();
     }
+}
+
+void Arrow::moveButton()
+{
+    b2Vec2 vector;
+    vector.x = button->getX() - x2;
+    vector.y = button->getY() - y2;
+
+    button->move( vector );
+
+    button = NULL;
 }

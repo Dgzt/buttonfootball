@@ -193,10 +193,7 @@ void Table::buttonDown( const unsigned int &x, const unsigned int &y)
 {
     for( int i = 0; i < playerButtons.size(); ++i ){
         if( playerButtons[i]->contains( x,y ) ){
-            std::cout << playerButtons[i]->getX() << " x " << playerButtons[i]->getY() << std::endl;
-            arrow->setStart( playerButtons[i]->getX(), playerButtons[i]->getY() );
-            arrow->setEnd( playerButtons[i]->getX(), playerButtons[i]->getY() );
-            arrow->setVisible( true );
+            arrow->setButton( playerButtons[i] );
         }
     }
 }
@@ -208,5 +205,5 @@ void Table::buttonMove( const unsigned int &x, const unsigned int &y)
 
 void Table::buttonUp()
 {
-    arrow->setVisible( false );
+    arrow->moveButton();
 }

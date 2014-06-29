@@ -89,6 +89,8 @@ public:
      * @return True when contains else false.
      */
     bool contains( const unsigned int &mouseX, const unsigned int &mouseY );
+
+    void move( b2Vec2 vector );
 };
 
 #endif // BUTTON_H

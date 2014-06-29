@@ -27,16 +27,15 @@
 
 #include "shape/line.h"
 
+class Button;
+
 class Arrow : public Line
 {
-    // Visible status.
-    bool visible;
+    Button* button;
 
-    // The x1 coordinate value.
-    float x1;
+    float x2;
 
-    // The y2 coordinate Value.
-    float y1;
+    float y2;
 
 public:
     /*!
@@ -45,12 +44,11 @@ public:
     Arrow();
 
     /*!
-     * Set the start point.
+     * Set the button.
      *
-     * @param x The x coordinate value of start point.
-     * @param y The y coordinate value of start point.
+     * @param button The new button.
      */
-    void setStart( const float &x, const float &y ){ x1 = x; y1 = y; }
+    void setButton( Button *button );
 
     /*!
      * Set the end point and show the line.
@@ -61,16 +59,14 @@ public:
     void setEnd( const float &x2, const float &y2 );
 
     /*!
-     * Set the visible of arrow.
-     *
-     * @param visible The visible status.
-     */
-    void setVisible( const bool &visible ){ this->visible = visible; }
-
-    /*!
      * Draw the arrow.
      */
     void draw();
+
+    /*!
+     * Move the button of arrow.
+     */
+    void moveButton();
 };
 
 #endif // ARROW_H

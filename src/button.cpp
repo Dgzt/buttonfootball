@@ -79,3 +79,8 @@ bool Button::contains( const unsigned int &mouseX, const unsigned int &mouseY)
     return abs( getX() - mouseX ) < BUTTON_RADIUS * parent->getScale() &&
            abs( getY() - mouseY ) < BUTTON_RADIUS * parent->getScale();
 }
+
+void Button::move( b2Vec2 vector )
+{
+    body->SetLinearVelocity( vector );
+}
