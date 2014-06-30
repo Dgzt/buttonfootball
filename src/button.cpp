@@ -23,6 +23,9 @@
 // The radius of the button.
 const float BUTTON_RADIUS = 2.5f;
 
+// The linear damping.
+const float LINEAR_DAMPING = 3.0f;
+
 Button::Button( Table *parent, b2World *box2DWorld, Color color, const float box2DX, const float box2DY ) :
     Circle( GL_POLYGON, color ),
     parent( parent ),
@@ -45,6 +48,9 @@ Button::Button( Table *parent, b2World *box2DWorld, Color color, const float box
     fixturedef.friction = 10;
     fixturedef.restitution=0.4;
     body->CreateFixture(&fixturedef);
+
+    // Set the damping.
+    body->SetLinearDamping( 3.0f );
 }
 
 void Button::resize()
