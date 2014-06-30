@@ -22,7 +22,9 @@ const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
 
 Arrow::Arrow() :
     Line( RED_COLOR )
-{}
+{
+    button = NULL;
+}
 
 void Arrow::setButton(Button *button)
 {
