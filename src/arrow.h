@@ -19,38 +19,54 @@
 *
 * @section DESCRIPTION
 *
-* The main window.
+* The arrow.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ARROW_H
+#define ARROW_H
 
-#include <SDL.h>
+#include "shape/line.h"
 
-class Table;
+class Button;
 
-class MainWindow
+class Arrow : public Line
 {
-    SDL_Window *mainwindow; /* Our window handle */
-    SDL_GLContext maincontext; /* Our opengl context handle */
+    Button* button;
 
-    int width;
-    int height;
+    float x2;
 
-    // The table.
-    Table *table;
-
-    void sdldie( const char* msg );
-
-    void resizeWindow( int width, int height );
-
-    void drawTable();
+    float y2;
 
 public:
-    MainWindow();
-    ~MainWindow();
+    /*!
+     * The constructor.
+     */
+    Arrow();
 
-    void mainLoop();
+    /*!
+     * Set the button.
+     *
+     * @param button The new button.
+     */
+    void setButton( Button *button );
+
+    /*!
+     * Set the end point and show the line.
+     *
+     * @param x2 The x coordinate value of end point.
+     * @param y2 The y coordinate value of end point.
+     */
+    void setEnd( const float &x2, const float &y2 );
+
+    /*!
+     * Draw the arrow.
+     */
+    void draw();
+
+    /*!
+     * Move the button of arrow.
+     */
+    void moveButton();
 };
 
-#endif // MAINWINDOW_H
+#endif // ARROW_H

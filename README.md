@@ -9,6 +9,7 @@ Requirements:
  * CMake (>= 2.8) [link](http://www.cmake.org/)
  * SDL2 [link](http://www.libsdl.org/)
  * OpenGL
+ * Box2D [link](http://box2d.org/)
 
 ##Complie:
 

@@ -1,3 +1,18 @@
+/*!
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <GL/glew.h>
 #include <iostream>
 #include "table.h"
@@ -10,7 +25,12 @@ const char APPLICATION_NAME[] = "Button Football";
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
-MainWindow::MainWindow()
+// The default frame per sec
+const float DEFAULT_FPS = 40;
+
+MainWindow::MainWindow() :
+    width( WINDOW_WIDTH ),
+    height( WINDOW_HEIGHT )
 {
     // Initialize SDL's Video subsystem
     if( SDL_Init(SDL_INIT_VIDEO) < 0 ){
@@ -57,7 +77,7 @@ MainWindow::MainWindow()
 
     resizeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    drawTable( WINDOW_WIDTH, WINDOW_HEIGHT );
+    drawTable();
 
     // Swap our back buffer to the front
     SDL_GL_SwapWindow(mainwindow);
@@ -96,7 +116,7 @@ void MainWindow::resizeWindow( int width, int height ){
     table->resize( width, height );
 }
 
-void MainWindow::drawTable( int width, int height )
+void MainWindow::drawTable()
 {
     glClear( GL_COLOR_BUFFER_BIT );
 
@@ -113,22 +133,48 @@ void MainWindow::mainLoop()
 {
     SDL_Event event;
     bool done = false;
+    Uint32 start;
 
     while( !done ){
-        SDL_WaitEvent(&event);
-        do{
+        start = SDL_GetTicks();
+
+        while( SDL_PollEvent( &event ) ){
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
 
             if( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED ){
-                resizeWindow(event.window.data1,event.window.data2);
-                drawTable( event.window.data1, event.window.data2 );
-                SDL_GL_SwapWindow(mainwindow);
+                width = event.window.data1;
+                height = event.window.data2;
+
+                resizeWindow(width,height);
             }
 
+            if( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+                std::cout << "Button down: " << event.button.x << " x " << event.button.y << std::endl;
+                table->buttonDown( event.button.x, height - event.button.y );
+            }
 
-        }while(SDL_PollEvent(&event));
+            if( event.type == SDL_MOUSEMOTION && event.button.button == SDL_BUTTON_LEFT ){
+                //table->buttonMove( event.button.x, event.button.y );
+                table->buttonMove( event.button.x, height - event.button.y );
+            }
+
+            if( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT ){
+                std::cout << "Button up" << std::endl;
+                table->buttonUp();
+            }
+        }
+
+        drawTable();
+        SDL_GL_SwapWindow(mainwindow);
+
+        table->stepBox2D( 1.0/DEFAULT_FPS );
+
+        if( 1000.0/DEFAULT_FPS > SDL_GetTicks() - start ){
+            SDL_Delay( 1000.0/DEFAULT_FPS - ( SDL_GetTicks() - start ) );
+        }
+
 
     }
 }

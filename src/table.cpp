@@ -13,34 +13,125 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <Box2D/Box2D.h>
+#include <iostream>
 #include "color.h"
 #include "map.h"
+#include "button.h"
+#include "arrow.h"
 #include "table.h"
 
-/*!
- * The width of table.
- */
+// The width of the table.
 const float TABLE_WIDTH = 184.0;
 
-/*!
- * The height of table.
- */
+// The height of the table.
 const float TABLE_HEIGHT = 120.0;
 
-/*!
- * The color of table.
- */
+// Color of the table.
 const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
+
+// Color of the player button.
+const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
+
+// Color of the player button.
+const Color BLUE_COLOR = { 0.0f, 0.0f, 1.0f };
+
+// The size of walls.
+const int WALL_SIZE = 10;
 
 Table::Table() :
     Rectangle( GL_QUADS, GREY_COLOR )
 {
     map = new Map;
+
+    world = new b2World(b2Vec2( 0.0f, 0.0f ));
+    addBox2DWalls();
+
+    // Add buttons
+    addButtons();
+
+    arrow = new Arrow;
 }
 
 Table::~Table()
 {
     delete map;
+
+    delete world;
+
+    delete arrow;
+}
+
+void Table::addWall( const int &x, const int &y, const int &width, const int &height)
+{
+    b2BodyDef bodydef;
+    bodydef.position.Set(x,y);
+
+    b2Body* body=world->CreateBody(&bodydef);
+
+    b2PolygonShape shape;
+    shape.SetAsBox(width/2,height/2);
+
+    b2FixtureDef fixturedef;
+    fixturedef.shape=&shape;
+    fixturedef.density=1.0;
+    body->CreateFixture(&fixturedef);
+}
+
+void Table::addBox2DWalls()
+{
+    // Add top wall
+    addWall( TABLE_WIDTH / 2, 0 - WALL_SIZE / 2, TABLE_WIDTH, WALL_SIZE );
+
+    // Add right wall
+    addWall( TABLE_WIDTH + WALL_SIZE / 2, TABLE_HEIGHT / 2, WALL_SIZE, TABLE_HEIGHT );
+
+    // Add bottom wall
+    addWall( TABLE_WIDTH / 2, TABLE_HEIGHT + WALL_SIZE / 2, TABLE_WIDTH, WALL_SIZE );
+
+    // Add left wall
+    addWall( 0 - WALL_SIZE / 2, TABLE_HEIGHT / 2, WALL_SIZE, TABLE_HEIGHT );
+}
+
+void Table::addButtons()
+{
+    // Add player buttons
+    float buttonDistanceX = TABLE_WIDTH / 2 /4;
+    float buttonDistanceY = TABLE_HEIGHT / 5;
+
+    // Add defends
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, RED_COLOR, buttonDistanceX, (i+1) * buttonDistanceY );
+        playerButtons.push_back( button );
+    }
+
+    // Add midfielders
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, RED_COLOR, 2*buttonDistanceX, (i+1) * buttonDistanceY );
+        playerButtons.push_back( button );
+    }
+
+    // Add forwards
+    playerButtons.push_back( new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY ) );
+    playerButtons.push_back( new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
+
+    // Add opponent buttons
+
+    // Add defends
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, BLUE_COLOR, TABLE_WIDTH - buttonDistanceX, (i+1) * buttonDistanceY );
+        opponentButtons.push_back( button );
+    }
+
+    // Add midfielders
+    for( int i = 0; i < 4; ++i ){
+        Button *button = new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 2*buttonDistanceX, (i+1) * buttonDistanceY );
+        opponentButtons.push_back( button );
+    }
+
+    // Add forwards
+    opponentButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 - buttonDistanceY ) );
+    opponentButtons.push_back( new Button( this, world, BLUE_COLOR, TABLE_WIDTH - 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
 }
 
 void Table::resize(const float &windowWidth, const float &windowHeight)
@@ -58,12 +149,22 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
         tableHeight = windowHeight;
     }
 
-    GLfloat x = (windowWidth-tableWidth)/2;
+    x = (windowWidth-tableWidth)/2;
     GLfloat y = windowHeight - (windowHeight-tableHeight)/2;
+    bottom = (windowHeight-tableHeight)/2;
+    scale = tableWidth / TABLE_WIDTH;
 
     Rectangle::resize( x, y, tableWidth, tableHeight );
 
-    map->resize( x, y, tableWidth, tableHeight, tableWidth / TABLE_WIDTH );
+    map->resize( x, y, tableWidth, tableHeight, scale );
+
+    for( int i = 0; i < playerButtons.size(); ++i ){
+        playerButtons[i]->resize();
+    }
+
+    for( int i = 0; i < opponentButtons.size(); ++i ){
+        opponentButtons[i]->resize();
+    }
 }
 
 void Table::draw()
@@ -71,4 +172,38 @@ void Table::draw()
     Rectangle::draw();
 
     map->draw();
+
+    for( int i = 0; i < playerButtons.size(); ++i ){
+        playerButtons[i]->draw();
+    }
+
+    for( int i = 0; i < opponentButtons.size(); ++i ){
+        opponentButtons[i]->draw();
+    }
+
+    arrow->draw();
+}
+
+void Table::stepBox2D( const float &step )
+{
+    world->Step( step, 8, 3 );
+}
+
+void Table::buttonDown( const unsigned int &x, const unsigned int &y)
+{
+    for( int i = 0; i < playerButtons.size(); ++i ){
+        if( playerButtons[i]->contains( x,y ) ){
+            arrow->setButton( playerButtons[i] );
+        }
+    }
+}
+
+void Table::buttonMove( const unsigned int &x, const unsigned int &y)
+{
+    arrow->setEnd( x, y );
+}
+
+void Table::buttonUp()
+{
+    arrow->moveButton();
 }
