@@ -151,17 +151,14 @@ void MainWindow::mainLoop()
             }
 
             if( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-                std::cout << "Button down: " << event.button.x << " x " << event.button.y << std::endl;
                 table->buttonDown( event.button.x, height - event.button.y );
             }
 
             if( event.type == SDL_MOUSEMOTION && event.button.button == SDL_BUTTON_LEFT ){
-                //table->buttonMove( event.button.x, event.button.y );
                 table->buttonMove( event.button.x, height - event.button.y );
             }
 
             if( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT ){
-                std::cout << "Button up" << std::endl;
                 table->buttonUp();
             }
         }

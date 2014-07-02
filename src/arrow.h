@@ -51,6 +51,13 @@ public:
     void setButton( Button *button );
 
     /*!
+     * Return true when button isn't null else false.
+     *
+     * @return true/false.
+     */
+    bool isButtonSelected(){ return button != NULL; }
+
+    /*!
      * Set the end point and show the line.
      *
      * @param x2 The x coordinate value of end point.

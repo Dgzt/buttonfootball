@@ -200,10 +200,15 @@ void Table::buttonDown( const unsigned int &x, const unsigned int &y)
 
 void Table::buttonMove( const unsigned int &x, const unsigned int &y)
 {
-    arrow->setEnd( x, y );
+    if( arrow->isButtonSelected() ){
+        arrow->setEnd( x, y );
+    }
 }
 
 void Table::buttonUp()
 {
-    arrow->moveButton();
+    if( arrow->isButtonSelected() ){
+        arrow->moveButton();
+
+    }
 }
