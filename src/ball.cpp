@@ -13,20 +13,22 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "button.h"
+#include "ball.h"
 
-// The radius of the button.
-const float RADIUS = 2.5f;
+// The color
+const Color BLACK_COLOR = { 0.0f, 0.0f, 0.0f };
 
-Button::Button( Table *parent,
-                b2World *box2DWorld,
-                const Color &color,
-                const float &box2DX,
-                const float &box2DY ) :
+// The radius.
+const float RADIUS = 1.0f;
+
+Ball::Ball( Table *parent,
+            b2World *box2DWorld,
+            const float &box2DX,
+            const float &box2DY) :
     AbstractButton( parent,
                     box2DWorld,
-                    color,
+                    BLACK_COLOR,
                     box2DX,
                     box2DY,
-                    RADIUS )
+                    RADIUS)
 {}

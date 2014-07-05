@@ -1,4 +1,9 @@
 /*!
+* @file
+* @author Zsuro Tibor <zsurotibor@gmail.com>
+*
+* @section LICENSE
+*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -11,22 +16,32 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*
+* @section DESCRIPTION
+*
+* The ball.
 */
 
-#include "button.h"
+#ifndef BALL_H
+#define BALL_H
 
-// The radius of the button.
-const float RADIUS = 2.5f;
+#include "abstractbutton.h"
 
-Button::Button( Table *parent,
-                b2World *box2DWorld,
-                const Color &color,
-                const float &box2DX,
-                const float &box2DY ) :
-    AbstractButton( parent,
-                    box2DWorld,
-                    color,
-                    box2DX,
-                    box2DY,
-                    RADIUS )
-{}
+class Ball : public AbstractButton
+{
+public:
+    /*!
+     * The constructor.
+     *
+     * @param parent The parent table.
+     * @param box2DWorld The box2d world.
+     * @param box2DX The x coordinate in box2d.
+     * @param box2DY The y coordinate in box2d.
+     */
+    Ball( Table *parent,
+          b2World *box2DWorld,
+          const float &box2DX,
+          const float &box2DY);
+};
+
+#endif // BALL_H

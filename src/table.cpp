@@ -18,6 +18,7 @@
 #include "color.h"
 #include "map.h"
 #include "button.h"
+#include "ball.h"
 #include "arrow.h"
 #include "table.h"
 
@@ -50,16 +51,21 @@ Table::Table() :
     // Add buttons
     addButtons();
 
+    //Add ball
+    ball = new Ball( this, world, TABLE_WIDTH/2, TABLE_HEIGHT/2 );
+
     arrow = new Arrow;
 }
 
 Table::~Table()
 {
-    delete map;
+    delete ball;
+
+    delete arrow;
 
     delete world;
 
-    delete arrow;
+    delete map;
 }
 
 void Table::addWall( const int &x, const int &y, const int &width, const int &height)
@@ -165,6 +171,8 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
     for( int i = 0; i < opponentButtons.size(); ++i ){
         opponentButtons[i]->resize();
     }
+
+    ball->resize();
 }
 
 void Table::draw()
@@ -180,6 +188,8 @@ void Table::draw()
     for( int i = 0; i < opponentButtons.size(); ++i ){
         opponentButtons[i]->draw();
     }
+
+    ball->draw();
 
     arrow->draw();
 }

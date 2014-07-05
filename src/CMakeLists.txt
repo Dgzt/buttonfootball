@@ -7,7 +7,9 @@ SET( ButtonFootball_Sources
     shape/rectangle.cpp
     shape/circle.cpp
     shape/line.cpp
+    abstractbutton.cpp
     button.cpp
+    ball.cpp
     arrow.cpp
 )
 

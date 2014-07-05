@@ -31,6 +31,7 @@
 class Map;
 class b2World;
 class Button;
+class Ball;
 class Arrow;
 
 class Table : public Rectangle
@@ -55,6 +56,9 @@ class Table : public Rectangle
 
     // The opponent buttons.
     std::vector<Button*> opponentButtons;
+
+    // The ball.
+    Ball *ball;
 
     // The arrow.
     Arrow *arrow;
