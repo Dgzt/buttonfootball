@@ -69,13 +69,17 @@ public:
     /*!
      * Recalculate the position on the parent (table).
      *
-     * @param parentX The x coordinate of parent.
-     * @param parentY The y coordinate of parent.
-     * @param parentWidth The width value of parent.
-     * @param parentHeight The height value of parent.
-     * @param scale The scale of table on window.
+     * @param x The x coordinate value.
+     * @param y The y coordinate value.
+     * @param width The width value.
+     * @param height The height value.
+     * @param scale The scale of the table on window.
      */
-    void resize( const float &parentX, const float &parentY, const float &parentWidth, const float &parentHeight, const float &scale );
+    void resize( const float &x,
+                 const float &y,
+                 const float &width,
+                 const float &height,
+                 const float &scale );
 
     /*!
      * Draw the map.

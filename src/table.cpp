@@ -28,6 +28,12 @@ const float TABLE_WIDTH = 184.0;
 // The height of the table.
 const float TABLE_HEIGHT = 120.0;
 
+// The width of the map.
+const float MAP_WIDTH = 167.0;
+
+// The height of the map.
+const float MAP_HEIGHT = 104.0;
+
 // Color of the table.
 const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
 
@@ -162,8 +168,16 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
 
     Rectangle::resize( x, y, tableWidth, tableHeight );
 
-    map->resize( x, y, tableWidth, tableHeight, scale );
+    // Map
+    float mapWidth = MAP_WIDTH * scale;
+    float mapHeight = MAP_HEIGHT * scale;
 
+    float mapX = x + (tableWidth - mapWidth)/2;
+    float mapY = y - (tableHeight - mapHeight)/2;
+
+    map->resize( mapX, mapY, mapWidth, mapHeight, scale );
+
+    // Buttons
     for( int i = 0; i < playerButtons.size(); ++i ){
         playerButtons[i]->resize();
     }
@@ -172,6 +186,7 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
         opponentButtons[i]->resize();
     }
 
+    // Ball
     ball->resize();
 }
 

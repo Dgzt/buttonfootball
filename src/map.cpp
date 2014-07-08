@@ -18,9 +18,6 @@
 #include "shape/line.h"
 #include "map.h"
 
-const float MAP_WIDTH = 167.0;
-const float MAP_HEIGHT = 104.0;
-
 const float BORDER = 0.3f;
 
 const float SECTOR_16_WIDTH = 30.0;
@@ -93,70 +90,63 @@ Map::~Map()
     delete bigRightArc;
 }
 
-void Map::resize( const float &parentX, const float &parentY, const float &parentWidth, const float &parentHeight, const float &scale )
+void Map::resize(const float &x, const float &y, const float &width, const float &height, const float &scale)
 {
-    // Map
-    float mapWidth = MAP_WIDTH * scale;
-    float mapHeight = MAP_HEIGHT * scale;
-
-    float mapX = parentX + (parentWidth - mapWidth)/2;
-    float mapY = parentY - (parentHeight - mapHeight)/2;
-
-    Rectangle::resize( mapX, mapY, mapWidth, mapHeight );
+    Rectangle::resize(x,y,width,height);
 
     // Sector 16
     float sector16Width = SECTOR_16_WIDTH * scale;
     float sector16Height = SECTOR_16_HEIGHT * scale;
-    float sector16Y = mapY - ( mapHeight - sector16Height ) / 2;
+    float sector16Y = y - ( height - sector16Height ) / 2;
 
-    leftSector16->resize( mapX, sector16Y, sector16Width, sector16Height );
-    rightSector16->resize( mapX + mapWidth - sector16Width, sector16Y, sector16Width, sector16Height);
+    leftSector16->resize( x, sector16Y, sector16Width, sector16Height );
+    rightSector16->resize( x + width - sector16Width, sector16Y, sector16Width, sector16Height);
 
     // Sector 5
     float sector5Width = SECTOR_5_WIDTH * scale;
     float sector5Height = SECTOR_5_HEIGHT * scale;
-    float sector5Y = mapY - ( mapHeight - sector5Height ) / 2;
+    float sector5Y = y - ( height - sector5Height ) / 2;
 
-    leftSector5->resize( mapX, sector5Y, sector5Width, sector5Height );
-    rightSector5->resize( mapX + mapWidth - sector5Width, sector5Y, sector5Width, sector5Height );
+    leftSector5->resize( x, sector5Y, sector5Width, sector5Height );
+    rightSector5->resize( x + width - sector5Width, sector5Y, sector5Width, sector5Height );
 
     // Central big circle
     float bigCircleRadius = BIG_CIRCLE_RADIUS * scale;
 
-    bigCentralCircle->resize( mapX + mapWidth / 2, mapY - mapHeight / 2, bigCircleRadius );
+    bigCentralCircle->resize( x + width / 2, y - height / 2, bigCircleRadius );
 
     // Half line
-    float halfMapX = mapX + ( mapWidth / 2 );
-    float bottomMapY = mapY - mapHeight;
+    float halfx = x + ( width / 2 );
+    float bottomy = y - height;
 
-    halfLine->resize( halfMapX, mapY, halfMapX, bottomMapY );
+    halfLine->resize( halfx, y, halfx, bottomy );
 
     // Left circle 11
     float smallCircleDistance = CIRCLE_11_DISTANCE * scale;
     float smallCircleRadius = SMALL_CIRCLE_RADIUS * scale;
-    float smallCircleY = mapY - mapHeight / 2;
-    float leftSmallCircleX = mapX + smallCircleDistance;
+    float smallCircleY = y - height / 2;
+    float leftSmallCircleX = x + smallCircleDistance;
 
     leftCircle11->resize( leftSmallCircleX, smallCircleY, smallCircleRadius );
 
     // Right circle 11
-    float rightSmallCircleX = mapX + mapWidth - smallCircleDistance;
+    float rightSmallCircleX = x + width - smallCircleDistance;
 
     rightCircle11->resize( rightSmallCircleX, smallCircleY, smallCircleRadius );
 
     // Central small circle
-    float centralSmallCircleX = mapX + ( mapWidth / 2 );
-    float centralSmallCircleY = mapY - ( mapHeight / 2 );
+    float centralSmallCircleX = x + ( width / 2 );
+    float centralSmallCircleY = y - ( height / 2 );
 
     smallCentralCircle->resize( centralSmallCircleX, centralSmallCircleY, smallCircleRadius );
 
     // Corner arcs
     float cornerArcRadius = CORNER_ARC_RADIUS * scale;
 
-    topLeftCornerArc->resize( mapX, mapY, cornerArcRadius );
-    topRightCornerArc->resize( mapX + mapWidth, mapY, cornerArcRadius );
-    bottomLeftCornerArc->resize( mapX, bottomMapY, cornerArcRadius );
-    bottomRightCornerArc->resize( mapX + mapWidth, bottomMapY, cornerArcRadius );
+    topLeftCornerArc->resize( x, y, cornerArcRadius );
+    topRightCornerArc->resize( x + width, y, cornerArcRadius );
+    bottomLeftCornerArc->resize( x, bottomy, cornerArcRadius );
+    bottomRightCornerArc->resize( x + width, bottomy, cornerArcRadius );
 
     // Big left arc
     bigLeftArc->resize( leftSmallCircleX, smallCircleY, bigCircleRadius );
