@@ -51,6 +51,9 @@ class Table : public Rectangle
     // Left gate.
     Rectangle *leftGate;
 
+    // Right gate.
+    Rectangle *rightGate;
+
     // The box2d world.
     b2World* world;
 

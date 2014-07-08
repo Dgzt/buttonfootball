@@ -61,6 +61,7 @@ Table::Table() :
     map = new Map;
 
     leftGate = new Rectangle( GL_LINE_LOOP, WHITE_COLOR );
+    rightGate = new Rectangle( GL_LINE_LOOP, WHITE_COLOR );
 
     world = new b2World(b2Vec2( 0.0f, 0.0f ));
     addBox2DWalls();
@@ -85,6 +86,7 @@ Table::~Table()
     delete map;
 
     delete leftGate;
+    delete rightGate;
 }
 
 void Table::addWall( const int &x, const int &y, const int &width, const int &height)
@@ -202,14 +204,19 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
     // Ball
     ball->resize();
 
-    // Left gate.
+    // Left gate
     const float gateWidth = GATE_WIDTH * scale;
     const float gateHeight = GATE_HEIGHT * scale;
 
     const float leftGateX = mapX - gateWidth;
-    const float leftGateY = mapY - ( mapHeight - gateHeight ) / 2;
+    const float gateY = mapY - ( mapHeight - gateHeight ) / 2;
 
-    leftGate->resize(leftGateX, leftGateY, gateWidth, gateHeight);
+    leftGate->resize(leftGateX, gateY, gateWidth, gateHeight);
+
+    // Right gate
+    const float rightGateX = mapX + mapWidth;
+
+    rightGate->resize( rightGateX, gateY, gateWidth, gateHeight );
 }
 
 void Table::draw()
@@ -228,9 +235,11 @@ void Table::draw()
 
     ball->draw();
 
-    arrow->draw();
-
     leftGate->draw();
+
+    rightGate->draw();
+
+    arrow->draw();
 }
 
 void Table::stepBox2D( const float &step )
