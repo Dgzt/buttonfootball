@@ -48,6 +48,9 @@ class Table : public Rectangle
     // The map.
     Map *map;
 
+    // Left gate.
+    Rectangle *leftGate;
+
     // The box2d world.
     b2World* world;
 

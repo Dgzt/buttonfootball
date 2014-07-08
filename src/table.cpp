@@ -34,6 +34,12 @@ const float MAP_WIDTH = 167.0;
 // The height of the map.
 const float MAP_HEIGHT = 104.0;
 
+// The width of the gate.
+const float GATE_WIDTH = 8.0f;
+
+// The height of the gate.
+const float GATE_HEIGHT = 13.0f;
+
 // Color of the table.
 const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
 
@@ -43,6 +49,9 @@ const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
 // Color of the player button.
 const Color BLUE_COLOR = { 0.0f, 0.0f, 1.0f };
 
+// Color of the gates.
+const Color WHITE_COLOR = { 1.0f, 1.0f, 1.0f };
+
 // The size of walls.
 const int WALL_SIZE = 10;
 
@@ -50,6 +59,8 @@ Table::Table() :
     Rectangle( GL_QUADS, GREY_COLOR )
 {
     map = new Map;
+
+    leftGate = new Rectangle( GL_LINE_LOOP, WHITE_COLOR );
 
     world = new b2World(b2Vec2( 0.0f, 0.0f ));
     addBox2DWalls();
@@ -72,6 +83,8 @@ Table::~Table()
     delete world;
 
     delete map;
+
+    delete leftGate;
 }
 
 void Table::addWall( const int &x, const int &y, const int &width, const int &height)
@@ -188,6 +201,15 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
 
     // Ball
     ball->resize();
+
+    // Left gate.
+    const float gateWidth = GATE_WIDTH * scale;
+    const float gateHeight = GATE_HEIGHT * scale;
+
+    const float leftGateX = mapX - gateWidth;
+    const float leftGateY = mapY - ( mapHeight - gateHeight ) / 2;
+
+    leftGate->resize(leftGateX, leftGateY, gateWidth, gateHeight);
 }
 
 void Table::draw()
@@ -207,6 +229,8 @@ void Table::draw()
     ball->draw();
 
     arrow->draw();
+
+    leftGate->draw();
 }
 
 void Table::stepBox2D( const float &step )
