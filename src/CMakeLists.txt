@@ -11,6 +11,7 @@ SET( ButtonFootball_Sources
     button.cpp
     ball.cpp
     arrow.cpp
+    gate.cpp
 )
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )

@@ -20,6 +20,7 @@
 #include "button.h"
 #include "ball.h"
 #include "arrow.h"
+#include "gate.h"
 #include "table.h"
 
 // The width of the table.
@@ -60,8 +61,8 @@ Table::Table() :
 {
     map = new Map;
 
-    leftGate = new Rectangle( GL_LINE_LOOP, WHITE_COLOR );
-    rightGate = new Rectangle( GL_LINE_LOOP, WHITE_COLOR );
+    leftGate = new Gate;
+    rightGate = new Gate;
 
     world = new b2World(b2Vec2( 0.0f, 0.0f ));
     addBox2DWalls();

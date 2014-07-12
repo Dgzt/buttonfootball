@@ -33,6 +33,7 @@ class b2World;
 class Button;
 class Ball;
 class Arrow;
+class Gate;
 
 class Table : public Rectangle
 {
@@ -49,10 +50,10 @@ class Table : public Rectangle
     Map *map;
 
     // Left gate.
-    Rectangle *leftGate;
+    Gate *leftGate;
 
     // Right gate.
-    Rectangle *rightGate;
+    Gate *rightGate;
 
     // The box2d world.
     b2World* world;
