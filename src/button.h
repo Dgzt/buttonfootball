@@ -44,6 +44,12 @@ public:
             const Color &color,
             const float &box2DX,
             const float &box2DY );
+
+    /**
+     * Get the radius.
+     * @return The radius.
+     */
+    static float getRadius();
 };
 
 #endif // BUTTON_H

@@ -148,8 +148,13 @@ void Table::addBox2DGateWalls()
 void Table::addButtons()
 {
     // Add player buttons
-    float buttonDistanceX = TABLE_WIDTH / 2 /4;
-    float buttonDistanceY = TABLE_HEIGHT / 5;
+    const float buttonDistanceX = TABLE_WIDTH / 2 /4;
+    const float buttonDistanceY = TABLE_HEIGHT / 5;
+
+    // Add goalkeeper
+    const float playerGoalkeeperX = ( TABLE_WIDTH - MAP_WIDTH ) / 2 + Button::getRadius();
+    const float goalkeeperY = TABLE_HEIGHT / 2;
+    playerButtons.push_back( new Button( this, world, RED_COLOR, playerGoalkeeperX, goalkeeperY ) );
 
     // Add defends
     for( int i = 0; i < 4; ++i ){
@@ -168,6 +173,10 @@ void Table::addButtons()
     playerButtons.push_back( new Button( this, world, RED_COLOR, 3*buttonDistanceX, TABLE_HEIGHT / 2 + buttonDistanceY ) );
 
     // Add opponent buttons
+
+    // Add goalkeeper
+    const float opponentGoalkeeperX = TABLE_WIDTH - ( TABLE_WIDTH - MAP_WIDTH ) / 2 - Button::getRadius();
+    opponentButtons.push_back( new Button( this, world, BLUE_COLOR, opponentGoalkeeperX, goalkeeperY ) );
 
     // Add defends
     for( int i = 0; i < 4; ++i ){

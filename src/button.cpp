@@ -30,3 +30,8 @@ Button::Button( Table *parent,
                     box2DY,
                     RADIUS )
 {}
+
+float Button::getRadius()
+{
+    return RADIUS;
+}
