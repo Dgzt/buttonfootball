@@ -20,6 +20,7 @@
 #include "button.h"
 #include "ball.h"
 #include "arrow.h"
+#include "gate.h"
 #include "table.h"
 
 // The width of the table.
@@ -27,6 +28,21 @@ const float TABLE_WIDTH = 184.0;
 
 // The height of the table.
 const float TABLE_HEIGHT = 120.0;
+
+// The width of the map.
+const float MAP_WIDTH = 167.0;
+
+// The height of the map.
+const float MAP_HEIGHT = 104.0;
+
+// The width of the gate.
+const float GATE_WIDTH = 8.0f;
+
+// The height of the gate.
+const float GATE_HEIGHT = 13.0f;
+
+// The size of gate wall.
+const float GATE_WALL_SIZE = 0.5f;
 
 // Color of the table.
 const Color GREY_COLOR = { 0.5, 0.5, 0.5 };
@@ -37,6 +53,9 @@ const Color RED_COLOR = { 1.0f, 0.0f, 0.0f };
 // Color of the player button.
 const Color BLUE_COLOR = { 0.0f, 0.0f, 1.0f };
 
+// Color of the gates.
+const Color WHITE_COLOR = { 1.0f, 1.0f, 1.0f };
+
 // The size of walls.
 const int WALL_SIZE = 10;
 
@@ -45,8 +64,12 @@ Table::Table() :
 {
     map = new Map;
 
+    leftGate = new Gate;
+    rightGate = new Gate;
+
     world = new b2World(b2Vec2( 0.0f, 0.0f ));
-    addBox2DWalls();
+    addBox2DTableWalls();
+    addBox2DGateWalls();
 
     // Add buttons
     addButtons();
@@ -66,9 +89,12 @@ Table::~Table()
     delete world;
 
     delete map;
+
+    delete leftGate;
+    delete rightGate;
 }
 
-void Table::addWall( const int &x, const int &y, const int &width, const int &height)
+void Table::addWall( const float &x, const float &y, const float &width, const float &height)
 {
     b2BodyDef bodydef;
     bodydef.position.Set(x,y);
@@ -84,7 +110,7 @@ void Table::addWall( const int &x, const int &y, const int &width, const int &he
     body->CreateFixture(&fixturedef);
 }
 
-void Table::addBox2DWalls()
+void Table::addBox2DTableWalls()
 {
     // Add top wall
     addWall( TABLE_WIDTH / 2, 0 - WALL_SIZE / 2, TABLE_WIDTH, WALL_SIZE );
@@ -97,6 +123,26 @@ void Table::addBox2DWalls()
 
     // Add left wall
     addWall( 0 - WALL_SIZE / 2, TABLE_HEIGHT / 2, WALL_SIZE, TABLE_HEIGHT );
+}
+
+void Table::addBox2DGateWalls()
+{
+    const float leftGateWallX = GATE_WIDTH / 2;
+    const float rightGateWallX = TABLE_WIDTH - GATE_WIDTH / 2;
+    const float gateTopWallY = ( TABLE_HEIGHT + GATE_HEIGHT ) / 2;
+    const float gateBottomWallY = ( TABLE_HEIGHT - GATE_HEIGHT ) / 2;
+
+    // Top left gate wall
+    addWall( leftGateWallX, gateTopWallY, GATE_WIDTH, GATE_WALL_SIZE );
+
+    // Bottom left gate wall
+    addWall( leftGateWallX, gateBottomWallY, GATE_WIDTH, GATE_WALL_SIZE );
+
+    // Top right gate wall
+    addWall( rightGateWallX, gateTopWallY, GATE_WIDTH, GATE_WALL_SIZE );
+
+    // Bottom right gate wall
+    addWall( rightGateWallX, gateBottomWallY, GATE_WIDTH, GATE_WALL_SIZE );
 }
 
 void Table::addButtons()
@@ -162,8 +208,16 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
 
     Rectangle::resize( x, y, tableWidth, tableHeight );
 
-    map->resize( x, y, tableWidth, tableHeight, scale );
+    // Map
+    float mapWidth = MAP_WIDTH * scale;
+    float mapHeight = MAP_HEIGHT * scale;
 
+    float mapX = x + (tableWidth - mapWidth)/2;
+    float mapY = y - (tableHeight - mapHeight)/2;
+
+    map->resize( mapX, mapY, mapWidth, mapHeight, scale );
+
+    // Buttons
     for( int i = 0; i < playerButtons.size(); ++i ){
         playerButtons[i]->resize();
     }
@@ -172,7 +226,22 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
         opponentButtons[i]->resize();
     }
 
+    // Ball
     ball->resize();
+
+    // Left gate
+    const float gateWidth = GATE_WIDTH * scale;
+    const float gateHeight = GATE_HEIGHT * scale;
+
+    const float leftGateX = mapX - gateWidth;
+    const float gateY = mapY - ( mapHeight - gateHeight ) / 2;
+
+    leftGate->resize(leftGateX, gateY, gateWidth, gateHeight);
+
+    // Right gate
+    const float rightGateX = mapX + mapWidth;
+
+    rightGate->resize( rightGateX, gateY, gateWidth, gateHeight );
 }
 
 void Table::draw()
@@ -190,6 +259,10 @@ void Table::draw()
     }
 
     ball->draw();
+
+    leftGate->draw();
+
+    rightGate->draw();
 
     arrow->draw();
 }

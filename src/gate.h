@@ -19,72 +19,50 @@
 *
 * @section DESCRIPTION
 *
-* The map.
+* The gate.
 */
 
-#ifndef MAP_H
-#define MAP_H
+#ifndef GATE_H
+#define GATE_H
 
+#include <vector>
 #include "shape/rectangle.h"
 
-class Circle;
 class Line;
 
-class Map : public Rectangle
+class Gate : public Rectangle
 {
-    Rectangle *leftSector16;
-    Rectangle *rightSector16;
-    Rectangle *leftSector5;
-    Rectangle *rightSector5;
-
-    Circle *bigCentralCircle;
-
-    Line *halfLine;
-
-    Circle *leftCircle11;
-
-    Circle *rightCircle11;
-
-    Circle *smallCentralCircle;
-
-    Circle *topLeftCornerArc;
-    Circle *topRightCornerArc;
-    Circle *bottomLeftCornerArc;
-    Circle *bottomRightCornerArc;
-
-    Circle *bigLeftArc;
-    Circle *bigRightArc;
+    // The grid lines
+    std::vector<Line*> lines;
 
 public:
     /*!
      * The constructor.
      */
-    Map();
+    Gate();
 
     /*!
      * The desctructor.
      */
-    ~Map();
+    ~Gate();
 
     /*!
-     * Recalculate the position on the parent (table).
+     * Resize the shape.
      *
      * @param x The x coordinate value.
      * @param y The y coordinate value.
      * @param width The width value.
      * @param height The height value.
-     * @param scale The scale of the table on window.
      */
     void resize( const float &x,
                  const float &y,
                  const float &width,
-                 const float &height,
-                 const float &scale );
+                 const float &height );
 
     /*!
-     * Draw the map.
+     * Draw to the window.
      */
     void draw();
 };
 
-#endif // MAP_H
+#endif // GATE_H

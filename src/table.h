@@ -33,6 +33,7 @@ class b2World;
 class Button;
 class Ball;
 class Arrow;
+class Gate;
 
 class Table : public Rectangle
 {
@@ -47,6 +48,12 @@ class Table : public Rectangle
 
     // The map.
     Map *map;
+
+    // Left gate.
+    Gate *leftGate;
+
+    // Right gate.
+    Gate *rightGate;
 
     // The box2d world.
     b2World* world;
@@ -71,12 +78,17 @@ class Table : public Rectangle
      * @param width The width of wall.
      * @param height The height of wall.
      */
-    void addWall( const int &x, const int &y, const int &width, const int &height );
+    void addWall( const float &x, const float &y, const float &width, const float &height );
 
     /*!
-     * Add the box2d walls.
+     * Add the box2d table walls.
      */
-    void addBox2DWalls();
+    void addBox2DTableWalls();
+
+    /**
+     * Add the box2d gate walls.
+     */
+    void addBox2DGateWalls();
 
     /*!
      * Add the buttons.
