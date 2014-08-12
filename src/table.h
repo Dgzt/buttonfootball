@@ -78,12 +78,17 @@ class Table : public Rectangle
      * @param width The width of wall.
      * @param height The height of wall.
      */
-    void addWall( const int &x, const int &y, const int &width, const int &height );
+    void addWall( const float &x, const float &y, const float &width, const float &height );
 
     /*!
-     * Add the box2d walls.
+     * Add the box2d table walls.
      */
-    void addBox2DWalls();
+    void addBox2DTableWalls();
+
+    /**
+     * Add the box2d gate walls.
+     */
+    void addBox2DGateWalls();
 
     /*!
      * Add the buttons.
