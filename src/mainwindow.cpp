@@ -42,12 +42,15 @@ MainWindow::MainWindow() :
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    // Create our window centered at 512x512 resolution
+#ifdef __EMSCRIPTEN__
+    screen = SDL_SetVideoMode( width, height, 0, SDL_OPENGL );
+#else
+    // Create our window
     mainwindow = SDL_CreateWindow( APPLICATION_NAME,
                                    SDL_WINDOWPOS_CENTERED,
                                    SDL_WINDOWPOS_CENTERED,
-                                   WINDOW_WIDTH,
-                                   WINDOW_HEIGHT,
+                                   width,
+                                   height,
                                    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!mainwindow){
         sdldie("Unable to create window");
@@ -55,6 +58,7 @@ MainWindow::MainWindow() :
 
     // Create our opengl context and attach it to our window
     maincontext = SDL_GL_CreateContext(mainwindow);
+#endif
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +84,11 @@ MainWindow::MainWindow() :
     drawTable();
 
     // Swap our back buffer to the front
+#ifdef __EMSCRIPTEN__
+    SDL_GL_SwapBuffers();
+#else
     SDL_GL_SwapWindow(mainwindow);
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -88,8 +96,10 @@ MainWindow::~MainWindow()
     delete table;
 
     // Delete our opengl context, destroy our window, and shutdown SDL
+#ifndef __EMSCRIPTEN__
     SDL_GL_DeleteContext(maincontext);
     SDL_DestroyWindow(mainwindow);
+#endif
     SDL_Quit();
 }
 
@@ -164,7 +174,12 @@ void MainWindow::mainLoop()
         }
 
         drawTable();
+
+#ifdef __EMSCRIPTEN__
+        SDL_GL_SwapBuffers();
+#else
         SDL_GL_SwapWindow(mainwindow);
+#endif
 
         table->stepBox2D( 1.0/DEFAULT_FPS );
 

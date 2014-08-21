@@ -25,14 +25,22 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <SDL.h>
+#ifdef __EMSCRIPTEN__
+#include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 
 class Table;
 
 class MainWindow
 {
+#ifdef __EMSCRIPTEN__
+    SDL_Surface *screen;
+#else
     SDL_Window *mainwindow; /* Our window handle */
     SDL_GLContext maincontext; /* Our opengl context handle */
+#endif
 
     int width;
     int height;
