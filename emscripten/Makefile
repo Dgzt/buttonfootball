@@ -12,7 +12,7 @@ $(FILE_PREFIX)/shape/*cpp
 all: index.html
 
 index.html: $(OBJECTS)
-	$(CXX) -I Box2D/include -s LEGACY_GL_EMULATION=1 -o index.html $(FILES)
+	$(CXX) -I Box2D/include -s LEGACY_GL_EMULATION=1 -O2 -o index.html $(FILES)
 
 clean:
 	rm -f index.html index.html.map index.js
