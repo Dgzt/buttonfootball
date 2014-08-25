@@ -6,11 +6,11 @@ A button football game.
 HTML5
 -----
 
-h3. Requirements:
+Requirements:
 
  * Emscripten (>= 1.22) [link](http://emscripten.org/)
 
-h3. Complie
+Complie
 
  * Change directory to 'emscripten'
  * $ emmake make
@@ -19,14 +19,14 @@ h3. Complie
 Executable
 ----------
 
-h3. Requirements:
+Requirements:
 
  * CMake (>= 2.8) [link](http://www.cmake.org/)
  * SDL2 [link](http://www.libsdl.org/)
  * OpenGL
  * Box2D [link](http://box2d.org/)
 
-h3. Complie:
+Complie:
 
  * Create a 'build' directory in the root directory. Change directory to the 'build'.
  * $ cmake ..
