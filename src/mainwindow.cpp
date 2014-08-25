@@ -59,7 +59,7 @@ void MainWindow::draw()
 
 void MainWindow::buttonPressed( const unsigned int &x, const unsigned int &y )
 {
-    table->buttonDown(x, y);
+    table->buttonPressed(x, y);
 }
 
 void MainWindow::buttonMove( const unsigned int &x, const unsigned int &y )
@@ -69,5 +69,10 @@ void MainWindow::buttonMove( const unsigned int &x, const unsigned int &y )
 
 void MainWindow::buttonReleased()
 {
-    table->buttonUp();
+    table->buttonReleased();
+}
+
+void MainWindow::stepBox2D( const double &timeStep )
+{
+    table->stepBox2D( timeStep );
 }

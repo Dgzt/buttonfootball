@@ -69,6 +69,13 @@ public:
      * The bittom os released.
      */
     void buttonReleased();
+
+    /*!
+     * Step the box2d world.
+     *
+     * @timeStep The time step value.
+     */
+    void stepBox2D( const double &timeStep );
 };
 
 #endif // MAINWINDOW_H

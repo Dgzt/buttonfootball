@@ -33,6 +33,10 @@
 #include <iostream>
 #include "mainwindow.h"
 
+//
+// ~~~ The constants. ~~~
+//
+
 // The name of the application
 const char APPLICATION_NAME[] = "Button Football";
 
@@ -43,9 +47,17 @@ const int WINDOW_HEIGHT = 600;
 // The default frame per sec
 const float DEFAULT_FPS = 40;
 
+//
+// ~~~ The function declarations. ~~~
+//
+
 void initSdl();
 void sdldie( const char* );
 void mainLoop();
+
+//
+// ~~~ The variable declarations. ~~~
+//
 
 #ifdef __EMSCRIPTEN__
 SDL_Surface *screen;
@@ -58,6 +70,10 @@ MainWindow *mainWindow;
 
 int width = WINDOW_WIDTH;
 int height = WINDOW_HEIGHT;
+
+//
+// ~~~ Functions. ~~~
+//
 
 /*!
  * The main function.
@@ -79,7 +95,7 @@ int main()
 #endif
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(mainLoop,0,0);
+    emscripten_set_main_loop( mainLoop, DEFAULT_FPS, 0 );
 #else
     bool done = false;
 
@@ -91,6 +107,9 @@ int main()
     return 0;
 }
 
+/*!
+ * Initialize the SDL.
+ */
 void initSdl()
 {
     // Initialize SDL's Video subsystem
@@ -137,12 +156,40 @@ void initSdl()
 #endif
 }
 
-void sdldie( const char* msg ){
+/*!
+ * Show error message and quit.
+ *
+ * @msg The message.
+ */
+void sdldie( const char* msg )
+{
     std::cout << msg << ": " << SDL_GetError() << std::endl;
     SDL_Quit();
     exit(1);
 }
 
+/*!
+ * Correctly quit the program.
+ */
+void quit()
+{
+    delete mainWindow;
+
+    // Delete our opengl context, destroy our window, and shutdown SDL
+#ifdef __EMSCRIPTEN__
+    SDL_FreeSurface( screen );
+#else
+    SDL_GL_DeleteContext( maincontext );
+    SDL_DestroyWindow( mainwindow );
+#endif
+    SDL_Quit();
+
+    exit(0);
+}
+
+/*!
+ * The main loop.
+ */
 void mainLoop()
 {
     SDL_Event event;
@@ -150,15 +197,7 @@ void mainLoop()
 
     while( SDL_PollEvent( &event ) ){
         if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-
-            // Delete our opengl context, destroy our window, and shutdown SDL
-#ifndef __EMSCRIPTEN__
-            SDL_GL_DeleteContext(maincontext);
-            SDL_DestroyWindow(mainwindow);
-#endif
-            SDL_Quit();
-
-            exit(0);
+            quit();
         }
 
         if( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED ){
@@ -190,7 +229,7 @@ void mainLoop()
     SDL_GL_SwapWindow(mainwindow);
 #endif
 
-    //table->stepBox2D( 1.0/DEFAULT_FPS );
+    mainWindow->stepBox2D( 1.0/DEFAULT_FPS );
 
 #ifndef __EMSCRIPTEN__
     if( 1000.0/DEFAULT_FPS > SDL_GetTicks() - start ){

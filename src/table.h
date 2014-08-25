@@ -143,17 +143,17 @@ public:
     /*!
      * Step the box2d world.
      *
-     * @param step The step value.
+     * @param timeStep The time step value.
      */
-    void stepBox2D( const float &step );
+    void stepBox2D( const float &timeStep );
 
     /*!
-     * The coordinates of the pressing button.
+     * The coordinates of the pressed button.
      *
      * @param x The x coordinate value.
      * @param y The y coordinate value.
      */
-    void buttonDown( const unsigned int &x, const unsigned int &y );
+    void buttonPressed( const unsigned int &x, const unsigned int &y );
 
     /*!
      * The coordinates of the moving button.
@@ -164,9 +164,9 @@ public:
     void buttonMove( const unsigned int &x, const unsigned int &y );
 
     /*!
-     * The button is releasing.
+     * The button is released.
      */
-    void buttonUp();
+    void buttonReleased();
 };
 
 #endif // TABLE_H
