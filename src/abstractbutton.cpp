@@ -29,7 +29,7 @@ AbstractButton::AbstractButton( Table *parent,
                                 const float &box2DX,
                                 const float &box2DY,
                                 const float &radius ) :
-    Circle( GL_POLYGON, color ),
+    Circle( GL_TRIANGLE_FAN, color ),
     parent( parent ),
     box2DX(box2DX),
     box2DY(box2DY)

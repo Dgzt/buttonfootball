@@ -276,12 +276,12 @@ void Table::draw()
     arrow->draw();
 }
 
-void Table::stepBox2D( const float &step )
+void Table::stepBox2D( const float &timeStep )
 {
-    world->Step( step, 8, 3 );
+    world->Step( timeStep, 8, 3 );
 }
 
-void Table::buttonDown( const unsigned int &x, const unsigned int &y)
+void Table::buttonPressed( const unsigned int &x, const unsigned int &y)
 {
     for( int i = 0; i < playerButtons.size(); ++i ){
         if( playerButtons[i]->contains( x,y ) ){
@@ -297,7 +297,7 @@ void Table::buttonMove( const unsigned int &x, const unsigned int &y)
     }
 }
 
-void Table::buttonUp()
+void Table::buttonReleased()
 {
     if( arrow->isButtonSelected() ){
         arrow->moveButton();

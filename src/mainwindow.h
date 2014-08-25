@@ -25,32 +25,57 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <SDL.h>
-
 class Table;
 
 class MainWindow
 {
-    SDL_Window *mainwindow; /* Our window handle */
-    SDL_GLContext maincontext; /* Our opengl context handle */
-
-    int width;
-    int height;
-
     // The table.
     Table *table;
-
-    void sdldie( const char* msg );
-
-    void resizeWindow( int width, int height );
-
-    void drawTable();
 
 public:
     MainWindow();
     ~MainWindow();
 
-    void mainLoop();
+    /*!
+     * The window resized.
+     *
+     * @width The new width.
+     * @height The new height.
+     */
+    void resize( const int &width, const int &height );
+
+    /*!
+     * Draw the items.
+     */
+    void draw();
+
+    /*!
+     * The button is pressed.
+     *
+     * @x The x value.
+     * @y The y value.
+     */
+    void buttonPressed( const unsigned int &x, const unsigned int &y );
+
+    /*!
+     * The button is moved when it pressed.
+     *
+     * @x The x value.
+     * @y The y value.
+     */
+    void buttonMove( const unsigned int &x, const unsigned int &y );
+
+    /*!
+     * The bittom os released.
+     */
+    void buttonReleased();
+
+    /*!
+     * Step the box2d world.
+     *
+     * @timeStep The time step value.
+     */
+    void stepBox2D( const double &timeStep );
 };
 
 #endif // MAINWINDOW_H

@@ -13,93 +13,21 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <GL/glew.h>
 #include <iostream>
 #include "table.h"
 #include "mainwindow.h"
 
-// The name of the application
-const char APPLICATION_NAME[] = "Button Football";
-
-// The width and height of the main window
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
-
-// The default frame per sec
-const float DEFAULT_FPS = 40;
-
-MainWindow::MainWindow() :
-    width( WINDOW_WIDTH ),
-    height( WINDOW_HEIGHT )
+MainWindow::MainWindow()
 {
-    // Initialize SDL's Video subsystem
-    if( SDL_Init(SDL_INIT_VIDEO) < 0 ){
-        sdldie("Unable to initialize SDL");
-    }
-
-    // Turn on double buffering with a 24bit Z buffer.
-    // You may need to change this to 16 or 32 for your system
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
-    // Create our window centered at 512x512 resolution
-    mainwindow = SDL_CreateWindow( APPLICATION_NAME,
-                                   SDL_WINDOWPOS_CENTERED,
-                                   SDL_WINDOWPOS_CENTERED,
-                                   WINDOW_WIDTH,
-                                   WINDOW_HEIGHT,
-                                   SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (!mainwindow){
-        sdldie("Unable to create window");
-    }
-
-    // Create our opengl context and attach it to our window
-    maincontext = SDL_GL_CreateContext(mainwindow);
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    glewInit();
-
-    // This makes our buffer swap syncronized with the monitor's vertical refresh
-    SDL_GL_SetSwapInterval(1);
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    glClearColor( 0, 0, 0, 0 );
-
-#ifndef __EMSCRIPTEN__
-    glEnable( GL_TEXTURE_2D ); // Need this to display a texture XXX unnecessary in OpenGL ES 2.0/WebGL
-#endif
-
-    //
     table = new Table;
-    //
-
-    resizeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-    drawTable();
-
-    // Swap our back buffer to the front
-    SDL_GL_SwapWindow(mainwindow);
 }
 
 MainWindow::~MainWindow()
 {
     delete table;
-
-    // Delete our opengl context, destroy our window, and shutdown SDL
-    SDL_GL_DeleteContext(maincontext);
-    SDL_DestroyWindow(mainwindow);
-    SDL_Quit();
 }
 
-void MainWindow::sdldie( const char* msg ){
-    std::cout << msg << ": " << SDL_GetError() << std::endl;
-    SDL_Quit();
-    exit(1);
-}
-
-void MainWindow::resizeWindow( int width, int height ){
+void MainWindow::resize( const int &width, const int &height ){
     glViewport( 0, 0, width, height );
 
     glMatrixMode( GL_MODELVIEW );
@@ -116,7 +44,7 @@ void MainWindow::resizeWindow( int width, int height ){
     table->resize( width, height );
 }
 
-void MainWindow::drawTable()
+void MainWindow::draw()
 {
     glClear( GL_COLOR_BUFFER_BIT );
 
@@ -129,49 +57,22 @@ void MainWindow::drawTable()
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void MainWindow::mainLoop()
+void MainWindow::buttonPressed( const unsigned int &x, const unsigned int &y )
 {
-    SDL_Event event;
-    bool done = false;
-    Uint32 start;
+    table->buttonPressed(x, y);
+}
 
-    while( !done ){
-        start = SDL_GetTicks();
+void MainWindow::buttonMove( const unsigned int &x, const unsigned int &y )
+{
+    table->buttonMove(x, y);
+}
 
-        while( SDL_PollEvent( &event ) ){
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-                done = true;
-            }
+void MainWindow::buttonReleased()
+{
+    table->buttonReleased();
+}
 
-            if( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED ){
-                width = event.window.data1;
-                height = event.window.data2;
-
-                resizeWindow(width,height);
-            }
-
-            if( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-                table->buttonDown( event.button.x, height - event.button.y );
-            }
-
-            if( event.type == SDL_MOUSEMOTION && event.button.button == SDL_BUTTON_LEFT ){
-                table->buttonMove( event.button.x, height - event.button.y );
-            }
-
-            if( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT ){
-                table->buttonUp();
-            }
-        }
-
-        drawTable();
-        SDL_GL_SwapWindow(mainwindow);
-
-        table->stepBox2D( 1.0/DEFAULT_FPS );
-
-        if( 1000.0/DEFAULT_FPS > SDL_GetTicks() - start ){
-            SDL_Delay( 1000.0/DEFAULT_FPS - ( SDL_GetTicks() - start ) );
-        }
-
-
-    }
+void MainWindow::stepBox2D( const double &timeStep )
+{
+    table->stepBox2D( timeStep );
 }

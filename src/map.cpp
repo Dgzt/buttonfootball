@@ -48,10 +48,10 @@ Map::Map() :
 
     halfLine = new Line( WHITE_COLOR );
 
-    leftCircle11 = new Circle( GL_POLYGON, WHITE_COLOR );
-    rightCircle11 = new Circle( GL_POLYGON, WHITE_COLOR );
+    leftCircle11 = new Circle( GL_TRIANGLE_FAN, WHITE_COLOR );
+    rightCircle11 = new Circle( GL_TRIANGLE_FAN, WHITE_COLOR );
 
-    smallCentralCircle = new Circle( GL_POLYGON, WHITE_COLOR );
+    smallCentralCircle = new Circle( GL_TRIANGLE_FAN, WHITE_COLOR );
 
     topLeftCornerArc = new Circle( 0, 90, WHITE_COLOR );
     topRightCornerArc = new Circle( 90, 180, WHITE_COLOR );

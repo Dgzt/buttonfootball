@@ -42,7 +42,7 @@ class Circle : public AbstractShape
 public:
     /*!
      * Full circle, 0-360 degrees.
-     * If the type is GL_POLYGON then filled.
+     * If the type is GL_TRIANGLE_FAN then filled.
      * If the type is GL_LINE_LOOP then border of circle.
      *
      * @param type Type of the circle.
