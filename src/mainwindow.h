@@ -25,40 +25,50 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#ifdef __EMSCRIPTEN__
-#include <SDL/SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif
-
 class Table;
 
 class MainWindow
 {
-#ifdef __EMSCRIPTEN__
-    SDL_Surface *screen;
-#else
-    SDL_Window *mainwindow; /* Our window handle */
-    SDL_GLContext maincontext; /* Our opengl context handle */
-#endif
-
-    int width;
-    int height;
-
     // The table.
     Table *table;
-
-    void sdldie( const char* msg );
-
-    void resizeWindow( int width, int height );
-
-    void drawTable();
 
 public:
     MainWindow();
     ~MainWindow();
 
-    void mainLoop();
+    /*!
+     * The window resized.
+     *
+     * @width The new width.
+     * @height The new height.
+     */
+    void resize( const int &width, const int &height );
+
+    /*!
+     * Draw the items.
+     */
+    void draw();
+
+    /*!
+     * The button is pressed.
+     *
+     * @x The x value.
+     * @y The y value.
+     */
+    void buttonPressed( const unsigned int &x, const unsigned int &y );
+
+    /*!
+     * The button is moved when it pressed.
+     *
+     * @x The x value.
+     * @y The y value.
+     */
+    void buttonMove( const unsigned int &x, const unsigned int &y );
+
+    /*!
+     * The bittom os released.
+     */
+    void buttonReleased();
 };
 
 #endif // MAINWINDOW_H
