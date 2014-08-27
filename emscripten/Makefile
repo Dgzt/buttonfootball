@@ -15,4 +15,4 @@ index.html: $(OBJECTS)
 	$(CXX) -I Box2D/include -s LEGACY_GL_EMULATION=1 -O2 -o index.html $(FILES)
 
 clean:
-	rm -f index.html index.html.map index.js
+	rm -f index.html index.html.mem index.js
