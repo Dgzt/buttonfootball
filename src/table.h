@@ -37,10 +37,10 @@ class Gate;
 
 class Table : public Rectangle
 {
-    // TODO
+    // The width value in the Box2D world.
     float box2DWidth;
 
-    // TODO
+    // The height value in the Box2D world.
     float box2DHeight;
 
     // The x coordinate value.
@@ -144,13 +144,13 @@ public:
     GLfloat getScale(){ return scale; }
 
     /*!
-     * TODO.
+     * Resize the table.
      *
-     * @param x TODO
-     * @param y TODO
-     * @param width TODO.
-     * @param height TODO.
-     * @param scale TODO
+     * @param x The x coordinate value.
+     * @param y The y coordinate value.
+     * @param width The width value.
+     * @param height The height value.
+     * @param scale The scale value.
      */
     void resize( const float &x, const float &y, const float &width, const float &height, const float &scale );
 
