@@ -17,9 +17,15 @@
 #include "table.h"
 #include "mainwindow.h"
 
+// The width of the table.
+const float TABLE_WIDTH = 184.0;
+
+// The height of the table.
+const float TABLE_HEIGHT = 120.0;
+
 MainWindow::MainWindow()
 {
-    table = new Table;
+    table = new Table( TABLE_WIDTH, TABLE_HEIGHT );
 }
 
 MainWindow::~MainWindow()
@@ -27,7 +33,8 @@ MainWindow::~MainWindow()
     delete table;
 }
 
-void MainWindow::resize( const int &width, const int &height ){
+void MainWindow::setScreen( const int &width, const int &height )
+{
     glViewport( 0, 0, width, height );
 
     glMatrixMode( GL_MODELVIEW );
@@ -39,9 +46,31 @@ void MainWindow::resize( const int &width, const int &height ){
     // Projection to the table
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    glOrtho( 0.0,width,0.0,height,0.0,1.0 );
+    glOrtho( 0.0, width, 0.0, height, 0.0, 1.0 );
+}
 
-    table->resize( width, height );
+void MainWindow::resize( const int &width, const int &height )
+{
+    setScreen( width, height );
+
+    float tableWidth;
+    float tableHeight;
+
+    float rate = (double)width/height;
+
+    if( TABLE_WIDTH/TABLE_HEIGHT > rate ){
+        tableWidth = width;
+        tableHeight = TABLE_HEIGHT*(width/TABLE_WIDTH);
+    }else{
+        tableWidth = TABLE_WIDTH*(height/TABLE_HEIGHT);
+        tableHeight = height;
+    }
+
+    const float tableX = (width-tableWidth)/2;
+    const float tableY = height - (height-tableHeight)/2;
+    float scale = tableWidth / TABLE_WIDTH;
+
+    table->resize( tableX, tableY, tableWidth, tableHeight, scale );
 }
 
 void MainWindow::draw()

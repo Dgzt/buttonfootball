@@ -37,6 +37,12 @@ class Gate;
 
 class Table : public Rectangle
 {
+    // The width value in the Box2D world.
+    float box2DWidth;
+
+    // The height value in the Box2D world.
+    float box2DHeight;
+
     // The x coordinate value.
     GLfloat x;
 
@@ -102,7 +108,7 @@ public:
     /*!
      * Constructor.
      */
-    Table();
+    Table( const float &box2DWidth, const float &box2DHeight );
 
     /*!
      * Destructor.
@@ -138,12 +144,15 @@ public:
     GLfloat getScale(){ return scale; }
 
     /*!
-     * Recalculate the positions on the window.
+     * Resize the table.
      *
-     * @param width The new width value of window.
-     * @param height The new height value of window.
+     * @param x The x coordinate value.
+     * @param y The y coordinate value.
+     * @param width The width value.
+     * @param height The height value.
+     * @param scale The scale value.
      */
-    void resize( const float &windowWidth, const float &windowHeight );
+    void resize( const float &x, const float &y, const float &width, const float &height, const float &scale );
 
     /*!
      * Draw the object to the window.

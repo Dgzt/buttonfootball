@@ -32,6 +32,14 @@ class MainWindow
     // The table.
     Table *table;
 
+    /*!
+     * Set the screen size.
+     *
+     * @param width The new width value.
+     * @param height The new height value.
+     */
+    void setScreen( const int &width, const int &height );
+
 public:
     MainWindow();
     ~MainWindow();
@@ -39,8 +47,8 @@ public:
     /*!
      * The window resized.
      *
-     * @width The new width.
-     * @height The new height.
+     * @param width The new width value.
+     * @param height The new height value.
      */
     void resize( const int &width, const int &height );
 
@@ -52,16 +60,16 @@ public:
     /*!
      * The button is pressed.
      *
-     * @x The x value.
-     * @y The y value.
+     * @param x The x value.
+     * @param y The y value.
      */
     void buttonPressed( const unsigned int &x, const unsigned int &y );
 
     /*!
      * The button is moved when it pressed.
      *
-     * @x The x value.
-     * @y The y value.
+     * @param x The x value.
+     * @param y The y value.
      */
     void buttonMove( const unsigned int &x, const unsigned int &y );
 
@@ -73,7 +81,7 @@ public:
     /*!
      * Step the box2d world.
      *
-     * @timeStep The time step value.
+     * @param timeStep The time step value.
      */
     void stepBox2D( const double &timeStep );
 };
