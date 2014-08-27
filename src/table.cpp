@@ -205,7 +205,7 @@ void Table::addButtons()
     opponentButtons.push_back( new Button( this, world, BLUE_COLOR, box2DWidth - 3*buttonDistanceX, box2DHeight / 2 + buttonDistanceY ) );
 }
 
-void Table::resize(const float &x, const float &y, const float &width, const float &height, const float &scale)
+void Table::resize(const float &x, const float &y, const float &width, const float &height, const double &scale)
 {
     this->x = x;
     this->y = y;

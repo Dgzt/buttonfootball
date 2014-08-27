@@ -90,7 +90,7 @@ Map::~Map()
     delete bigRightArc;
 }
 
-void Map::resize(const float &x, const float &y, const float &width, const float &height, const float &scale)
+void Map::resize(const float &x, const float &y, const float &width, const float &height, const double &scale)
 {
     Rectangle::resize(x,y,width,height);
 

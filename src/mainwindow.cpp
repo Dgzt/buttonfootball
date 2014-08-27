@@ -68,7 +68,7 @@ void MainWindow::resize( const int &width, const int &height )
 
     const float tableX = (width-tableWidth)/2;
     const float tableY = height - (height-tableHeight)/2;
-    float scale = tableWidth / TABLE_WIDTH;
+    double scale = tableWidth / TABLE_WIDTH;
 
     table->resize( tableX, tableY, tableWidth, tableHeight, scale );
 }

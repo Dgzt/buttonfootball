@@ -79,7 +79,7 @@ public:
                  const float &y,
                  const float &width,
                  const float &height,
-                 const float &scale );
+                 const double &scale );
 
     /*!
      * Draw the map.

@@ -38,10 +38,10 @@ class Gate;
 class Table : public Rectangle
 {
     // The width value in the Box2D world.
-    float box2DWidth;
+    const float box2DWidth;
 
     // The height value in the Box2D world.
-    float box2DHeight;
+    const float box2DHeight;
 
     // The x coordinate value.
     GLfloat x;
@@ -53,7 +53,7 @@ class Table : public Rectangle
     GLfloat height;
 
     // The scale value.
-    float scale;
+    double scale;
 
     // The map.
     Map *map;
@@ -152,7 +152,7 @@ public:
      * @param height The height value.
      * @param scale The scale value.
      */
-    void resize( const float &x, const float &y, const float &width, const float &height, const float &scale );
+    void resize( const float &x, const float &y, const float &width, const float &height, const double &scale );
 
     /*!
      * Draw the object to the window.
