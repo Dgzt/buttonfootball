@@ -211,8 +211,8 @@ void Table::resize(const float &windowWidth, const float &windowHeight)
     }
 
     x = (windowWidth-tableWidth)/2;
-    GLfloat y = windowHeight - (windowHeight-tableHeight)/2;
-    bottom = (windowHeight-tableHeight)/2;
+    y = windowHeight - (windowHeight-tableHeight)/2;
+    height = tableHeight;
     scale = tableWidth / TABLE_WIDTH;
 
     Rectangle::resize( x, y, tableWidth, tableHeight );

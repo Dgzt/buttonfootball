@@ -37,11 +37,14 @@ class Gate;
 
 class Table : public Rectangle
 {
-    // The x coordinate of the table.
+    // The x coordinate value.
     GLfloat x;
 
-    // The bottom coordinate of the table.
-    GLfloat bottom;
+    // The y coordiante value.
+    GLfloat y;
+
+    // The height value.
+    GLfloat height;
 
     // The scale value.
     float scale;
@@ -107,18 +110,25 @@ public:
     ~Table();
 
     /*!
-     * Get the x coordinate value of table.
+     * Get the x coordinate value of the table.
      *
      * @return The x coordinate value.
      */
     GLfloat getX(){ return x; }
 
     /*!
-     * Ge the bottom coordinate value of table.
+     * Get the y coordinate value of the table.
      *
-     * @return The bottom coordinate value.
+     * @return The y coordinate value.
      */
-    GLfloat getBottom(){ return bottom; }
+    GLfloat getY(){ return y; }
+
+    /*!
+     * Get the height value of the table.
+     *
+     * @return The height value.
+     */
+    GLfloat getHeight(){ return height; }
 
     /*!
      * Get the scale value.

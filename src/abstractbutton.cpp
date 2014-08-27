@@ -80,7 +80,7 @@ int AbstractButton::getX()
 
 int AbstractButton::getY()
 {
-    return parent->getBottom() + ( box2DY * parent->getScale() );
+    return parent->getY() - parent->getHeight() + ( box2DY * parent->getScale() );
 }
 
 bool AbstractButton::contains( const unsigned int &mouseX, const unsigned int &mouseY)
