@@ -1,4 +1,4 @@
-PROJECT( buttobfootball )
+PROJECT( buttonfootball )
 
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
@@ -10,5 +10,8 @@ FIND_PACKAGE( OpenGL REQUIRED )
 FIND_PACKAGE( Box2D REQUIRED )
 
 INCLUDE_DIRECTORIES( ${SDL2_INCLUDE_DIR} )
+
+# Information message
+MESSAGE( STATUS "${PROJECT_NAME} will be built to install into ${CMAKE_INSTALL_PREFIX}" )
 
 ADD_SUBDIRECTORY( src )

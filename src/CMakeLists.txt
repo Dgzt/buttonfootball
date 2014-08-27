@@ -17,3 +17,7 @@ SET( ButtonFootball_Sources
 ADD_EXECUTABLE( ${PROJECT_NAME} ${ButtonFootball_Sources} )
 
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${SDL2_LIBRARY} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${BOX2D_LIBRARIES} )
+
+########### install files ###############
+
+INSTALL( TARGETS    ${PROJECT_NAME}     DESTINATION     ${CMAKE_INSTALL_PREFIX}/bin )
