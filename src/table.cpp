@@ -82,12 +82,26 @@ Table::~Table()
 
     delete arrow;
 
-    delete world;
-
     delete map;
 
     delete leftGate;
     delete rightGate;
+
+    // Delete player buttons.
+    while( playerButtons.size() != 0 ){
+        Button *button = playerButtons.at( playerButtons.size()-1 );
+        playerButtons.pop_back();
+        delete button;
+    }
+
+    // Delete opponent buttons.
+    while( opponentButtons.size() != 0 ){
+        Button *button = opponentButtons.at( opponentButtons.size()-1 );
+        opponentButtons.pop_back();
+        delete button;
+    }
+
+    delete world;
 }
 
 void Table::addWall( const float &x, const float &y, const float &width, const float &height)

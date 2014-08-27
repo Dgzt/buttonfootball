@@ -56,6 +56,11 @@ AbstractButton::AbstractButton( Table *parent,
     body->SetLinearDamping( 3.0f );
 }
 
+AbstractButton::~AbstractButton()
+{
+    body->GetWorld()->DestroyBody( body );
+}
+
 void AbstractButton::resize()
 {
     Circle::resize( getX(), getY(), body->GetFixtureList()->GetShape()->m_radius * parent->getScale() );

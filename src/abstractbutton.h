@@ -64,6 +64,11 @@ public:
                     const float &radius );
 
     /*!
+     * The destructor.
+     */
+    ~AbstractButton();
+
+    /*!
      * Resize the button.
      */
     void resize();
