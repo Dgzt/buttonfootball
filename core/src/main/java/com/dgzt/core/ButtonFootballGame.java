@@ -17,8 +17,9 @@ package com.dgzt.core;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
  * The game listener.
@@ -26,19 +27,37 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * @author Dgzt
  */
 public class ButtonFootballGame implements ApplicationListener {
+
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
 	
-	Texture texture;
-	SpriteBatch batch;
-	float elapsed;
+	/** The shape renderer. */
+	private ShapeRenderer shapeRenderer;
+
+	/** The camera. */
+	private OrthographicCamera camera;
+	
+	/** The camera. */
+	private Table table;
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
 
 	/**
 	 * Create the objects.
 	 */
 	@Override
 	public void create () {
+        camera = new OrthographicCamera();
+        camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.update();
+		
 		Gdx.app.log(ButtonFootballGame.class.getName()+".create", "");
-		texture = new Texture(Gdx.files.internal("libgdx-logo.png"));
-		batch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer();
+		
+		table = new Table(shapeRenderer);
 	}
 
 	/**
@@ -47,6 +66,9 @@ public class ButtonFootballGame implements ApplicationListener {
 	@Override
 	public void resize (int width, int height) {
 		Gdx.app.log(ButtonFootballGame.class.getName()+".resize", String.valueOf(width)+" x "+String.valueOf(height));
+		camera.setToOrtho(true, width, height);
+		
+		table.resize(width, height);
 	}
 
 	/**
@@ -54,12 +76,16 @@ public class ButtonFootballGame implements ApplicationListener {
 	 */
 	@Override
 	public void render () {
-		elapsed += Gdx.graphics.getDeltaTime();
-		Gdx.gl.glClearColor(1, 0, 1, 0);
-		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(texture, 100+100*(float)Math.cos(elapsed), 100+25*(float)Math.sin(elapsed));
-		batch.end();
+		camera.update();
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);;	
+		
+		shapeRenderer.begin(ShapeType.Filled);
+		
+		table.draw();
+		
+		shapeRenderer.end();
 	}
 
 	/**

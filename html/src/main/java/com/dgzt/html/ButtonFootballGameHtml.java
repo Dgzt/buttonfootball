@@ -32,6 +32,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Dgzt
  */
 public class ButtonFootballGameHtml extends GwtApplication {
+	
+	// --------------------------------------------------
+	// ~ Static members
+	// --------------------------------------------------
+	
 	/** The default width value. */
 	private static final int WIDTH = 640;
 	
@@ -41,8 +46,9 @@ public class ButtonFootballGameHtml extends GwtApplication {
 	/** This object. */
 	private static ButtonFootballGameHtml instance;
 	
-	/** The game object. */
-	private ButtonFootballGame game;
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
 
 	/**
 	 * The html configuration.
@@ -82,14 +88,17 @@ public class ButtonFootballGameHtml extends GwtApplication {
 			}
 		});
 		
-		game = new ButtonFootballGame();
-		return game;
+		return new ButtonFootballGame();
 	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
 	
 	/**
 	 * Scale the canvas on the html page.
 	 */
-	void scaleCanvas() {
+	private void scaleCanvas() {
 		Element element = Document.get().getElementById("embed-html");
 		int width = getWindowInnerWidth();
 		int height = getWindowInnerHeight();
@@ -105,8 +114,11 @@ public class ButtonFootballGameHtml extends GwtApplication {
 			canvas.getStyle().setLeft(0,Style.Unit.PX);
 			canvas.getStyle().setPosition(Style.Position.ABSOLUTE);
 		}
-		game.resize(width, height);
 	}
+	
+	// --------------------------------------------------
+	// ~ Native methods
+	// --------------------------------------------------
 
 	/**
 	 * Get the inner width value.
@@ -133,6 +145,10 @@ public class ButtonFootballGameHtml extends GwtApplication {
 		var htmlLauncher_onWindowResize = $entry(@com.dgzt.html.ButtonFootballGameHtml::handleResize());
 		$wnd.addEventListener('resize', htmlLauncher_onWindowResize, false);
 	}-*/;
+	
+	// --------------------------------------------------
+	// ~ Static methods
+	// --------------------------------------------------
 
 	/**
 	 * The resize handle.
