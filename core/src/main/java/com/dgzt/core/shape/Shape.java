@@ -20,7 +20,17 @@ package com.dgzt.core.shape;
  * @author Dgzt
  */
 public interface Shape {
+	
+	// --------------------------------------------------
+	// ~ Static members
+	// --------------------------------------------------
+	
+	public static final float LINE_WIDTH = 1.0f;
 
+	// --------------------------------------------------
+	// ~ Public members
+	// --------------------------------------------------
+	
 	/**
 	 * Draw the shape.
 	 */

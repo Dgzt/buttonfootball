@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
 
@@ -71,6 +72,9 @@ final public class Map extends RectangleShape{
 	/** The right sector 5. */
 	private final RectangleBorderShape rightSector5;
 	
+	/** The center line. */
+	private final LineShape centerLine;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -90,6 +94,8 @@ final public class Map extends RectangleShape{
 		
 		this.leftSector5 = new RectangleBorderShape(shapeRenderer);
 		this.rightSector5 = new RectangleBorderShape(shapeRenderer);
+		
+		this.centerLine = new LineShape(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -135,6 +141,14 @@ final public class Map extends RectangleShape{
 		final float rightSector5X = x + width - sector5Width;
 		
 		rightSector5.resize(rightSector5X, sector5Y, sector5Width, sector5Height, scale);
+		
+		// Center line
+		final float centerLineX1 = x + width / 2;
+		final float centerLineY1 = y;
+		final float centerLineX2 = centerLineX1;
+		final float centerLineY2 = centerLineY1 + height;
+		
+		centerLine.resize(centerLineX1, centerLineY1, centerLineX2, centerLineY2, scale);
 	}
 	
 	// --------------------------------------------------
@@ -155,6 +169,8 @@ final public class Map extends RectangleShape{
 		
 		leftSector5.draw();
 		rightSector5.draw();
+		
+		centerLine.draw();
 	}
 	
 }

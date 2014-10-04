@@ -19,12 +19,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
- * White border of the rectangle.
+ * Line shape.
  * 
  * @author Dgzt
  */
-public class RectangleBorderShape implements Shape{
-
+public class LineShape implements Shape{
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -32,17 +32,17 @@ public class RectangleBorderShape implements Shape{
 	/** The shape renderer. */
 	private final ShapeRenderer shapeRenderer;
 	
-	/** The x coordinate value. */
-	private float x;
+	/** The first x coordinate value. */
+	private float x1;
 	
-	/** The y coordinate value. */
-	private float y;
+	/** The first y coordinate value. */
+	private float y1;
 	
-	/** The width value. */
-	private float width;
+	/** The second x coordinate value. */
+	private float x2;
 	
-	/** The height value. */
-	private float height;
+	/** The second y coordinate value. */
+	private float y2;
 	
 	/** The width of the line. */
 	private float lineWidth;
@@ -56,7 +56,7 @@ public class RectangleBorderShape implements Shape{
 	 * 
 	 * @param shapeRenderer - The shape renderer.
 	 */
-	public RectangleBorderShape(final ShapeRenderer shapeRenderer){
+	public LineShape(final ShapeRenderer shapeRenderer){
 		this.shapeRenderer = shapeRenderer;
 	}
 	
@@ -67,17 +67,17 @@ public class RectangleBorderShape implements Shape{
 	/**
 	 * Resize the shape.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param scale The scale value.
+	 * @param x1 - The first x coordinate value.
+	 * @param y1 - The first y coordinate value.
+	 * @param x2 - The second x coordinate value.
+	 * @param y2 - The second y coordinate value.
+	 * @param scale - The scale value.
 	 */
-	public void resize(final float x, final float y, final float width, final float height, final double scale){
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+	public void resize(final float x1, final float y1, final float x2, final float y2, final double scale){
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
 		
 		lineWidth = (float) (LINE_WIDTH * scale);
 	}
@@ -90,16 +90,11 @@ public class RectangleBorderShape implements Shape{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void draw(){
-		final float halfLineWidth = lineWidth / 2;
-		
+	public void draw() {
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(Color.WHITE);
-		shapeRenderer.rectLine(x - halfLineWidth, y, x + width + halfLineWidth, y, lineWidth);
-		shapeRenderer.rectLine(x + width, y - halfLineWidth, x + width, y + height + halfLineWidth, lineWidth);
-		shapeRenderer.rectLine(x - halfLineWidth, y + height, x + width + halfLineWidth, y + height, lineWidth);
-		shapeRenderer.rectLine(x, y - halfLineWidth, x, y + height + halfLineWidth, lineWidth);
+		shapeRenderer.rectLine(x1, y1, x2, y2, lineWidth);
 		shapeRenderer.end();
 	}
-	
+
 }
