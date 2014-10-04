@@ -16,7 +16,6 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
 
@@ -82,7 +81,7 @@ final public class Map extends RectangleShape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public Map(final ShapeRenderer shapeRenderer){
-		super(shapeRenderer, ShapeType.Filled, Color.GREEN);
+		super(shapeRenderer, Color.GREEN);
 		
 		this.mapBorder = new RectangleBorderShape(shapeRenderer);
 		

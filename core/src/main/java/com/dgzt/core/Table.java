@@ -16,7 +16,6 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.dgzt.core.shape.RectangleShape;
 
 /**
@@ -53,7 +52,7 @@ final public class Table extends RectangleShape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public Table( final ShapeRenderer shapeRenderer ){
-		super(shapeRenderer, ShapeType.Filled, Color.GRAY);
+		super(shapeRenderer, Color.GRAY);
 		
 		map = new Map(shapeRenderer);
 	}

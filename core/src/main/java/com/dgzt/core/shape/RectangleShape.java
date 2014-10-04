@@ -32,9 +32,6 @@ public class RectangleShape implements Shape{
 	/** The shape renderer. */
 	private final ShapeRenderer shapeRenderer;
 	
-	/** The type of shape. */
-	private final ShapeType shapeType;
-	
 	/** The x coordinate value. */
 	private float x;
 	
@@ -60,9 +57,8 @@ public class RectangleShape implements Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 * @param color - The color of the shape.
 	 */
-	public RectangleShape( final ShapeRenderer shapeRenderer, final ShapeType shapeType, final Color color){
+	public RectangleShape( final ShapeRenderer shapeRenderer, final Color color){
 		this.shapeRenderer = shapeRenderer;
-		this.shapeType = shapeType;
 		this.color = color;
 	}
 	
@@ -94,7 +90,7 @@ public class RectangleShape implements Shape{
 	 */
 	@Override
 	public void draw(){
-		shapeRenderer.begin(shapeType);
+		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(color);
 		shapeRenderer.rect(x, y, width, height);
 		shapeRenderer.end();
