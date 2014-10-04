@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
  * The abstract shape.
@@ -30,6 +31,9 @@ public class Shape {
 	
 	/** The shape renderer. */
 	private final ShapeRenderer shapeRenderer;
+	
+	/** The type of shape. */
+	private final ShapeType shapeType;
 	
 	/** The x coordinate value. */
 	private float x;
@@ -56,8 +60,9 @@ public class Shape {
 	 * @param shapeRenderer - The shape renderer.
 	 * @param color - The color of the shape.
 	 */
-	public Shape( final ShapeRenderer shapeRenderer, final Color color){
+	public Shape( final ShapeRenderer shapeRenderer, final ShapeType shapeType, final Color color){
 		this.shapeRenderer = shapeRenderer;
+		this.shapeType = shapeType;
 		this.color = color;
 	}
 	
@@ -84,7 +89,9 @@ public class Shape {
 	 * Draw the shape.
 	 */
 	public void draw(){
+		shapeRenderer.begin(shapeType);
 		shapeRenderer.setColor(color);
 		shapeRenderer.rect(x, y, width, height);
+		shapeRenderer.end();
 	}
 }

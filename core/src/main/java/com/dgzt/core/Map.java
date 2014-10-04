@@ -16,13 +16,14 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
  * The map object.
  * 
  * @author Dgzt
  */
-public class Map extends Shape{
+final public class Map extends Shape{
 
 	// --------------------------------------------------
 	// ~ Static members
@@ -34,8 +35,8 @@ public class Map extends Shape{
 	/** The height value in cm. */
 	public static final float HEIGHT = 104.0f;
 	
-	/** The color. */
-	private static final Color COLOR = Color.GREEN;
+	/** The border of map. */
+	private final Shape border;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -47,7 +48,33 @@ public class Map extends Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public Map(final ShapeRenderer shapeRenderer){
-		super(shapeRenderer, COLOR);
+		super(shapeRenderer, ShapeType.Filled, Color.GREEN);
+		
+		border = new Shape(shapeRenderer, ShapeType.Line, Color.WHITE);
+	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
+	
+	/**
+	 * Resize the map and the child objects.
+	 */
+	@Override
+	public void resize(float x, float y, float width, float height) {
+		super.resize(x, y, width, height);
+		
+		border.resize(x, y, width, height);
+	}
+
+	/**
+	 * Draw the map and the child objects.
+	 */
+	@Override
+	public void draw() {
+		super.draw();
+		
+		border.draw();
 	}
 	
 }

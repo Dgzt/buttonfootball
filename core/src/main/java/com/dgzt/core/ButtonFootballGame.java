@@ -16,18 +16,24 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
  * The game listener.
  * 
  * @author Dgzt
  */
-public class ButtonFootballGame implements ApplicationListener {
+final public class ButtonFootballGame implements ApplicationListener {
 
+	// --------------------------------------------------
+	// ~ Static members
+	// --------------------------------------------------
+	
+	/** The width of lines. */
+	private static final float LINE_WIDTH = 1.0f;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -86,6 +92,8 @@ public class ButtonFootballGame implements ApplicationListener {
 		final float tableY = (height-tableHeight)/2;
 		final double scale = (double)tableWidth / Table.WIDTH;
 		
+		Gdx.gl20.glLineWidth(LINE_WIDTH*(float)scale);
+		
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
 	}
 
@@ -97,13 +105,9 @@ public class ButtonFootballGame implements ApplicationListener {
 		camera.update();
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);;	
-		
-		shapeRenderer.begin(ShapeType.Filled);
-		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);;	
+
 		table.draw();
-		
-		shapeRenderer.end();
 	}
 
 	/**

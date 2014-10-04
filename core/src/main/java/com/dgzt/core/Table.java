@@ -16,13 +16,14 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
  * The table object.
  * 
  * @author Dgzt
  */
-public class Table extends Shape{
+final public class Table extends Shape{
 	
 	// --------------------------------------------------
 	// ~ Static members
@@ -34,13 +35,11 @@ public class Table extends Shape{
 	/** The height in cm. */
 	public static final float HEIGHT = 120.0f;
 	
-	/** The color. */
-	private static final Color COLOR = Color.GRAY;
-	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
+	/** The map. */
 	private final Map map;
 	
 	// --------------------------------------------------
@@ -53,7 +52,7 @@ public class Table extends Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public Table( final ShapeRenderer shapeRenderer ){
-		super(shapeRenderer, COLOR);
+		super(shapeRenderer, ShapeType.Filled, Color.GRAY);
 		
 		map = new Map(shapeRenderer);
 	}
