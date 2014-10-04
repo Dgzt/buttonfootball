@@ -51,9 +51,6 @@ final public class Map extends RectangleShape{
 	// ~ Private members
 	// --------------------------------------------------	
 	
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
-	
 	/** The border of the map. */
 	private final RectangleBorderShape mapBorder;
 
@@ -71,8 +68,6 @@ final public class Map extends RectangleShape{
 	 */
 	public Map(final ShapeRenderer shapeRenderer){
 		super(shapeRenderer, ShapeType.Filled, Color.GREEN);
-		
-		this.shapeRenderer = shapeRenderer;
 		
 		this.mapBorder = new RectangleBorderShape(shapeRenderer);
 		this.leftSector16 = new RectangleBorderShape(shapeRenderer);
