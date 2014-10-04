@@ -12,36 +12,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core;
+package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.dgzt.core.shape.RectangleShape;
 
 /**
- * The table object.
+ * White border of the rectangle.
  * 
  * @author Dgzt
  */
-final public class Table extends RectangleShape{
+public class RectangleBorderShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
 	
-	/** The width in cm. */
-	public static final float WIDTH = 184.0f;
-	
-	/** The height in cm. */
-	public static final float HEIGHT = 120.0f;
-	
+	private static double LINE_WIDTH = 1.0;
+
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The map. */
-	private final Map map;
+	/** The shape renderer. */
+	private final ShapeRenderer shapeRenderer;
+	
+	/** The x coordinate value. */
+	private float x;
+	
+	/** The y coordinate value. */
+	private float y;
+	
+	/** The width value. */
+	private float width;
+	
+	/** The height value. */
+	private float height;
+	
+	/** The width of the line. */
+	private float lineWidth;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -52,35 +62,30 @@ final public class Table extends RectangleShape{
 	 * 
 	 * @param shapeRenderer - The shape renderer.
 	 */
-	public Table( final ShapeRenderer shapeRenderer ){
-		super(shapeRenderer, ShapeType.Filled, Color.GRAY);
-		
-		map = new Map(shapeRenderer);
+	public RectangleBorderShape(final ShapeRenderer shapeRenderer){
+		this.shapeRenderer = shapeRenderer;
 	}
 	
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
-
+	
 	/**
-	 * Resize the table and the child objects.
+	 * Resize the shape.
 	 * 
 	 * @param x - The x coordinate value.
 	 * @param y - The y coordinate value.
 	 * @param width - The width value.
 	 * @param height - The height value.
-	 * @param scale - The scale value.
+	 * @param scale The scale value.
 	 */
-	public void resize(final float x, final float y, final float width, final float height, final double scale) {
-		super.resize(x, y, width, height);
+	public void resize(final float x, final float y, final float width, final float height, final double scale){
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 		
-		// Map
-		final float mapWidth = (float) ((double)Map.WIDTH * scale);
-		final float mapHeight = (float) ((double)Map.HEIGHT * scale);
-		final float mapX = x + (width - mapWidth)/2;
-		final float mapY = y + (height - mapHeight)/2;
-		
-		map.resize( mapX, mapY, mapWidth, mapHeight, scale );
+		lineWidth = (float) (LINE_WIDTH * scale);
 	}
 	
 	// --------------------------------------------------
@@ -88,13 +93,19 @@ final public class Table extends RectangleShape{
 	// --------------------------------------------------
 
 	/**
-	 * Draw the table and the child objects.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void draw() {
-		super.draw();
+	public void draw(){
+		final float halfLineWidth = lineWidth / 2;
 		
-		map.draw();
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(Color.WHITE);
+		shapeRenderer.rectLine(x - halfLineWidth, y, x + width + halfLineWidth, y, lineWidth);
+		shapeRenderer.rectLine(x + width, y - halfLineWidth, x + width, y + height + halfLineWidth, lineWidth);
+		shapeRenderer.rectLine(x - halfLineWidth, y + height, x + width + halfLineWidth, y + height, lineWidth);
+		shapeRenderer.rectLine(x, y - halfLineWidth, x, y + height + halfLineWidth, lineWidth);
+		shapeRenderer.end();
 	}
 	
 }

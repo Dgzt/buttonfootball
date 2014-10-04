@@ -17,13 +17,15 @@ package com.dgzt.core;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.dgzt.core.shape.RectangleBorderShape;
+import com.dgzt.core.shape.RectangleShape;
 
 /**
  * The map object.
  * 
  * @author Dgzt
  */
-final public class Map extends Shape{
+final public class Map extends RectangleShape{
 
 	// --------------------------------------------------
 	// ~ Static members
@@ -35,8 +37,15 @@ final public class Map extends Shape{
 	/** The height value in cm. */
 	public static final float HEIGHT = 104.0f;
 	
-	/** The border of map. */
-	private final Shape border;
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------	
+	
+	/** The shape renderer. */
+	private final ShapeRenderer shapeRenderer;
+	
+	/** The border of the map. */
+	private final RectangleBorderShape mapBorder;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -50,22 +59,33 @@ final public class Map extends Shape{
 	public Map(final ShapeRenderer shapeRenderer){
 		super(shapeRenderer, ShapeType.Filled, Color.GREEN);
 		
-		border = new Shape(shapeRenderer, ShapeType.Line, Color.WHITE);
+		this.shapeRenderer = shapeRenderer;
+		
+		this.mapBorder = new RectangleBorderShape(shapeRenderer);
+	}
+	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
+	
+	/**
+	 * Resize the map and the child objects.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param scale - The scale value.
+	 */
+	public void resize(final float x, final float y, final float width, final float height, final double scale ) {
+		super.resize(x, y, width, height);
+		
+		mapBorder.resize(x, y, width, height, scale);
 	}
 	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
-	
-	/**
-	 * Resize the map and the child objects.
-	 */
-	@Override
-	public void resize(float x, float y, float width, float height) {
-		super.resize(x, y, width, height);
-		
-		border.resize(x, y, width, height);
-	}
 
 	/**
 	 * Draw the map and the child objects.
@@ -74,7 +94,7 @@ final public class Map extends Shape{
 	public void draw() {
 		super.draw();
 		
-		border.draw();
+		mapBorder.draw();		
 	}
 	
 }

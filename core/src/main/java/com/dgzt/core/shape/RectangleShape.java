@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core;
+package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
  * 
  * @author Dgzt
  */
-public class Shape {
+public class RectangleShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -60,7 +60,7 @@ public class Shape {
 	 * @param shapeRenderer - The shape renderer.
 	 * @param color - The color of the shape.
 	 */
-	public Shape( final ShapeRenderer shapeRenderer, final ShapeType shapeType, final Color color){
+	public RectangleShape( final ShapeRenderer shapeRenderer, final ShapeType shapeType, final Color color){
 		this.shapeRenderer = shapeRenderer;
 		this.shapeType = shapeType;
 		this.color = color;
@@ -78,16 +78,21 @@ public class Shape {
 	 * @param width - The width value.
 	 * @param height The height value.
 	 */
-	public void resize(final float x, final float y, final float width, final float height){
+	protected void resize(final float x, final float y, final float width, final float height){
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 	}
 	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------	
+	
 	/**
-	 * Draw the shape.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void draw(){
 		shapeRenderer.begin(shapeType);
 		shapeRenderer.setColor(color);
