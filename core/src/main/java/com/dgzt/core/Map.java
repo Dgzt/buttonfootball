@@ -57,6 +57,9 @@ final public class Map extends RectangleShape{
 	/** The left sector 16. */
 	private final RectangleBorderShape leftSector16;
 	
+	/** The right sector 16. */
+	private final RectangleBorderShape rightSector16;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -71,6 +74,7 @@ final public class Map extends RectangleShape{
 		
 		this.mapBorder = new RectangleBorderShape(shapeRenderer);
 		this.leftSector16 = new RectangleBorderShape(shapeRenderer);
+		this.rightSector16 = new RectangleBorderShape(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -91,13 +95,18 @@ final public class Map extends RectangleShape{
 		
 		mapBorder.resize(x, y, width, height, scale);
 		
-		//Left sector 16
+		// Left sector 16
 		final float sector16Width = (float)((double)SECTOR_16_WIDTH * scale);
 		final float sector16Height = (float)((double)SECTOR_16_HEIGHT * scale);
 		final float sector16Y = y + (height - sector16Height) / 2;
 		final float leftSector16X = x;
 		
 		leftSector16.resize(leftSector16X, sector16Y, sector16Width, sector16Height, scale);
+		
+		// Right sector 16
+		final float rightSector16X = x + width - sector16Width;
+		
+		rightSector16.resize(rightSector16X, sector16Y, sector16Width, sector16Height, scale);
 	}
 	
 	// --------------------------------------------------
@@ -114,6 +123,7 @@ final public class Map extends RectangleShape{
 		mapBorder.draw();		
 		
 		leftSector16.draw();
+		rightSector16.draw();
 	}
 	
 }
