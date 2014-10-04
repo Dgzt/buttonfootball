@@ -47,6 +47,12 @@ final public class Map extends RectangleShape{
 	/** The height value of the sector 16 in cm. */
 	private static final float SECTOR_16_HEIGHT = 60.0f;
 	
+	/** The width value of the sector 5 in cm. */
+	private static final float SECTOR_5_WIDTH = 11.0f;
+	
+	/** The height value of the sector 5 in cm. */
+	private static final float SECTOR_5_HEIGHT = 30.0f;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------	
@@ -59,6 +65,9 @@ final public class Map extends RectangleShape{
 	
 	/** The right sector 16. */
 	private final RectangleBorderShape rightSector16;
+	
+	/** The left sector 5. */
+	private final RectangleBorderShape leftSector5;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -73,8 +82,11 @@ final public class Map extends RectangleShape{
 		super(shapeRenderer, ShapeType.Filled, Color.GREEN);
 		
 		this.mapBorder = new RectangleBorderShape(shapeRenderer);
+		
 		this.leftSector16 = new RectangleBorderShape(shapeRenderer);
 		this.rightSector16 = new RectangleBorderShape(shapeRenderer);
+		
+		this.leftSector5 = new RectangleBorderShape(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -107,6 +119,14 @@ final public class Map extends RectangleShape{
 		final float rightSector16X = x + width - sector16Width;
 		
 		rightSector16.resize(rightSector16X, sector16Y, sector16Width, sector16Height, scale);
+		
+		// Left sector 5
+		final float sector5Width = (float)((double)SECTOR_5_WIDTH * scale);
+		final float sector5Height = (float)((double)SECTOR_5_HEIGHT * scale);
+		final float sector5Y = y + (height - sector5Height) / 2;
+		final float leftSector5X = x;
+		
+		leftSector5.resize(leftSector5X, sector5Y, sector5Width, sector5Height, scale);
 	}
 	
 	// --------------------------------------------------
@@ -124,6 +144,8 @@ final public class Map extends RectangleShape{
 		
 		leftSector16.draw();
 		rightSector16.draw();
+		
+		leftSector5.draw();
 	}
 	
 }
