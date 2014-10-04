@@ -29,10 +29,10 @@ public class Table extends Shape{
 	// --------------------------------------------------
 	
 	/** The width in cm. */
-	public static final int WIDTH = 184;
+	public static final float WIDTH = 184.0f;
 	
 	/** The height in cm. */
-	public static final int HEIGHT = 120;
+	public static final float HEIGHT = 120.0f;
 	
 	/** The color. */
 	private static final Color COLOR = Color.GRAY;
