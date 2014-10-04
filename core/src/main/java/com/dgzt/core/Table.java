@@ -29,13 +29,19 @@ public class Table extends Shape{
 	// --------------------------------------------------
 	
 	/** The width in cm. */
-	private static final int WIDTH = 184;
+	public static final int WIDTH = 184;
 	
 	/** The height in cm. */
-	private static final int HEIGHT = 120;
+	public static final int HEIGHT = 120;
 	
 	/** The color. */
 	private static final Color COLOR = Color.GRAY;
+	
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
+	
+	private final Map map;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -48,36 +54,47 @@ public class Table extends Shape{
 	 */
 	public Table( final ShapeRenderer shapeRenderer ){
 		super(shapeRenderer, COLOR);
+		
+		map = new Map(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
-	
-	/**
-	 * Resize and scaling the table to the center.
-	 * 
-	 * @param width - The width of the window.
-	 * @param height - The height of the window.
-	 */
-	public void resize(final float width, final float height){
-		float tableWidth;
-		float tableHeight;
-		
-		double rate = (double)width/height;
-		
-		if( (float)WIDTH/HEIGHT > rate ){
-			tableWidth = width;
-			tableHeight = HEIGHT*(width/WIDTH);
-		}else{
-			tableWidth = WIDTH*(height/HEIGHT);
-			tableHeight = height;
-		}
-		
-		final float tableX = (width-tableWidth)/2;
-		final float tableY = (height-tableHeight)/2;
-		
-		super.resize(tableX, tableY, tableWidth, tableHeight);
-	}
 
+	/**
+	 * Resize the table and the child objects.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param scale - The scale value.
+	 */
+	public void resize(final float x, final float y, final float width, final float height, final double scale) {
+		super.resize(x, y, width, height);
+		
+		// Map
+		final float mapWidth = (float) ((double)Map.WIDTH * scale);
+		final float mapHeight = (float) ((double)Map.HEIGHT * scale);
+		final float mapX = x + (width - mapWidth)/2;
+		final float mapY = y + (height - mapHeight)/2;
+		
+		map.resize( mapX, mapY, mapWidth, mapHeight );
+	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
+
+	/**
+	 * Draw the table and the child objects.
+	 */
+	@Override
+	public void draw() {
+		super.draw();
+		
+		map.draw();
+	}
+	
 }

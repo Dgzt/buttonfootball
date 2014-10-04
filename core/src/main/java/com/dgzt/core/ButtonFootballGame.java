@@ -68,7 +68,24 @@ public class ButtonFootballGame implements ApplicationListener {
 		Gdx.app.log(ButtonFootballGame.class.getName()+".resize", String.valueOf(width)+" x "+String.valueOf(height));
 		camera.setToOrtho(true, width, height);
 		
-		table.resize(width, height);
+		float tableWidth;
+		float tableHeight;
+		
+		double rate = (double)width/height;
+		
+		if( (float)Table.WIDTH/Table.HEIGHT > rate ){
+			tableWidth = width;
+			tableHeight = Table.HEIGHT*((float)width/Table.WIDTH);
+		}else{
+			tableWidth = Table.WIDTH*((float)height/Table.HEIGHT);
+			tableHeight = height;
+		}
+		
+		final float tableX = (width-tableWidth)/2;
+		final float tableY = (height-tableHeight)/2;
+		final double scale = (double)tableWidth / Table.WIDTH;
+		
+		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
 	}
 
 	/**

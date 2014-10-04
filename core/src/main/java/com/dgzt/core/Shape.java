@@ -62,7 +62,7 @@ public class Shape {
 	}
 	
 	// --------------------------------------------------
-	// ~ Protected methods
+	// ~ Public methods
 	// --------------------------------------------------
 	
 	/**
@@ -73,16 +73,12 @@ public class Shape {
 	 * @param width - The width value.
 	 * @param height The height value.
 	 */
-	protected void resize(final float x, final float y, final float width, final float height){
+	public void resize(final float x, final float y, final float width, final float height){
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 	}
-	
-	// --------------------------------------------------
-	// ~ public methods
-	// --------------------------------------------------
 	
 	/**
 	 * Draw the shape.
