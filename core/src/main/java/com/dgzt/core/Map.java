@@ -28,7 +28,7 @@ import com.dgzt.core.shape.RectangleShape;
 final public class Map extends RectangleShape{
 
 	// --------------------------------------------------
-	// ~ Static members
+	// ~ Public static members
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
@@ -36,6 +36,16 @@ final public class Map extends RectangleShape{
 	
 	/** The height value in cm. */
 	public static final float HEIGHT = 104.0f;
+	
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	/** The width value of the sector 16 in cm. */
+	private static final float SECTOR_16_WIDTH = 30.0f;
+	
+	/** The height value of the sector 16 in cm. */
+	private static final float SECTOR_16_HEIGHT = 60.0f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -46,6 +56,9 @@ final public class Map extends RectangleShape{
 	
 	/** The border of the map. */
 	private final RectangleBorderShape mapBorder;
+
+	/** The left sector 16. */
+	private final RectangleBorderShape leftSector16;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -62,6 +75,7 @@ final public class Map extends RectangleShape{
 		this.shapeRenderer = shapeRenderer;
 		
 		this.mapBorder = new RectangleBorderShape(shapeRenderer);
+		this.leftSector16 = new RectangleBorderShape(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -81,6 +95,14 @@ final public class Map extends RectangleShape{
 		super.resize(x, y, width, height);
 		
 		mapBorder.resize(x, y, width, height, scale);
+		
+		//Left sector 16
+		final float sector16Width = (float)((double)SECTOR_16_WIDTH * scale);
+		final float sector16Height = (float)((double)SECTOR_16_HEIGHT * scale);
+		final float sector16Y = y + (height - sector16Height) / 2;
+		final float leftSector16X = x;
+		
+		leftSector16.resize(leftSector16X, sector16Y, sector16Width, sector16Height, scale);
 	}
 	
 	// --------------------------------------------------
@@ -95,6 +117,8 @@ final public class Map extends RectangleShape{
 		super.draw();
 		
 		mapBorder.draw();		
+		
+		leftSector16.draw();
 	}
 	
 }
