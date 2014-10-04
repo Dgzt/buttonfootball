@@ -14,12 +14,10 @@
  */
 package com.dgzt.core.shape;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
- * White border of the rectangle.
+ * Border of the rectangle.
  * 
  * @author Dgzt
  */
@@ -29,23 +27,17 @@ public class RectangleBorderShape implements Shape{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
+	/** The bottom line. */
+	private final LineShape topLine;
 	
-	/** The x coordinate value. */
-	private float x;
+	/** The right line. */
+	private final LineShape rightLine;
 	
-	/** The y coordinate value. */
-	private float y;
+	/** The bottom line. */
+	private final LineShape bottomLine;
 	
-	/** The width value. */
-	private float width;
-	
-	/** The height value. */
-	private float height;
-	
-	/** The width of the line. */
-	private float lineWidth;
+	/** The left line. */
+	private final LineShape leftLine;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -57,7 +49,10 @@ public class RectangleBorderShape implements Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public RectangleBorderShape(final ShapeRenderer shapeRenderer){
-		this.shapeRenderer = shapeRenderer;
+		topLine = new LineShape(shapeRenderer);
+		rightLine = new LineShape(shapeRenderer);
+		bottomLine = new LineShape(shapeRenderer);
+		leftLine = new LineShape(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -74,12 +69,12 @@ public class RectangleBorderShape implements Shape{
 	 * @param scale The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		final float halpLineWidt = (float) (LINE_WIDTH * scale) / 2;
 		
-		lineWidth = (float) (LINE_WIDTH * scale);
+		topLine.resize(x - halpLineWidt, y, x + width + halpLineWidt, y, scale);
+		rightLine.resize(x + width, y - halpLineWidt, x + width, y + height + halpLineWidt, scale);
+		bottomLine.resize(x - halpLineWidt, y + height, x + width + halpLineWidt, y + height, scale);
+		leftLine.resize(x, y - halpLineWidt, x, y + height + halpLineWidt, scale);
 	}
 	
 	// --------------------------------------------------
@@ -91,15 +86,10 @@ public class RectangleBorderShape implements Shape{
 	 */
 	@Override
 	public void draw(){
-		final float halfLineWidth = lineWidth / 2;
-		
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.WHITE);
-		shapeRenderer.rectLine(x - halfLineWidth, y, x + width + halfLineWidth, y, lineWidth);
-		shapeRenderer.rectLine(x + width, y - halfLineWidth, x + width, y + height + halfLineWidth, lineWidth);
-		shapeRenderer.rectLine(x - halfLineWidth, y + height, x + width + halfLineWidth, y + height, lineWidth);
-		shapeRenderer.rectLine(x, y - halfLineWidth, x, y + height + halfLineWidth, lineWidth);
-		shapeRenderer.end();
+		topLine.draw();
+		rightLine.draw();
+		bottomLine.draw();
+		leftLine.draw();
 	}
 	
 }
