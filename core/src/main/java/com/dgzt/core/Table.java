@@ -42,6 +42,9 @@ final public class Table extends RectangleShape{
 	/** The map. */
 	private final Map map;
 	
+	/** The left gate. */
+	private final Gate leftGate;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -55,6 +58,8 @@ final public class Table extends RectangleShape{
 		super(shapeRenderer, Color.GRAY);
 		
 		map = new Map(shapeRenderer);
+		
+		leftGate = new Gate(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -78,8 +83,14 @@ final public class Table extends RectangleShape{
 		final float mapHeight = (float) ((double)Map.HEIGHT * scale);
 		final float mapX = x + (width - mapWidth)/2;
 		final float mapY = y + (height - mapHeight)/2;
-		
 		map.resize( mapX, mapY, mapWidth, mapHeight, scale );
+		
+		// Left gate
+		final float gateWidth = (float)(Gate.WIDTH * scale);
+		final float gateHeight = (float)(Gate.HEIGHT * scale);
+		final float leftGateX = mapX - gateWidth;
+		final float gateY = y + (height - gateHeight) / 2;
+		leftGate.resize(leftGateX, gateY, gateWidth, gateHeight, scale);
 	}
 	
 	// --------------------------------------------------
@@ -94,6 +105,8 @@ final public class Table extends RectangleShape{
 		super.draw();
 		
 		map.draw();
+		
+		leftGate.draw();
 	}
 	
 }

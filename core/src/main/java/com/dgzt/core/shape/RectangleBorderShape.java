@@ -21,7 +21,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  * 
  * @author Dgzt
  */
-final public class RectangleBorderShape implements Shape{
+public class RectangleBorderShape implements Shape{
 
 	// --------------------------------------------------
 	// ~ Private members
