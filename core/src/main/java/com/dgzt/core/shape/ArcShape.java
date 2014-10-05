@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
  * 
  * @author Dgzt
  */
-public class ArcShape implements Shape{
+final public class ArcShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Static members

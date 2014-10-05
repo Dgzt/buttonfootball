@@ -26,13 +26,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  * @author Dgzt
  */
 final public class ButtonFootballGame implements ApplicationListener {
-
-	// --------------------------------------------------
-	// ~ Static members
-	// --------------------------------------------------
-	
-	/** The width of lines. */
-	private static final float LINE_WIDTH = 1.0f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -91,8 +84,6 @@ final public class ButtonFootballGame implements ApplicationListener {
 		final float tableX = (width-tableWidth)/2;
 		final float tableY = (height-tableHeight)/2;
 		final double scale = (double)tableWidth / Table.WIDTH;
-		
-		Gdx.gl20.glLineWidth(LINE_WIDTH*(float)scale);
 		
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
 	}
