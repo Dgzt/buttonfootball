@@ -17,6 +17,7 @@ package com.dgzt.core;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.CircleBorderShape;
+import com.dgzt.core.shape.CircleShape;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
@@ -76,11 +77,14 @@ final public class Map extends RectangleShape{
 	/** The right sector 5. */
 	private final RectangleBorderShape rightSector5;
 	
-	/** The center big circle. */
+	/** The center big circle border. */
 	private final CircleBorderShape centerBigCircle;
 	
 	/** The center line. */
 	private final LineShape centerLine;
+	
+	/** The center small filled circle. */
+	private final CircleShape centerSmallCircle;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -105,6 +109,8 @@ final public class Map extends RectangleShape{
 		this.centerBigCircle = new CircleBorderShape(shapeRenderer, Color.GREEN, Color.WHITE);
 		
 		this.centerLine = new LineShape(shapeRenderer);
+		
+		this.centerSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
 	}
 	
 	// --------------------------------------------------
@@ -152,11 +158,11 @@ final public class Map extends RectangleShape{
 		rightSector5.resize(rightSector5X, sector5Y, sector5Width, sector5Height, scale);
 		
 		// Center big circle
-		final float centerBigCircleX = x + width / 2;
-		final float centerBigCircleY = y + height / 2;
+		final float centerCircleX = x + width / 2;
+		final float centerCircleY = y + height / 2;
 		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
 		
-		centerBigCircle.resize(centerBigCircleX, centerBigCircleY, bigCircleRadius, scale);
+		centerBigCircle.resize(centerCircleX, centerCircleY, bigCircleRadius, scale);
 		
 		// Center line
 		final float centerLineX1 = x + width / 2;
@@ -165,6 +171,11 @@ final public class Map extends RectangleShape{
 		final float centerLineY2 = centerLineY1 + height;
 		
 		centerLine.resize(centerLineX1, centerLineY1, centerLineX2, centerLineY2, scale);
+		
+		// Center small circle
+		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
+		
+		centerSmallCircle.resize(centerCircleX, centerCircleY, smallCircleRadius);
 	}
 	
 	// --------------------------------------------------
@@ -189,6 +200,8 @@ final public class Map extends RectangleShape{
 		centerBigCircle.draw();
 		
 		centerLine.draw();
+		
+		centerSmallCircle.draw();
 	}
 	
 }

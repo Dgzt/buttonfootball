@@ -65,7 +65,7 @@ final public class CircleBorderShape implements Shape{
 	public void resize(final float x, final float y, final float radius, final double scale){
 		outerCircle.resize(x, y, radius);
 		
-		float lineWidth = (float) (LINE_WIDTH * scale);
+		final float lineWidth = (float) (LINE_WIDTH * scale);
 		
 		innerCircle.resize(x, y, radius - lineWidth);
 		
