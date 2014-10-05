@@ -32,10 +32,10 @@ final public class Gate extends RectangleBorderShape{
 	// ~ Public static members
 	// --------------------------------------------------
 	
-	/** The width of the gate. */
+	/** The width of the gate in cm. */
 	public static final float WIDTH = 8.0f;
 	
-	/** The height of the gate. */
+	/** The height of the gate in cm. */
 	public static final float HEIGHT = 13.0f;
 	
 	// --------------------------------------------------
