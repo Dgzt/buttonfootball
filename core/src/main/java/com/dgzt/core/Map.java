@@ -102,6 +102,9 @@ final public class Map extends RectangleShape{
 	/** The top right small arc. */
 	private final ArcShape topRightSmallArc;
 	
+	/** The bottom right small arc. */
+	private final ArcShape bottomRightSmallArc;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -135,6 +138,8 @@ final public class Map extends RectangleShape{
 		this.topLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 0, 90);
 		
 		this.topRightSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 90, 90);
+		
+		this.bottomRightSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 180, 90);
 	}
 	
 	// --------------------------------------------------
@@ -165,6 +170,12 @@ final public class Map extends RectangleShape{
 		final float topRightSmallArcY = y;
 		
 		topRightSmallArc.resize(topRightSmallArcX, topRightSmallArcY, smallArcRadius, scale);
+		
+		// Bottom right small arc
+		final float bottomRightSmallArcX = x + width;
+		final float bottomRightSmallArcY = y + height;
+		
+		bottomRightSmallArc.resize(bottomRightSmallArcX, bottomRightSmallArcY, smallArcRadius, scale);
 		
 		// Border of map
 		mapBorder.resize(x, y, width, height, scale);
@@ -242,6 +253,7 @@ final public class Map extends RectangleShape{
 		
 		topLeftSmallArc.draw();
 		topRightSmallArc.draw();
+		bottomRightSmallArc.draw();
 		
 		mapBorder.draw();		
 		
