@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dgzt.core.shape.ArcShape;
 import com.dgzt.core.shape.CircleBorderShape;
 import com.dgzt.core.shape.CircleShape;
 import com.dgzt.core.shape.LineShape;
@@ -95,6 +96,9 @@ final public class Map extends RectangleShape{
 	/** The right small filled circle. */
 	private final CircleShape rightSmallCircle;
 	
+	/** The top left small arc. */
+	private final ArcShape topLeftSmallArc;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -124,6 +128,8 @@ final public class Map extends RectangleShape{
 		this.leftSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
 		
 		this.rightSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
+		
+		this.topLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 0, 90);
 	}
 	
 	// --------------------------------------------------
@@ -142,6 +148,14 @@ final public class Map extends RectangleShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale ) {
 		super.resize(x, y, width, height);
 		
+		// Top left small arc
+		final float topLeftSmallArcX = x;
+		final float topLeftSmallArcY = y;
+		final float smallArcRadius = (float)(ArcShape.SMALL_RADIUS * scale);
+		
+		topLeftSmallArc.resize(topLeftSmallArcX, topLeftSmallArcY, smallArcRadius, scale);
+		
+		// Border of map
 		mapBorder.resize(x, y, width, height, scale);
 		
 		// Left sector 16
@@ -214,6 +228,8 @@ final public class Map extends RectangleShape{
 	@Override
 	public void draw() {
 		super.draw();
+		
+		topLeftSmallArc.draw();
 		
 		mapBorder.draw();		
 		
