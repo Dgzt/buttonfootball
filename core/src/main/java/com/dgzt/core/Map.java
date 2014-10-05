@@ -60,7 +60,7 @@ final public class Map extends RectangleShape{
 	private static final float BIG_CIRCLE_RADIUS = 16.0f;
 	
 	/** The left and right small circle distance from border of map. */
-	private static final float LEFT_RIGHT_SMALL_CIRCLE_DISTANCE = 20.5f;
+	private static final float LEFT_RIGHT_CIRCLE_DISTANCE = 20.5f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -108,6 +108,9 @@ final public class Map extends RectangleShape{
 	/** The bottom left small arc. */
 	private final ArcShape bottomLeftSmallArc;
 	
+	/** The left big arc. */
+	private final ArcShape leftBigArc;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -145,6 +148,8 @@ final public class Map extends RectangleShape{
 		this.bottomRightSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 180, 90);
 		
 		this.bottomLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 270, 90);
+		
+		this.leftBigArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 307, 105);
 	}
 	
 	// --------------------------------------------------
@@ -188,6 +193,37 @@ final public class Map extends RectangleShape{
 		
 		bottomLeftSmallArc.resize(bottomLeftSmallArcX, bottomLeftSmallArcY, smallArcRadius, scale);
 		
+		// Center big circle
+		final float centerCircleX = x + width / 2;
+		final float centerCircleY = y + height / 2;
+		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
+		
+		centerBigCircle.resize(centerCircleX, centerCircleY, bigCircleRadius, scale);
+		
+		// Center small circle
+		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
+		
+		centerSmallCircle.resize(centerCircleX, centerCircleY, smallCircleRadius);
+		
+		// Left small circle
+		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_CIRCLE_DISTANCE * scale);
+		final float leftSmallCircleX = x + leftRightSmallCircleDistance;
+		final float leftSmallCircleY = centerCircleY;
+		
+		leftSmallCircle.resize(leftSmallCircleX, leftSmallCircleY, smallCircleRadius);
+		
+		// Right small circle
+		final float rightSmallCircleX = x + width - leftRightSmallCircleDistance;
+		final float rightSmallCircleY = leftSmallCircleY;
+		
+		rightSmallCircle.resize(rightSmallCircleX, rightSmallCircleY, smallCircleRadius);
+		
+		// The left big arc
+		final float leftBigCircleX = leftSmallCircleX;
+		final float leftBigCircleY = leftSmallCircleY;
+		
+		leftBigArc.resize(leftBigCircleX, leftBigCircleY, bigCircleRadius, scale);
+		
 		// Border of map
 		mapBorder.resize(x, y, width, height, scale);
 		
@@ -217,13 +253,6 @@ final public class Map extends RectangleShape{
 		
 		rightSector5.resize(rightSector5X, sector5Y, sector5Width, sector5Height, scale);
 		
-		// Center big circle
-		final float centerCircleX = x + width / 2;
-		final float centerCircleY = y + height / 2;
-		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
-		
-		centerBigCircle.resize(centerCircleX, centerCircleY, bigCircleRadius, scale);
-		
 		// Center line
 		final float centerLineX1 = x + width / 2;
 		final float centerLineY1 = y;
@@ -231,24 +260,6 @@ final public class Map extends RectangleShape{
 		final float centerLineY2 = centerLineY1 + height;
 		
 		centerLine.resize(centerLineX1, centerLineY1, centerLineX2, centerLineY2, scale);
-		
-		// Center small circle
-		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
-		
-		centerSmallCircle.resize(centerCircleX, centerCircleY, smallCircleRadius);
-		
-		// Left small circle
-		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_SMALL_CIRCLE_DISTANCE * scale);
-		final float leftSmallCircleX = x + leftRightSmallCircleDistance;
-		final float leftSmallCircleY = centerCircleY;
-		
-		leftSmallCircle.resize(leftSmallCircleX, leftSmallCircleY, smallCircleRadius);
-		
-		// Right small circle
-		final float rightSmallCircleX = x + width - leftRightSmallCircleDistance;
-		final float rightSmallCircleY = leftSmallCircleY;
-		
-		rightSmallCircle.resize(rightSmallCircleX, rightSmallCircleY, smallCircleRadius);
 	}
 	
 	// --------------------------------------------------
@@ -267,6 +278,16 @@ final public class Map extends RectangleShape{
 		bottomRightSmallArc.draw();
 		bottomLeftSmallArc.draw();
 		
+		centerBigCircle.draw();
+		
+		centerSmallCircle.draw();
+		
+		rightSmallCircle.draw();
+		
+		leftBigArc.draw();
+		
+		leftSmallCircle.draw();
+		
 		mapBorder.draw();		
 		
 		leftSector16.draw();
@@ -274,16 +295,8 @@ final public class Map extends RectangleShape{
 		
 		leftSector5.draw();
 		rightSector5.draw();
-
-		centerBigCircle.draw();
 		
 		centerLine.draw();
-		
-		centerSmallCircle.draw();
-		
-		leftSmallCircle.draw();
-		
-		rightSmallCircle.draw();
 	}
 	
 }
