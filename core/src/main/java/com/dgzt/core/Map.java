@@ -111,6 +111,9 @@ final public class Map extends RectangleShape{
 	/** The left big arc. */
 	private final ArcShape leftBigArc;
 	
+	/** The right big arc. */
+	private final ArcShape rightBigArc;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -150,6 +153,8 @@ final public class Map extends RectangleShape{
 		this.bottomLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 270, 90);
 		
 		this.leftBigArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 307, 105);
+		
+		this.rightBigArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 127, 105);
 	}
 	
 	// --------------------------------------------------
@@ -172,57 +177,53 @@ final public class Map extends RectangleShape{
 		final float topLeftSmallArcX = x;
 		final float topLeftSmallArcY = y;
 		final float smallArcRadius = (float)(ArcShape.SMALL_RADIUS * scale);
-		
 		topLeftSmallArc.resize(topLeftSmallArcX, topLeftSmallArcY, smallArcRadius, scale);
 		
 		// Top right small arc
 		final float topRightSmallArcX = x + width;
 		final float topRightSmallArcY = y;
-		
 		topRightSmallArc.resize(topRightSmallArcX, topRightSmallArcY, smallArcRadius, scale);
 		
 		// Bottom right small arc
 		final float bottomRightSmallArcX = x + width;
 		final float bottomRightSmallArcY = y + height;
-		
 		bottomRightSmallArc.resize(bottomRightSmallArcX, bottomRightSmallArcY, smallArcRadius, scale);
 		
 		// Bottom left small arc
 		final float bottomLeftSmallArcX = x;
 		final float bottomLeftSmallArcY = y + height;
-		
 		bottomLeftSmallArc.resize(bottomLeftSmallArcX, bottomLeftSmallArcY, smallArcRadius, scale);
 		
 		// Center big circle
 		final float centerCircleX = x + width / 2;
 		final float centerCircleY = y + height / 2;
 		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
-		
 		centerBigCircle.resize(centerCircleX, centerCircleY, bigCircleRadius, scale);
 		
 		// Center small circle
 		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
-		
 		centerSmallCircle.resize(centerCircleX, centerCircleY, smallCircleRadius);
 		
 		// Left small circle
 		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_CIRCLE_DISTANCE * scale);
 		final float leftSmallCircleX = x + leftRightSmallCircleDistance;
 		final float leftSmallCircleY = centerCircleY;
-		
 		leftSmallCircle.resize(leftSmallCircleX, leftSmallCircleY, smallCircleRadius);
 		
 		// Right small circle
 		final float rightSmallCircleX = x + width - leftRightSmallCircleDistance;
 		final float rightSmallCircleY = leftSmallCircleY;
-		
 		rightSmallCircle.resize(rightSmallCircleX, rightSmallCircleY, smallCircleRadius);
 		
-		// The left big arc
-		final float leftBigCircleX = leftSmallCircleX;
-		final float leftBigCircleY = leftSmallCircleY;
+		// Left big arc
+		final float leftBigArcX = leftSmallCircleX;
+		final float leftBigArcY = leftSmallCircleY;
+		leftBigArc.resize(leftBigArcX, leftBigArcY, bigCircleRadius, scale);
 		
-		leftBigArc.resize(leftBigCircleX, leftBigCircleY, bigCircleRadius, scale);
+		// Right big arc
+		final float rightBigArcX = rightSmallCircleX;
+		final float rightBigArcY = rightSmallCircleY;
+		rightBigArc.resize(rightBigArcX, rightBigArcY, bigCircleRadius, scale);
 		
 		// Border of map
 		mapBorder.resize(x, y, width, height, scale);
@@ -232,12 +233,10 @@ final public class Map extends RectangleShape{
 		final float sector16Height = (float)((double)SECTOR_16_HEIGHT * scale);
 		final float sector16Y = y + (height - sector16Height) / 2;
 		final float leftSector16X = x;
-		
 		leftSector16.resize(leftSector16X, sector16Y, sector16Width, sector16Height, scale);
 		
 		// Right sector 16
 		final float rightSector16X = x + width - sector16Width;
-		
 		rightSector16.resize(rightSector16X, sector16Y, sector16Width, sector16Height, scale);
 		
 		// Left sector 5
@@ -245,12 +244,10 @@ final public class Map extends RectangleShape{
 		final float sector5Height = (float)((double)SECTOR_5_HEIGHT * scale);
 		final float sector5Y = y + (height - sector5Height) / 2;
 		final float leftSector5X = x;
-		
 		leftSector5.resize(leftSector5X, sector5Y, sector5Width, sector5Height, scale);
 		
 		// Right sector 5
 		final float rightSector5X = x + width - sector5Width;
-		
 		rightSector5.resize(rightSector5X, sector5Y, sector5Width, sector5Height, scale);
 		
 		// Center line
@@ -258,7 +255,6 @@ final public class Map extends RectangleShape{
 		final float centerLineY1 = y;
 		final float centerLineX2 = centerLineX1;
 		final float centerLineY2 = centerLineY1 + height;
-		
 		centerLine.resize(centerLineX1, centerLineY1, centerLineX2, centerLineY2, scale);
 	}
 	
@@ -282,11 +278,14 @@ final public class Map extends RectangleShape{
 		
 		centerSmallCircle.draw();
 		
-		rightSmallCircle.draw();
-		
 		leftBigArc.draw();
 		
+		rightBigArc.draw();
+		
+		rightSmallCircle.draw();
+		
 		leftSmallCircle.draw();
+		
 		
 		mapBorder.draw();		
 		
