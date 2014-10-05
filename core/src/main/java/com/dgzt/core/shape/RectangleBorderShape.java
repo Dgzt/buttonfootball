@@ -69,12 +69,12 @@ public class RectangleBorderShape implements Shape{
 	 * @param scale The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
-		final float halpLineWidt = (float) (LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
 		
-		topLine.resize(x - halpLineWidt, y, x + width + halpLineWidt, y, scale);
-		rightLine.resize(x + width, y - halpLineWidt, x + width, y + height + halpLineWidt, scale);
-		bottomLine.resize(x - halpLineWidt, y + height, x + width + halpLineWidt, y + height, scale);
-		leftLine.resize(x, y - halpLineWidt, x, y + height + halpLineWidt, scale);
+		topLine.resize(x - halfLineWidth, y, x + width + halfLineWidth, y, scale);
+		rightLine.resize(x + width, y - halfLineWidth, x + width, y + height + halfLineWidth, scale);
+		bottomLine.resize(x - halfLineWidth, y + height, x + width + halfLineWidth, y + height, scale);
+		leftLine.resize(x, y - halfLineWidth, x, y + height + halfLineWidth, scale);
 	}
 	
 	// --------------------------------------------------
