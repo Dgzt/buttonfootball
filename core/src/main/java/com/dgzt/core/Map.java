@@ -56,7 +56,10 @@ final public class Map extends RectangleShape{
 	private static final float SECTOR_5_HEIGHT = 30.0f;
 	
 	/** The radius of the big circle. */
-	public static final float BIG_CIRCLE_RADIUS = 16.0f;
+	private static final float BIG_CIRCLE_RADIUS = 16.0f;
+	
+	/** The left and right small circle distance from border of map. */
+	private static final float LEFT_RIGHT_SMALL_CIRCLE_DISTANCE = 20.5f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -86,6 +89,9 @@ final public class Map extends RectangleShape{
 	/** The center small filled circle. */
 	private final CircleShape centerSmallCircle;
 	
+	/** The left small filled circle. */
+	private final CircleShape leftSmallCircle;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -111,6 +117,8 @@ final public class Map extends RectangleShape{
 		this.centerLine = new LineShape(shapeRenderer);
 		
 		this.centerSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
+		
+		this.leftSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
 	}
 	
 	// --------------------------------------------------
@@ -176,6 +184,12 @@ final public class Map extends RectangleShape{
 		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
 		
 		centerSmallCircle.resize(centerCircleX, centerCircleY, smallCircleRadius);
+		
+		// Left small circle
+		final float leftSmallCircleX = x + (float)(LEFT_RIGHT_SMALL_CIRCLE_DISTANCE * scale);
+		final float leftSmallCircleY = centerCircleY;
+		
+		leftSmallCircle.resize(leftSmallCircleX, leftSmallCircleY, smallCircleRadius);
 	}
 	
 	// --------------------------------------------------
@@ -202,6 +216,8 @@ final public class Map extends RectangleShape{
 		centerLine.draw();
 		
 		centerSmallCircle.draw();
+		
+		leftSmallCircle.draw();
 	}
 	
 }
