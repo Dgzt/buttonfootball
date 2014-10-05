@@ -16,36 +16,23 @@ package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
- * Line shape.
+ * Border of the circle.
  * 
  * @author Dgzt
  */
-final public class LineShape implements Shape{
+final public class CircleBorderShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
+	/** The inner filled circle. */
+	private final CircleShape innerCircle;
 	
-	/** The first x coordinate value. */
-	private float x1;
-	
-	/** The first y coordinate value. */
-	private float y1;
-	
-	/** The second x coordinate value. */
-	private float x2;
-	
-	/** The second y coordinate value. */
-	private float y2;
-	
-	/** The width of the line. */
-	private float lineWidth;
+	/** The outer filled circle */
+	private final CircleShape outerCircle;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -55,9 +42,12 @@ final public class LineShape implements Shape{
 	 * The constructor.
 	 * 
 	 * @param shapeRenderer - The shape renderer.
+	 * @param innerColor - The color of the inner circle.
+	 * @param outerColor - The color of the outer circle.
 	 */
-	public LineShape(final ShapeRenderer shapeRenderer){
-		this.shapeRenderer = shapeRenderer;
+	public CircleBorderShape(final ShapeRenderer shapeRenderer, final Color innerColor, final Color outerColor){
+		innerCircle = new CircleShape(shapeRenderer, innerColor);
+		outerCircle = new CircleShape(shapeRenderer, outerColor);
 	}
 	
 	// --------------------------------------------------
@@ -67,19 +57,18 @@ final public class LineShape implements Shape{
 	/**
 	 * Resize the shape.
 	 * 
-	 * @param x1 - The first x coordinate value.
-	 * @param y1 - The first y coordinate value.
-	 * @param x2 - The second x coordinate value.
-	 * @param y2 - The second y coordinate value.
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param radius - The radius value.
 	 * @param scale - The scale value.
 	 */
-	public void resize(final float x1, final float y1, final float x2, final float y2, final double scale){
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+	public void resize(final float x, final float y, final float radius, final double scale){
+		outerCircle.resize(x, y, radius);
 		
-		lineWidth = (float) (LINE_WIDTH * scale);
+		float lineWidth = (float) (LINE_WIDTH * scale);
+		
+		innerCircle.resize(x, y, radius - lineWidth);
+		
 	}
 	
 	// --------------------------------------------------
@@ -91,10 +80,8 @@ final public class LineShape implements Shape{
 	 */
 	@Override
 	public void draw() {
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.WHITE);
-		shapeRenderer.rectLine(x1, y1, x2, y2, lineWidth);
-		shapeRenderer.end();
+		outerCircle.draw();
+		innerCircle.draw();
 	}
 
 }

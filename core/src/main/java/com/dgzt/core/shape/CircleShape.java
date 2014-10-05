@@ -19,33 +19,30 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 /**
- * Line shape.
+ * Circle shape.
  * 
  * @author Dgzt
  */
-final public class LineShape implements Shape{
+final public class CircleShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
-	
+
 	/** The shape renderer. */
 	private final ShapeRenderer shapeRenderer;
 	
-	/** The first x coordinate value. */
-	private float x1;
+	/** The color of the circle */
+	private final Color color;
 	
-	/** The first y coordinate value. */
-	private float y1;
+	/** The x coordinate value. */
+	private float x;
 	
-	/** The second x coordinate value. */
-	private float x2;
+	/** The y coordinate value. */
+	private float y;
 	
-	/** The second y coordinate value. */
-	private float y2;
-	
-	/** The width of the line. */
-	private float lineWidth;
+	/** The radius value. */
+	private float radius;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -55,9 +52,11 @@ final public class LineShape implements Shape{
 	 * The constructor.
 	 * 
 	 * @param shapeRenderer - The shape renderer.
+	 * @param color - The color of the circle.
 	 */
-	public LineShape(final ShapeRenderer shapeRenderer){
+	public CircleShape(final ShapeRenderer shapeRenderer, final Color color){
 		this.shapeRenderer = shapeRenderer;
+		this.color = color;
 	}
 	
 	// --------------------------------------------------
@@ -67,34 +66,30 @@ final public class LineShape implements Shape{
 	/**
 	 * Resize the shape.
 	 * 
-	 * @param x1 - The first x coordinate value.
-	 * @param y1 - The first y coordinate value.
-	 * @param x2 - The second x coordinate value.
-	 * @param y2 - The second y coordinate value.
-	 * @param scale - The scale value.
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param radius - The radius value.
 	 */
-	public void resize(final float x1, final float y1, final float x2, final float y2, final double scale){
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
-		
-		lineWidth = (float) (LINE_WIDTH * scale);
+	public void resize(final float x, final float y, final float radius){
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
 	}
 	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void draw() {
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.WHITE);
-		shapeRenderer.rectLine(x1, y1, x2, y2, lineWidth);
+		shapeRenderer.setColor(color);
+		shapeRenderer.circle(x, y, radius);
 		shapeRenderer.end();
+		
 	}
 
 }

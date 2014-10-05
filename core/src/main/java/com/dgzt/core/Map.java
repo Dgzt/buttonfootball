@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dgzt.core.shape.CircleBorderShape;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
@@ -53,6 +54,9 @@ final public class Map extends RectangleShape{
 	/** The height value of the sector 5 in cm. */
 	private static final float SECTOR_5_HEIGHT = 30.0f;
 	
+	/** The radius of the big circle. */
+	public static final float BIG_CIRCLE_RADIUS = 16.0f;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------	
@@ -71,6 +75,9 @@ final public class Map extends RectangleShape{
 	
 	/** The right sector 5. */
 	private final RectangleBorderShape rightSector5;
+	
+	/** The center big circle. */
+	private final CircleBorderShape centerBigCircle;
 	
 	/** The center line. */
 	private final LineShape centerLine;
@@ -94,6 +101,8 @@ final public class Map extends RectangleShape{
 		
 		this.leftSector5 = new RectangleBorderShape(shapeRenderer);
 		this.rightSector5 = new RectangleBorderShape(shapeRenderer);
+
+		this.centerBigCircle = new CircleBorderShape(shapeRenderer, Color.GREEN, Color.WHITE);
 		
 		this.centerLine = new LineShape(shapeRenderer);
 	}
@@ -142,6 +151,13 @@ final public class Map extends RectangleShape{
 		
 		rightSector5.resize(rightSector5X, sector5Y, sector5Width, sector5Height, scale);
 		
+		// Center big circle
+		final float centerBigCircleX = x + width / 2;
+		final float centerBigCircleY = y + height / 2;
+		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
+		
+		centerBigCircle.resize(centerBigCircleX, centerBigCircleY, bigCircleRadius, scale);
+		
 		// Center line
 		final float centerLineX1 = x + width / 2;
 		final float centerLineY1 = y;
@@ -169,6 +185,8 @@ final public class Map extends RectangleShape{
 		
 		leftSector5.draw();
 		rightSector5.draw();
+
+		centerBigCircle.draw();
 		
 		centerLine.draw();
 	}
