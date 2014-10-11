@@ -83,5 +83,23 @@ final public class CircleBorderShape implements Shape{
 		outerCircle.draw();
 		innerCircle.draw();
 	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value.
+	 */
+	public final float getX(){
+		return innerCircle.getX();
+	}
+	
+	/**
+	 * Return with the y coordinate value.
+	 */
+	public final float getY(){
+		return innerCircle.getY();
+	}
 
 }

@@ -125,5 +125,22 @@ final public class ArcShape implements Shape{
 		shapeRenderer.arc(x, y, smallRadius, start, degrees);
 		shapeRenderer.end();
 	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value.
+	 */
+	public final float getX(){
+		return x;
+	}
 
+	/**
+	 * Return with the y coordiante value.
+	 */
+	public final float getY(){
+		return y;
+	}
 }

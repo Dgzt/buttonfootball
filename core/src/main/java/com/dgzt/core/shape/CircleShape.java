@@ -91,5 +91,22 @@ final public class CircleShape implements Shape{
 		shapeRenderer.end();
 		
 	}
-
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value.
+	 */
+	public final float getX(){
+		return x;
+	}
+	
+	/**
+	 * Return with the y coordinate value.
+	 */
+	public final float getY(){
+		return y;
+	}
 }

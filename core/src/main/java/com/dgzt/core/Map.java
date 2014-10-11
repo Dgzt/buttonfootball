@@ -173,89 +173,38 @@ final public class Map extends RectangleShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale ) {
 		super.resize(x, y, width, height);
 		
-		// Top left small arc
-		final float topLeftSmallArcX = x;
-		final float topLeftSmallArcY = y;
 		final float smallArcRadius = (float)(ArcShape.SMALL_RADIUS * scale);
-		topLeftSmallArc.resize(topLeftSmallArcX, topLeftSmallArcY, smallArcRadius, scale);
-		
-		// Top right small arc
-		final float topRightSmallArcX = x + width;
-		final float topRightSmallArcY = y;
-		topRightSmallArc.resize(topRightSmallArcX, topRightSmallArcY, smallArcRadius, scale);
-		
-		// Bottom right small arc
-		final float bottomRightSmallArcX = x + width;
-		final float bottomRightSmallArcY = y + height;
-		bottomRightSmallArc.resize(bottomRightSmallArcX, bottomRightSmallArcY, smallArcRadius, scale);
-		
-		// Bottom left small arc
-		final float bottomLeftSmallArcX = x;
-		final float bottomLeftSmallArcY = y + height;
-		bottomLeftSmallArc.resize(bottomLeftSmallArcX, bottomLeftSmallArcY, smallArcRadius, scale);
-		
-		// Center big circle
-		final float centerCircleX = x + width / 2;
-		final float centerCircleY = y + height / 2;
 		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
-		centerBigCircle.resize(centerCircleX, centerCircleY, bigCircleRadius, scale);
-		
-		// Center small circle
 		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
-		centerSmallCircle.resize(centerCircleX, centerCircleY, smallCircleRadius);
-		
-		// Left small circle
 		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_CIRCLE_DISTANCE * scale);
-		final float leftSmallCircleX = x + leftRightSmallCircleDistance;
-		final float leftSmallCircleY = centerCircleY;
-		leftSmallCircle.resize(leftSmallCircleX, leftSmallCircleY, smallCircleRadius);
-		
-		// Right small circle
-		final float rightSmallCircleX = x + width - leftRightSmallCircleDistance;
-		final float rightSmallCircleY = leftSmallCircleY;
-		rightSmallCircle.resize(rightSmallCircleX, rightSmallCircleY, smallCircleRadius);
-		
-		// Left big arc
-		final float leftBigArcX = leftSmallCircleX;
-		final float leftBigArcY = leftSmallCircleY;
-		leftBigArc.resize(leftBigArcX, leftBigArcY, bigCircleRadius, scale);
-		
-		// Right big arc
-		final float rightBigArcX = rightSmallCircleX;
-		final float rightBigArcY = rightSmallCircleY;
-		rightBigArc.resize(rightBigArcX, rightBigArcY, bigCircleRadius, scale);
-		
-		// Border of map
-		mapBorder.resize(x, y, width, height, scale);
-		
-		// Left sector 16
 		final float sector16Width = (float)((double)SECTOR_16_WIDTH * scale);
 		final float sector16Height = (float)((double)SECTOR_16_HEIGHT * scale);
-		final float sector16Y = y + (height - sector16Height) / 2;
-		final float leftSector16X = x;
-		leftSector16.resize(leftSector16X, sector16Y, sector16Width, sector16Height, scale);
-		
-		// Right sector 16
-		final float rightSector16X = x + width - sector16Width;
-		rightSector16.resize(rightSector16X, sector16Y, sector16Width, sector16Height, scale);
-		
-		// Left sector 5
 		final float sector5Width = (float)((double)SECTOR_5_WIDTH * scale);
 		final float sector5Height = (float)((double)SECTOR_5_HEIGHT * scale);
-		final float sector5Y = y + (height - sector5Height) / 2;
-		final float leftSector5X = x;
-		leftSector5.resize(leftSector5X, sector5Y, sector5Width, sector5Height, scale);
 		
-		// Right sector 5
-		final float rightSector5X = x + width - sector5Width;
-		rightSector5.resize(rightSector5X, sector5Y, sector5Width, sector5Height, scale);
+		resizeTopLeftSmallArc(x, y, smallArcRadius, scale);
+		resizeTopRightSmallArc(y, x, width, smallArcRadius, scale);
+		resizeBottomRightSmallArc(topRightSmallArc.getX(), y, height, smallArcRadius, scale);
+		resizeBottomLeftSmallArc(x, bottomRightSmallArc.getY(), smallArcRadius, scale);
 		
-		// Center line
-		final float centerLineX1 = x + width / 2;
-		final float centerLineY1 = y;
-		final float centerLineX2 = centerLineX1;
-		final float centerLineY2 = centerLineY1 + height;
-		centerLine.resize(centerLineX1, centerLineY1, centerLineX2, centerLineY2, scale);
+		resizeCenterBigCircle(x, y, width, height, bigCircleRadius, scale);
+		resizeCenterSmallCircle(centerBigCircle.getX(), centerBigCircle.getY(), smallCircleRadius);
+		
+		resizeLeftSmallCircle(centerSmallCircle.getY(), x, leftRightSmallCircleDistance, smallCircleRadius);
+		resizeRightSmallCircle(leftSmallCircle.getY(), x, width, leftRightSmallCircleDistance, smallCircleRadius);
+		
+		resizeLeftBigArc(leftSmallCircle.getX(), leftSmallCircle.getY(), bigCircleRadius, scale);
+		resizeRightBigArc(rightSmallCircle.getX(), rightSmallCircle.getY(), bigCircleRadius, scale);
+		
+		resizeMapBorder(x, y, width, height, scale);
+		
+		resizeLeftSector16(x, sector16Width, sector16Height, y, height, scale);
+		resizeRightSector16(leftSector16.getY(), leftSector16.getWidth(), leftSector16.getHeight(), x, width, scale);
+		
+		resizeLeftSector5(x, sector5Width, sector5Height, y, height, scale);
+		resizeRightSector5(leftSector5.getY(), sector5Width, sector5Height, x, width, scale);
+		
+		resizeCenterLine(x, y, width, height, scale);
 	}
 	
 	// --------------------------------------------------
@@ -298,4 +247,236 @@ final public class Map extends RectangleShape{
 		centerLine.draw();
 	}
 	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Resize the top left small arc.
+	 * 
+	 * @param x - The x coordinate value of the arc.
+	 * @param y - The y coordinate value of the arc.
+	 * @param radius - The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeTopLeftSmallArc(final float x, final float y, final float radius, final double scale){
+		topLeftSmallArc.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize the top right small arc.
+	 * 
+	 * @param y - The y coordinate value of the arc.
+	 * @param mapX - The x coordinate value of the map.
+	 * @param mapWidth - The width value of the map.
+	 * @param radius The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeTopRightSmallArc(final float y, final float mapX, final float mapWidth, final float radius, final double scale){
+		final float x = mapX + mapWidth;
+		
+		topRightSmallArc.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize the bottom right small arc.
+	 * 
+	 * @param x - The x coordinate value of the arc.
+	 * @param mapY - The y coordinate value of the map.
+	 * @param mapHeight - The height value of the map.
+	 * @param radius - The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeBottomRightSmallArc(final float x, final float mapY, final float mapHeight, final float radius, final double scale){
+		final float y = mapY + mapHeight;
+		
+		bottomRightSmallArc.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize the bottom left small arc.
+	 * 
+	 * @param x - The x coordinate value of the arc.
+	 * @param y - The y coordinate value of the arc.
+	 * @param radius - The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeBottomLeftSmallArc(final float x, final float y, final float radius, final double scale){
+		bottomLeftSmallArc.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize the center big circle.
+	 * 
+	 * @param mapX - The x coordinate value of the map.
+	 * @param mapY - The y coordinate value of the map.
+	 * @param mapWidth - The width value of the map.
+	 * @param mapHeight - The height value of the map.
+	 * @param radius - The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeCenterBigCircle(final float mapX, final float mapY, final float mapWidth, final float mapHeight, final float radius, final double scale){
+		final float x = mapX + mapWidth / 2;
+		final float y = mapY + mapHeight / 2;
+		
+		centerBigCircle.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize the center small circle.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordiante value.
+	 * @param radius - The radius value.
+	 */
+	private void resizeCenterSmallCircle(final float x, final float y, final float radius){
+		centerSmallCircle.resize(x, y, radius);
+	}
+	
+	/**
+	 * Resize the left small circle.
+	 * 
+	 * @param y - The y coordinate value.
+	 * @param mapX - The x coordinate value of the map.
+	 * @param distance - The distance from the left border of map.
+	 * @param radius - The radius value.
+	 */
+	private void resizeLeftSmallCircle(final float y, final float mapX, final float distance, final float radius){
+		final float x = mapX + distance;
+		
+		leftSmallCircle.resize(x, y, radius);
+	}
+	
+	/**
+	 * Resize the right small circle.
+	 * 
+	 * @param y - The y coordinate value.
+	 * @param mapX - The x coordinate value of map.
+	 * @param mapWidth - The width value of map.
+	 * @param distance - The distance from the right border of map.
+	 * @param radius - The radius value.
+	 */
+	private void resizeRightSmallCircle(final float y, final float mapX, final float mapWidth, final float distance, final float radius){
+		final float x = mapX + mapWidth - distance;
+		
+		rightSmallCircle.resize(x, y, radius);
+	}
+	
+	/**
+	 * Resize left big arc.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param radius - The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeLeftBigArc(final float x, final float y, final float radius, final double scale){
+		leftBigArc.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize right big arc.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param radius - The radius value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeRightBigArc(final float x, final float y, final float radius, final double scale){
+		rightBigArc.resize(x, y, radius, scale);
+	}
+	
+	/**
+	 * Resize border of map.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param scale - The scale value.
+	 */
+	private void resizeMapBorder(final float x, final float y, final float width, final float height, final double scale){
+		mapBorder.resize(x, y, width, height, scale);
+	}
+	
+	/**
+	 * Resize left sector 16.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param mapY - The y coordinate value of the map.
+	 * @param mapHeight - The height value of the map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeLeftSector16(final float x, final float width, final float height, final float mapY, final float mapHeight, final double scale){
+		final float y = mapY + (mapHeight - height) / 2;
+		leftSector16.resize(x, y, width, height, scale);
+	}
+	
+	/**
+	 * Resize right sector 16.
+	 * 
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param mapX - The x coordinate value of the map.
+	 * @param mapWidth - The width value of the map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeRightSector16(final float y, final float width, final float height, final float mapX, final float mapWidth, final double scale){
+		final float x = mapX + mapWidth - width;
+		
+		rightSector16.resize(x, y, width, height, scale);
+	}
+	
+	/**
+	 * Resize the left sector 5.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param mapY - The y coordinate value of the map.
+	 * @param mapHeight - The height value of the map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeLeftSector5(final float x, final float width, final float height, final float mapY, final float mapHeight, final double scale){
+		final float y = mapY + ( mapHeight - height ) / 2;
+		
+		leftSector5.resize(x, y, width, height, scale);
+	}
+	
+	/**
+	 * Resize the right sector 5.
+	 * 
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param mapX - The x coordinate value of the map.
+	 * @param mapWidth - The width value of the map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeRightSector5(final float y, final float width, final float height, final float mapX, final float mapWidth, final double scale){
+		final float x = mapX + mapWidth - width;
+		
+		rightSector5.resize(x, y, width, height, scale);
+		
+	}
+	
+	/**
+	 * Resize the center line.
+	 * 
+	 * @param mapX - The x coordinate value of the map.
+	 * @param mapY - The y coordinate value of the map.
+	 * @param mapWidth - The width value of the map.
+	 * @param mapHeight - The height value of the map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeCenterLine(final float mapX, final float mapY, final float mapWidth, final float mapHeight, final double scale){
+		final float x1 = mapX + mapWidth / 2;
+		final float y1 = mapY;
+		final float x2 = x1;
+		final float y2 = y1 + mapHeight;
+		centerLine.resize(x1, y1, x2, y2, scale);
+	}
 }
