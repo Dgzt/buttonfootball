@@ -83,24 +83,11 @@ final public class Table extends RectangleShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height);
 		
-		// Map
-		final float mapWidth = (float) ((double)Map.WIDTH * scale);
-		final float mapHeight = (float) ((double)Map.HEIGHT * scale);
-		final float mapX = x + (width - mapWidth)/2;
-		final float mapY = y + (height - mapHeight)/2;
-		map.resize( mapX, mapY, mapWidth, mapHeight, scale );
+		resizeMap(x, y, width, height, scale);
 		
-		// Left gate
-		final float gateWidth = (float)(Gate.WIDTH * scale);
-		final float gateHeight = (float)(Gate.HEIGHT * scale);
-		final float leftGateX = mapX - gateWidth;
-		final float leftGateY = y + (height - gateHeight) / 2;
-		leftGate.resize(leftGateX, leftGateY, gateWidth, gateHeight, scale);
+		resizeLeftGate(y, height, map.getX(), scale);
 		
-		// Right gate
-		final float rightGateX = mapX + mapWidth;
-		final float rightGateY = leftGateY;
-		rightGate.resize(rightGateX, rightGateY, gateWidth, gateHeight, scale);
+		resizeRightGate(map.getX(), map.getWidth(), leftGate.getY(), leftGate.getWidth(), leftGate.getHeight(), scale);
 	}
 	
 	// --------------------------------------------------
@@ -120,4 +107,57 @@ final public class Table extends RectangleShape{
 		rightGate.draw();
 	}
 	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Resize the map.
+	 * 
+	 * @param tableX - The x coordinate value of map.
+	 * @param tableY - The y coordinate value of map.
+	 * @param tableWidth - The width value of map.
+	 * @param tableHeight - The height value of map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeMap(final float tableX, final float tableY, final float tableWidth, final float tableHeight, final double scale){
+		final float width = (float) ((double)Map.WIDTH * scale);
+		final float height = (float) ((double)Map.HEIGHT * scale);
+		final float x = tableX + (tableWidth - width)/2;
+		final float y = tableY + (tableHeight - height)/2;
+		
+		map.resize( x, y, width, height, scale );
+	}
+	
+	/**
+	 * Resize the left gate.
+	 * 
+	 * @param tableY - The y coordinate value of table.
+	 * @param tableHeight - The height value of table.
+	 * @param mapX - The x coordinate value of map.
+	 * @param scale - The scale value.
+	 */
+	private void resizeLeftGate(final float tableY, final float tableHeight, final float mapX, final double scale){
+		final float width = (float)(Gate.WIDTH * scale);
+		final float height = (float)(Gate.HEIGHT * scale);
+		final float x = mapX - width;
+		final float y = tableY + (tableHeight - height) / 2;
+		
+		leftGate.resize(x, y, width, height, scale);
+	}
+	
+	/**
+	 * Resize the right gate.
+	 * 
+	 * @param mapX - The x coordiante value of map.
+	 * @param mapWidth - The width value of map.
+	 * @param y - The y coordinate value of right gate.
+	 * @param width - The width value of right gate.
+	 * @param height - The height value of right gate.
+	 * @param scale - The scale value.
+	 */
+	private void resizeRightGate(final float mapX, final float mapWidth, final float y, final float width, final float height, final double scale){
+		final float x = mapX + mapWidth;
+		rightGate.resize(x, y, width, height, scale);
+	}
 }

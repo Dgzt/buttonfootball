@@ -39,6 +39,9 @@ public class RectangleBorderShape implements Shape{
 	/** The left line. */
 	private final LineShape leftLine;
 	
+	/** The scale value. */
+	private double scale;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -69,6 +72,7 @@ public class RectangleBorderShape implements Shape{
 	 * @param scale The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
+		this.scale = scale;
 		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
 		
 		topLine.resize(x - halfLineWidth, y, x + width + halfLineWidth, y, scale);
@@ -92,4 +96,36 @@ public class RectangleBorderShape implements Shape{
 		leftLine.draw();
 	}
 	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+
+	/**
+	 * Return with y coordinate value;
+	 */
+	public final float getY(){
+		return topLine.getY1();
+	}
+	
+	/**
+	 * Return with width value.
+	 */
+	public final float getWidth(){
+		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
+		final float leftX = topLine.getX1() + halfLineWidth;
+		final float rightX = topLine.getX2() - halfLineWidth;
+		
+		return rightX - leftX;
+	}
+	
+	/**
+	 * Return width height value.
+	 */
+	public final float getHeight(){
+		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
+		final float topY = rightLine.getY1() + halfLineWidth;
+		final float bottomY = rightLine.getY2() - halfLineWidth;
+
+		return bottomY - topY;
+	}
 }

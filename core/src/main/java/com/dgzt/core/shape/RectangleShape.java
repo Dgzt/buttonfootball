@@ -95,4 +95,22 @@ public class RectangleShape implements Shape{
 		shapeRenderer.rect(x, y, width, height);
 		shapeRenderer.end();
 	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with x coordinate value.
+	 */
+	public final float getX(){
+		return x;
+	}
+	
+	/**
+	 * Return with width value.
+	 */
+	public final float getWidth(){
+		return width;
+	}
 }

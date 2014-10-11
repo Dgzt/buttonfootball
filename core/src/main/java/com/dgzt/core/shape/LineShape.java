@@ -96,5 +96,36 @@ final public class LineShape implements Shape{
 		shapeRenderer.rectLine(x1, y1, x2, y2, lineWidth);
 		shapeRenderer.end();
 	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
 
+	/**
+	 * Return with first x coordinate value.
+	 */
+	public final float getX1(){
+		return x1;
+	}
+	
+	/**
+	 * Return with first y coordinate value.
+	 */
+	public final float getY1(){
+		return y1;
+	}
+	
+	/**
+	 * Return with second x coordinate value.
+	 */
+	public final float getX2(){
+		return x2;
+	}
+	
+	/**
+	 * Return with second y coordinate value.
+	 */
+	public final float getY2(){
+		return y2;
+	}
 }
