@@ -14,6 +14,9 @@
  */
 package com.dgzt.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.RectangleShape;
@@ -48,6 +51,12 @@ final public class Table extends RectangleShape{
 	/** The right gate. */
 	private final Gate rightGate;
 	
+	/** The player's buttons. */
+	private final List<Button> playerButtons;
+	
+	/** The opponent's buttons. */
+	private final List<Button> opponentButtons;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -63,8 +72,12 @@ final public class Table extends RectangleShape{
 		map = new Map(shapeRenderer);
 		
 		leftGate = new Gate(shapeRenderer);
-		
 		rightGate = new Gate(shapeRenderer);
+		
+		playerButtons = new ArrayList<Button>();
+		opponentButtons = new ArrayList<Button>();
+		
+		addButtons(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -88,6 +101,14 @@ final public class Table extends RectangleShape{
 		resizeLeftGate(y, height, map.getX(), scale);
 		
 		resizeRightGate(map.getX(), map.getWidth(), leftGate.getY(), leftGate.getWidth(), leftGate.getHeight(), scale);
+		
+		for(final Button playerButton : playerButtons){
+			playerButton.resize(x, y, scale);
+		}
+		
+		for(final Button opponentButton : opponentButtons){
+			opponentButton.resize(x, y, scale);
+		}
 	}
 	
 	// --------------------------------------------------
@@ -103,6 +124,14 @@ final public class Table extends RectangleShape{
 		
 		map.draw();
 		
+		for(final Button playerButton : playerButtons){
+			playerButton.draw();
+		}
+		
+		for(final Button opponentButton : opponentButtons){
+			opponentButton.draw();
+		}
+		
 		leftGate.draw();
 		rightGate.draw();
 	}
@@ -110,6 +139,60 @@ final public class Table extends RectangleShape{
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
+	
+	/**
+	 * Add buttons to the table.
+	 * 
+	 * @param shapeRenderer - The shape renderer.
+	 */
+	private void addButtons(final ShapeRenderer shapeRenderer){
+		final float playerGoalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.RADIUS;
+		final float opponentGoalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.RADIUS;
+		final float goalKeeperY = Table.HEIGHT / 2;
+		final float buttonDistanceX = Table.WIDTH / 2 / 4;
+		final float buttonDistanceY = Table.HEIGHT / 5;
+		final float halfTableHeight = Table.HEIGHT / 2;
+		
+		// Add player buttons
+		// ------------------
+		
+		// Add player goalkeeper
+		playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY));
+		
+		// Add player defenders
+		for(int i=1; i <= 4; ++i){
+			playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY));
+		}
+		
+		// Add player midfielders
+		for(int i=1; i <= 4; ++i){
+			playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY));
+		}
+		
+		// Add player forwards
+		playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY ));
+		playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY ));
+		
+		// Add opponent buttons
+		// --------------------
+		
+		// Add opponent goalkeeper
+		opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY));
+		
+		// Add opponent defenders
+		for(int i=1; i <= 4; ++i){
+			opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY));
+		}
+		
+		// Add opponent midfielders
+		for(int i=1; i <= 4; ++i){
+			opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY));
+		}
+		
+		// Add opponent forwards
+		opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
+		opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
+	}
 	
 	/**
 	 * Resize the map.

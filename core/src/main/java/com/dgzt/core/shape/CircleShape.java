@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
  * 
  * @author Dgzt
  */
-final public class CircleShape implements Shape{
+public class CircleShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Private members

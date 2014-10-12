@@ -1,0 +1,88 @@
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.dgzt.core;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dgzt.core.shape.CircleShape;
+
+/**
+ * The button object.
+ * 
+ * @author Dgzt
+ */
+final public class Button extends CircleShape{
+
+	// --------------------------------------------------
+	// ~ Static members
+	// --------------------------------------------------
+	
+	/** The color of the player's buttons. */
+	public static final Color PLAYER_COLOR = Color.RED;
+	
+	/** The color of the opponent's buttons. */
+	public static final Color OPPONENT_COLOR = Color.BLUE;
+	
+	/** The radius of the buttons in cm. */
+	public static final float RADIUS = 2.5f;
+	
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
+	
+	/** The x coordinate value in Box2D. */
+	private float box2DX;
+	
+	/** The y coordinate value in Box2D. */
+	private float box2DY;
+	
+	// --------------------------------------------------
+	// ~ Constructors
+	// --------------------------------------------------
+	
+	/**
+	 * The constructor.
+	 * 
+	 * @param shapeRenderer - The shape renderer.
+	 * @param color - The color of button.
+	 * @param box2DX - The x coordinate value of button in Box2D.
+	 * @param box2DY - The y coordinate value of button in Box2D.
+	 */
+	public Button(final ShapeRenderer shapeRenderer, final Color color, final float box2DX, final float box2DY) {
+		super(shapeRenderer, color);
+		this.box2DX = box2DX;
+		this.box2DY = box2DY;
+	}
+	
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
+	
+	/**
+	 * Resize the object.
+	 * 
+	 * @param parentX - The x coordinate value of the parent object.
+	 * @param parentY - The y coordinate value of the parent object.
+	 * @param scale - The scale value
+	 */
+	public void resize(final float parentX, final float parentY, final double scale){
+		final float x = parentX + (float)(box2DX * scale);
+		final float y = parentY + (float)(box2DY * scale);
+		final float radius = (float)(RADIUS * scale);
+		
+		super.resize(x, y, radius);
+	}
+
+}
