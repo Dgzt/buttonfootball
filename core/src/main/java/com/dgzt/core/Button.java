@@ -35,8 +35,14 @@ final public class Button extends CircleShape{
 	/** The color of the opponent's buttons. */
 	public static final Color OPPONENT_COLOR = Color.BLUE;
 	
-	/** The radius of the buttons in cm. */
-	public static final float RADIUS = 2.5f;
+	/** The color of the ball. */
+	public static final Color BALL_COLOR = Color.BLACK;
+	
+	/** The radius of the players's and opponent's buttons in cm. */
+	public static final float PLAYER_OPPONENT_RADIUS = 2.5f;
+	
+	/** The radius of ball. */
+	public static final float BALL_RADIUS = 1.0f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -47,6 +53,9 @@ final public class Button extends CircleShape{
 	
 	/** The y coordinate value in Box2D. */
 	private float box2DY;
+	
+	/** The radius value in Box2D. */
+	private final float box2DRadius;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -59,11 +68,13 @@ final public class Button extends CircleShape{
 	 * @param color - The color of button.
 	 * @param box2DX - The x coordinate value of button in Box2D.
 	 * @param box2DY - The y coordinate value of button in Box2D.
+	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
-	public Button(final ShapeRenderer shapeRenderer, final Color color, final float box2DX, final float box2DY) {
+	public Button(final ShapeRenderer shapeRenderer, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
 		super(shapeRenderer, color);
 		this.box2DX = box2DX;
 		this.box2DY = box2DY;
+		this.box2DRadius = box2DRadius;
 	}
 	
 	// --------------------------------------------------
@@ -80,7 +91,7 @@ final public class Button extends CircleShape{
 	public void resize(final float parentX, final float parentY, final double scale){
 		final float x = parentX + (float)(box2DX * scale);
 		final float y = parentY + (float)(box2DY * scale);
-		final float radius = (float)(RADIUS * scale);
+		final float radius = (float)(box2DRadius * scale);
 		
 		super.resize(x, y, radius);
 	}
