@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.shape;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 /**
@@ -52,10 +53,10 @@ public class RectangleBorderShape implements Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public RectangleBorderShape(final ShapeRenderer shapeRenderer){
-		topLine = new LineShape(shapeRenderer);
-		rightLine = new LineShape(shapeRenderer);
-		bottomLine = new LineShape(shapeRenderer);
-		leftLine = new LineShape(shapeRenderer);
+		topLine = new LineShape(shapeRenderer, Color.WHITE);
+		rightLine = new LineShape(shapeRenderer, Color.WHITE);
+		bottomLine = new LineShape(shapeRenderer, Color.WHITE);
+		leftLine = new LineShape(shapeRenderer, Color.WHITE);
 	}
 	
 	// --------------------------------------------------

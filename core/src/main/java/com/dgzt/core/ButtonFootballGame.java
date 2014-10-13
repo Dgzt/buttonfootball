@@ -57,6 +57,8 @@ final public class ButtonFootballGame implements ApplicationListener {
 		shapeRenderer = new ShapeRenderer();
 		
 		table = new Table(shapeRenderer);
+		
+		Gdx.input.setInputProcessor(new InputListener(table));
 	}
 
 	/**
@@ -121,4 +123,5 @@ final public class ButtonFootballGame implements ApplicationListener {
 	@Override
 	public void dispose () {
 	}
+
 }

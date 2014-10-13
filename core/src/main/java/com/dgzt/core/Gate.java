@@ -17,6 +17,7 @@ package com.dgzt.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
@@ -72,12 +73,12 @@ final public class Gate extends RectangleBorderShape{
 
 		columnLines = new ArrayList<LineShape>();
 		for(int i=0; i < COLUMN_LINES; ++i){
-			columnLines.add(new LineShape(shapeRenderer));
+			columnLines.add(new LineShape(shapeRenderer, Color.WHITE));
 		}
 		
 		rowLines = new ArrayList<LineShape>();
 		for(int i=0; i < ROW_LINES; ++i){
-			rowLines.add(new LineShape(shapeRenderer));
+			rowLines.add(new LineShape(shapeRenderer, Color.WHITE));
 		}
 	}
 	

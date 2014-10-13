@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
  * 
  * @author Dgzt
  */
-final public class LineShape implements Shape{
+public class LineShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -31,6 +31,9 @@ final public class LineShape implements Shape{
 	
 	/** The shape renderer. */
 	private final ShapeRenderer shapeRenderer;
+	
+	/** The color of the line. */
+	private final Color color;
 	
 	/** The first x coordinate value. */
 	private float x1;
@@ -55,9 +58,11 @@ final public class LineShape implements Shape{
 	 * The constructor.
 	 * 
 	 * @param shapeRenderer - The shape renderer.
+	 * @param color - The color.
 	 */
-	public LineShape(final ShapeRenderer shapeRenderer){
+	public LineShape(final ShapeRenderer shapeRenderer, final Color color){
 		this.shapeRenderer = shapeRenderer;
+		this.color = color;
 	}
 	
 	// --------------------------------------------------
@@ -92,7 +97,7 @@ final public class LineShape implements Shape{
 	@Override
 	public void draw() {
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.WHITE);
+		shapeRenderer.setColor(color);
 		shapeRenderer.rectLine(x1, y1, x2, y2, lineWidth);
 		shapeRenderer.end();
 	}

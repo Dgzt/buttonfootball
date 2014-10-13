@@ -109,4 +109,11 @@ public class CircleShape implements Shape{
 	public final float getY(){
 		return y;
 	}
+	
+	/**
+	 * Return with the radius value.
+	 */
+	public final float getRadius(){
+		return radius;
+	}
 }

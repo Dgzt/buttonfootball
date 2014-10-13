@@ -136,7 +136,7 @@ final public class Map extends RectangleShape{
 
 		this.centerBigCircle = new CircleBorderShape(shapeRenderer, Color.GREEN, Color.WHITE);
 		
-		this.centerLine = new LineShape(shapeRenderer);
+		this.centerLine = new LineShape(shapeRenderer, Color.WHITE);
 		
 		this.centerSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
 		

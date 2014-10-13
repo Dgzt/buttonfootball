@@ -78,6 +78,20 @@ final public class Button extends CircleShape{
 	}
 	
 	// --------------------------------------------------
+	// ~ Public members
+	// --------------------------------------------------
+	
+	/**
+	 * Contains the button the given coordinate.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 */
+	public boolean contains(final float x, final float y){
+		return (Math.abs(getX() - x) < getRadius() && Math.abs(getY() - y) < getRadius());
+	}
+	
+	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	

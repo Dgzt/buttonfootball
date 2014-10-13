@@ -17,6 +17,7 @@ package com.dgzt.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.RectangleShape;
@@ -60,6 +61,9 @@ final public class Table extends RectangleShape{
 	/** The ball. */
 	private final Button ball;
 	
+	/** The arrow. */
+	private final Arrow arrow;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -83,6 +87,8 @@ final public class Table extends RectangleShape{
 		addButtons(shapeRenderer);
 		
 		ball = new Button(shapeRenderer, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
+		
+		arrow = new Arrow(shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -116,6 +122,40 @@ final public class Table extends RectangleShape{
 		}
 		
 		ball.resize(x, y, scale);
+		
+		arrow.setScale(scale);
+	}
+	
+	/**
+	 * Setup the arrow if contains the given position a player button.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 */
+	public void mouseButtonPressed(final float x, final float y){
+		for(final Button playerButton : playerButtons){
+			if(playerButton.contains(x, y)){
+				Gdx.app.log(Table.class.getName()+".mouseButtonPressed", "contains");
+				arrow.show(playerButton.getX(), playerButton.getY());
+			}
+		}
+	}
+	
+	/**
+	 * Set the new ends point of the arrow.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 */
+	public void mouseButtonMoved(final float x, final float y){
+		arrow.setEndPoint(x, y);
+	}
+	
+	/**
+	 * Hide the arrow.
+	 */
+	public void mouseButtonReleased(){
+		arrow.hide();
 	}
 	
 	// --------------------------------------------------
@@ -143,6 +183,8 @@ final public class Table extends RectangleShape{
 		rightGate.draw();
 		
 		ball.draw();
+		
+		arrow.draw();
 	}
 	
 	// --------------------------------------------------
