@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
  * 
  * @author Dgzt
  */
-public class CircleShape implements Shape{
+public class FilledCircleShape implements Shape{
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -54,7 +54,7 @@ public class CircleShape implements Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 * @param color - The color of the circle.
 	 */
-	public CircleShape(final ShapeRenderer shapeRenderer, final Color color){
+	public FilledCircleShape(final ShapeRenderer shapeRenderer, final Color color){
 		this.shapeRenderer = shapeRenderer;
 		this.color = color;
 	}

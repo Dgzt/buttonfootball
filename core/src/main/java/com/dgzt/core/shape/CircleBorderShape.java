@@ -29,10 +29,10 @@ final public class CircleBorderShape implements Shape{
 	// --------------------------------------------------
 	
 	/** The inner filled circle. */
-	private final CircleShape innerCircle;
+	private final FilledCircleShape innerCircle;
 	
 	/** The outer filled circle */
-	private final CircleShape outerCircle;
+	private final FilledCircleShape outerCircle;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -46,8 +46,8 @@ final public class CircleBorderShape implements Shape{
 	 * @param outerColor - The color of the outer circle.
 	 */
 	public CircleBorderShape(final ShapeRenderer shapeRenderer, final Color innerColor, final Color outerColor){
-		innerCircle = new CircleShape(shapeRenderer, innerColor);
-		outerCircle = new CircleShape(shapeRenderer, outerColor);
+		innerCircle = new FilledCircleShape(shapeRenderer, innerColor);
+		outerCircle = new FilledCircleShape(shapeRenderer, outerColor);
 	}
 	
 	// --------------------------------------------------

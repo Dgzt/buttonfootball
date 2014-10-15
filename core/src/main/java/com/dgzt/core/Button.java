@@ -16,17 +16,23 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dgzt.core.shape.CircleShape;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.shape.FilledCircleShape;
 
 /**
  * The button object.
  * 
  * @author Dgzt
  */
-final public class Button extends CircleShape{
+final public class Button extends FilledCircleShape{
 
 	// --------------------------------------------------
-	// ~ Static members
+	// ~ Public static members
 	// --------------------------------------------------
 	
 	/** The color of the player's buttons. */
@@ -45,17 +51,36 @@ final public class Button extends CircleShape{
 	public static final float BALL_RADIUS = 1.0f;
 	
 	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	/** The density of the fixture definition. */
+	private static final float FIXTURE_DEFINITION_DENSITY = 1.0f;
+	
+	/** The friction of the fixture definition. */
+	private static final float FIXTURE_DEFINITION_FRICTION = 10.0f;
+	
+	/** The restitution of the fixture definition. */
+	private static final float FIXTURE_DEFINITION_RESTITUTION = 0.4f;
+	
+	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
+	
+	/** The parent object. */
+	private final Table parent;
 	
 	/** The x coordinate value in Box2D. */
 	private float box2DX;
 	
 	/** The y coordinate value in Box2D. */
 	private float box2DY;
-	
+
 	/** The radius value in Box2D. */
 	private final float box2DRadius;
+	
+	/** The box2D body. */
+	private final Body box2DBody;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -64,21 +89,26 @@ final public class Button extends CircleShape{
 	/**
 	 * The constructor.
 	 * 
+	 * @param parent - The parent object.
 	 * @param shapeRenderer - The shape renderer.
+	 * @param box2DWorld - The box2D world.
 	 * @param color - The color of button.
 	 * @param box2DX - The x coordinate value of button in Box2D.
 	 * @param box2DY - The y coordinate value of button in Box2D.
 	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
-	public Button(final ShapeRenderer shapeRenderer, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
+	public Button(final Table parent, final ShapeRenderer shapeRenderer, final World box2DWorld, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
 		super(shapeRenderer, color);
+		this.parent = parent;
 		this.box2DX = box2DX;
 		this.box2DY = box2DY;
 		this.box2DRadius = box2DRadius;
+		
+		this.box2DBody = createBox2DBody(box2DWorld);
 	}
 	
 	// --------------------------------------------------
-	// ~ Public members
+	// ~ Public methods
 	// --------------------------------------------------
 	
 	/**
@@ -91,23 +121,68 @@ final public class Button extends CircleShape{
 		return (Math.abs(getX() - x) < getRadius() && Math.abs(getY() - y) < getRadius());
 	}
 	
+	/**
+	 * Resize the object.
+	 */
+	public void resize(){
+		final float x = parent.getX() + (float)(box2DX * parent.getScale());
+		final float y = parent.getY() + (float)(box2DY * parent.getScale());
+		final float radius = (float)(box2DRadius * parent.getScale());
+		
+		super.resize(x, y, radius);
+	}
+	
 	// --------------------------------------------------
-	// ~ Private members
+	// ~ Override methods
 	// --------------------------------------------------
 	
 	/**
-	 * Resize the object.
-	 * 
-	 * @param parentX - The x coordinate value of the parent object.
-	 * @param parentY - The y coordinate value of the parent object.
-	 * @param scale - The scale value
+	 * Draw the shape. 
+	 * If changed the position in the box2D world then resize the shape.
 	 */
-	public void resize(final float parentX, final float parentY, final double scale){
-		final float x = parentX + (float)(box2DX * scale);
-		final float y = parentY + (float)(box2DY * scale);
-		final float radius = (float)(box2DRadius * scale);
+	@Override
+	public void draw() {
+		if( box2DX != box2DBody.getPosition().x || box2DY != box2DBody.getPosition().y ){
+			box2DX = box2DBody.getPosition().x;
+			box2DY = box2DBody.getPosition().y;
+			
+			resize();
+		}
 		
-		super.resize(x, y, radius);
+		super.draw();
+	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+
+	/**
+	 * Create the box2D body.
+	 * 
+	 * @param box2DWorld - The box2D world.
+	 * @return - The box2D body.
+	 */
+	private Body createBox2DBody(final World box2DWorld){
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		bodyDef.position.set(box2DX, box2DY);
+		
+		Body body = box2DWorld.createBody(bodyDef);
+		
+		CircleShape circle = new CircleShape();
+		circle.setRadius(box2DRadius);
+		
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = circle;
+		fixtureDef.density = FIXTURE_DEFINITION_DENSITY;
+		fixtureDef.friction = FIXTURE_DEFINITION_FRICTION;
+		fixtureDef.restitution = FIXTURE_DEFINITION_RESTITUTION;
+		
+		body.createFixture(fixtureDef);
+		
+		circle.dispose();
+		
+		return body;
 	}
 
 }

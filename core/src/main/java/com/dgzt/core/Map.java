@@ -18,7 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.ArcShape;
 import com.dgzt.core.shape.CircleBorderShape;
-import com.dgzt.core.shape.CircleShape;
+import com.dgzt.core.shape.FilledCircleShape;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
@@ -88,13 +88,13 @@ final public class Map extends RectangleShape{
 	private final LineShape centerLine;
 	
 	/** The center small filled circle. */
-	private final CircleShape centerSmallCircle;
+	private final FilledCircleShape centerSmallCircle;
 	
 	/** The left small filled circle. */
-	private final CircleShape leftSmallCircle;
+	private final FilledCircleShape leftSmallCircle;
 	
 	/** The right small filled circle. */
-	private final CircleShape rightSmallCircle;
+	private final FilledCircleShape rightSmallCircle;
 	
 	/** The top left small arc. */
 	private final ArcShape topLeftSmallArc;
@@ -138,11 +138,11 @@ final public class Map extends RectangleShape{
 		
 		this.centerLine = new LineShape(shapeRenderer, Color.WHITE);
 		
-		this.centerSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
+		this.centerSmallCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
 		
-		this.leftSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
+		this.leftSmallCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
 		
-		this.rightSmallCircle = new CircleShape(shapeRenderer, Color.WHITE);
+		this.rightSmallCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
 		
 		this.topLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 0, 90);
 		

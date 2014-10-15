@@ -20,6 +20,8 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.shape.RectangleShape;
 
 /**
@@ -64,6 +66,12 @@ final public class Table extends RectangleShape{
 	/** The arrow. */
 	private final Arrow arrow;
 	
+	/** The box2d world. */
+	private final World box2DWorld;
+	
+	/** The actual scale value. */
+	private double scale;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -76,6 +84,8 @@ final public class Table extends RectangleShape{
 	public Table( final ShapeRenderer shapeRenderer ){
 		super(shapeRenderer, Color.GRAY);
 		
+		box2DWorld = new World(new Vector2(0,0), true);
+		
 		map = new Map(shapeRenderer);
 		
 		leftGate = new Gate(shapeRenderer);
@@ -86,7 +96,7 @@ final public class Table extends RectangleShape{
 		
 		addButtons(shapeRenderer);
 		
-		ball = new Button(shapeRenderer, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
+		ball = new Button(this, shapeRenderer, box2DWorld, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
 		
 		arrow = new Arrow(shapeRenderer);
 	}
@@ -106,6 +116,7 @@ final public class Table extends RectangleShape{
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height);
+		this.scale = scale;
 		
 		resizeMap(x, y, width, height, scale);
 		
@@ -114,14 +125,14 @@ final public class Table extends RectangleShape{
 		resizeRightGate(map.getX(), map.getWidth(), leftGate.getY(), leftGate.getWidth(), leftGate.getHeight(), scale);
 		
 		for(final Button playerButton : playerButtons){
-			playerButton.resize(x, y, scale);
+			playerButton.resize();
 		}
 		
 		for(final Button opponentButton : opponentButtons){
-			opponentButton.resize(x, y, scale);
+			opponentButton.resize();
 		}
 		
-		ball.resize(x, y, scale);
+		ball.resize();
 		
 		arrow.setScale(scale);
 	}
@@ -167,8 +178,11 @@ final public class Table extends RectangleShape{
 	 */
 	@Override
 	public void draw() {
-		super.draw();
+		// Step the box2d world
+		box2DWorld.step(1/60f, 6, 2);
 		
+		// Draw the shapes.
+		super.draw();
 		map.draw();
 		
 		for(final Button playerButton : playerButtons){
@@ -208,41 +222,41 @@ final public class Table extends RectangleShape{
 		// ------------------
 		
 		// Add player goalkeeper
-		playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
 		
 		// Add player defenders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add player midfielders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add player forwards
-		playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
-		playerButtons.add(new Button(shapeRenderer, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		
 		// Add opponent buttons
 		// --------------------
 		
 		// Add opponent goalkeeper
-		opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
 		
 		// Add opponent defenders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add opponent midfielders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add opponent forwards
-		opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
-		opponentButtons.add(new Button(shapeRenderer, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 	}
 	
 	/**
@@ -293,5 +307,16 @@ final public class Table extends RectangleShape{
 	private void resizeRightGate(final float mapX, final float mapWidth, final float y, final float width, final float height, final double scale){
 		final float x = mapX + mapWidth;
 		rightGate.resize(x, y, width, height, scale);
+	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the actual scale value.
+	 */
+	public final double getScale(){
+		return scale;
 	}
 }

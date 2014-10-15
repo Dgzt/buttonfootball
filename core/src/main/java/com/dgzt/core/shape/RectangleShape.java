@@ -108,6 +108,13 @@ public class RectangleShape implements Shape{
 	}
 	
 	/**
+	 * Return with y coordinate value.
+	 */
+	public final float getY(){
+		return y;
+	}
+	
+	/**
 	 * Return with width value.
 	 */
 	public final float getWidth(){

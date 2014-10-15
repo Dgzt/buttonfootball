@@ -13,14 +13,25 @@
 	<name>ButtonFootballGame Core</name>
 
 	<dependencies>
+	
+		<!-- libGDX -->
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
 		</dependency>
+		
+		<!-- libGDX - box2D -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-box2d</artifactId>
+		</dependency>
+		
+		<!-- Unit test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

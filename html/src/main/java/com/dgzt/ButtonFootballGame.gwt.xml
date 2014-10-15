@@ -1,5 +1,6 @@
 <module rename-to='buttonfootball'>
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
+	<inherits name='com.badlogic.gdx.physics.box2d.box2d-gwt' />
 
 	<source path='core'/>
 	<source path='html'/>

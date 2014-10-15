@@ -68,6 +68,29 @@
 				<version>${gdx.version}</version>
 			</dependency>
 			
+			<!-- Box2D -->
+			<dependency>
+				<groupId>com.badlogicgames.gdx</groupId>
+				<artifactId>gdx-box2d</artifactId>
+				<version>${gdx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.badlogicgames.gdx</groupId>
+				<artifactId>gdx-box2d-platform</artifactId>
+				<version>${gdx.version}</version>
+				<classifier>natives-desktop</classifier>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.badlogicgames.gdx</groupId>
+				<artifactId>gdx-box2d-gwt</artifactId>
+				<version>${gdx.version}</version>
+				<classifier>sources</classifier>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- unit test -->
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
