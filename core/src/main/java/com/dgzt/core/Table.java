@@ -21,6 +21,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.shape.RectangleShape;
 
@@ -32,7 +36,7 @@ import com.dgzt.core.shape.RectangleShape;
 final public class Table extends RectangleShape{
 	
 	// --------------------------------------------------
-	// ~ Static members
+	// ~ Public static members
 	// --------------------------------------------------
 	
 	/** The width in cm. */
@@ -40,6 +44,12 @@ final public class Table extends RectangleShape{
 	
 	/** The height in cm. */
 	public static final float HEIGHT = 120.0f;
+	
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	private static final float BOX2D_WALL_SIZE = 10.0f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -85,6 +95,7 @@ final public class Table extends RectangleShape{
 		super(shapeRenderer, Color.GRAY);
 		
 		box2DWorld = new World(new Vector2(0,0), true);
+		addBox2DTableWalls();
 		
 		map = new Map(shapeRenderer);
 		
@@ -260,6 +271,46 @@ final public class Table extends RectangleShape{
 	}
 	
 	/**
+	 * Add wall to the box2D.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 */
+	private void addBox2DWall(final float x, final float y, final float width, final float height){
+		final BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(x + width / 2, y + height / 2);
+		
+		final Body body = box2DWorld.createBody(bodyDef);
+		
+		final PolygonShape shape = new PolygonShape();
+		shape.setAsBox(width / 2, height / 2);
+		
+		final FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 1.0f;
+		body.createFixture(fixtureDef);
+	}
+	
+	/**
+	 * Add the box2D walls of table.
+	 */
+	private void addBox2DTableWalls(){
+		// Add top wall
+		addBox2DWall(0, 0 - BOX2D_WALL_SIZE, Table.WIDTH, BOX2D_WALL_SIZE);
+		
+		// Add right wall
+		addBox2DWall(Table.WIDTH, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
+		
+		// Add bottom wall
+		addBox2DWall(0, Table.HEIGHT, Table.WIDTH, BOX2D_WALL_SIZE);
+		
+		// Add left Wall
+		addBox2DWall(0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
+	}
+	
+	/**
 	 * Resize the map.
 	 * 
 	 * @param tableX - The x coordinate value of map.
@@ -310,7 +361,7 @@ final public class Table extends RectangleShape{
 	}
 	
 	// --------------------------------------------------
-	// ~ Private methods
+	// ~ Getter methods
 	// --------------------------------------------------
 	
 	/**

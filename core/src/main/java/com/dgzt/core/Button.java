@@ -145,7 +145,7 @@ final public class Button extends FilledCircleShape{
 		if( box2DX != box2DBody.getPosition().x || box2DY != box2DBody.getPosition().y ){
 			box2DX = box2DBody.getPosition().x;
 			box2DY = box2DBody.getPosition().y;
-			
+
 			resize();
 		}
 		
