@@ -63,6 +63,9 @@ final public class Button extends FilledCircleShape{
 	/** The restitution of the fixture definition. */
 	private static final float FIXTURE_DEFINITION_RESTITUTION = 0.4f;
 	
+	/** The linear damping for body of box2D. */
+	private static final float BOX2D_BODY_LINEAR_DAMPING = 3.0f;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -132,6 +135,16 @@ final public class Button extends FilledCircleShape{
 		super.resize(x, y, radius);
 	}
 	
+	/**
+	 * Move the button to the given position.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 */
+	public void move(final float x, final float y){
+		box2DBody.setLinearVelocity(x, y);
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -181,6 +194,9 @@ final public class Button extends FilledCircleShape{
 		body.createFixture(fixtureDef);
 		
 		circle.dispose();
+		
+		// The linear damping.
+		body.setLinearDamping(BOX2D_BODY_LINEAR_DAMPING);
 		
 		return body;
 	}

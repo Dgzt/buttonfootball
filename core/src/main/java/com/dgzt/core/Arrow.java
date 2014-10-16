@@ -30,11 +30,14 @@ final public class Arrow extends LineShape{
 	// ~ Private members
 	// --------------------------------------------------
 	
+	/** The parent object. */
+	private final Table parent;
+	
 	/** Is visible the arrow. */
 	private boolean visible;
 	
-	/** The scale value. */
-	private double scale;
+	/** The last selected player buttons. */
+	private Button lastSelectedButton;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -43,35 +46,28 @@ final public class Arrow extends LineShape{
 	/**
 	 * The constructor.
 	 * 
+	 * @param parent - The parent object.
 	 * @param shapeRenderer - The shape renderer.
 	 */
-	public Arrow(final ShapeRenderer shapeRenderer) {
+	public Arrow(final Table parent, final ShapeRenderer shapeRenderer) {
 		super(shapeRenderer, Color.RED);
+		this.parent = parent;
 		visible = false;
 	}
 	
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
-
-	/**
-	 * Set the scale.
-	 * 
-	 * @param scale - The scale value.
-	 */
-	public void setScale(final double scale) {
-		this.scale = scale;
-	}
 	
 	/**
 	 * Show the arrow.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
+	 * @param selectedButton - The selected player button.
 	 */
-	public void show(final float x, final float y){
-		Gdx.app.log(Arrow.class.getName()+".show", String.valueOf(x)+" x "+String.valueOf(y));
-		super.resize(x, y, x, y, scale);
+	public void show(final Button selectedButton){
+		Gdx.app.log(Arrow.class.getName()+".show", String.valueOf(selectedButton.getX())+" x "+String.valueOf(selectedButton.getY()));
+		this.lastSelectedButton = selectedButton;
+		super.resize(selectedButton.getX(), selectedButton.getY(), selectedButton.getX(), selectedButton.getY(), parent.getScale());
 		visible = true;
 	}
 	
@@ -84,7 +80,7 @@ final public class Arrow extends LineShape{
 	public void setEndPoint(final float x, final float y){
 		if(visible){
 			Gdx.app.log(Arrow.class.getName()+".setEndPoint", String.valueOf(x)+" x "+String.valueOf(y));
-			super.resize(getX1(), getY1(), x, y, scale);
+			super.resize(getX1(), getY1(), x, y, parent.getScale());
 		}
 	}
 	
@@ -92,10 +88,8 @@ final public class Arrow extends LineShape{
 	 * Hide the arrow.
 	 */
 	public void hide(){
-		if(visible){
-			Gdx.app.log(Arrow.class.getName()+".hide", "");
-			visible = false;
-		}
+		Gdx.app.log(Arrow.class.getName()+".hide", "");
+		visible = false;
 	}
 	
 	// --------------------------------------------------
@@ -111,6 +105,22 @@ final public class Arrow extends LineShape{
 			super.draw();
 		}
 	}
-
 	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+
+	/**
+	 * Return with the visibility of arrow.
+	 */
+	public boolean isVisible(){
+		return visible;
+	}
+	
+	/**
+	 * Return with the last selected player button.
+	 */
+	public Button getLastSelectedButton(){
+		return lastSelectedButton;
+	}
 }

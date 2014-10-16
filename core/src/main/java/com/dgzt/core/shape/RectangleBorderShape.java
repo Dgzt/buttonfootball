@@ -112,21 +112,17 @@ public class RectangleBorderShape implements Shape{
 	 * Return with width value.
 	 */
 	public final float getWidth(){
-		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
-		final float leftX = topLine.getX1() + halfLineWidth;
-		final float rightX = topLine.getX2() - halfLineWidth;
+		final float lineWidth = (float) (LINE_WIDTH * scale);
 		
-		return rightX - leftX;
+		return topLine.getLength() - lineWidth;
 	}
 	
 	/**
 	 * Return width height value.
 	 */
 	public final float getHeight(){
-		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
-		final float topY = rightLine.getY1() + halfLineWidth;
-		final float bottomY = rightLine.getY2() - halfLineWidth;
-
-		return bottomY - topY;
+		final float lineWidth = (float) (LINE_WIDTH * scale);
+		
+		return rightLine.getLength() - lineWidth;
 	}
 }

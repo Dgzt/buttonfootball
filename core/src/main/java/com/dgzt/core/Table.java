@@ -109,7 +109,7 @@ final public class Table extends RectangleShape{
 		
 		ball = new Button(this, shapeRenderer, box2DWorld, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
 		
-		arrow = new Arrow(shapeRenderer);
+		arrow = new Arrow(this, shapeRenderer);
 	}
 	
 	// --------------------------------------------------
@@ -144,8 +144,6 @@ final public class Table extends RectangleShape{
 		}
 		
 		ball.resize();
-		
-		arrow.setScale(scale);
 	}
 	
 	/**
@@ -158,7 +156,7 @@ final public class Table extends RectangleShape{
 		for(final Button playerButton : playerButtons){
 			if(playerButton.contains(x, y)){
 				Gdx.app.log(Table.class.getName()+".mouseButtonPressed", "contains");
-				arrow.show(playerButton.getX(), playerButton.getY());
+				arrow.show(playerButton);
 			}
 		}
 	}
@@ -174,10 +172,15 @@ final public class Table extends RectangleShape{
 	}
 	
 	/**
-	 * Hide the arrow.
+	 * Move the selected button and hide the arrow if the arrow is visible.
 	 */
 	public void mouseButtonReleased(){
-		arrow.hide();
+		if(arrow.isVisible()){
+			arrow.hide();
+			
+			final Button movingButton = arrow.getLastSelectedButton();
+			movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
+		}
 	}
 	
 	// --------------------------------------------------

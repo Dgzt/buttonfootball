@@ -87,6 +87,13 @@ public class LineShape implements Shape{
 		lineWidth = (float) (LINE_WIDTH * scale);
 	}
 	
+	/**
+	 * Return with the length of line.
+	 */
+	public float getLength(){
+		return (float)Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -109,8 +116,8 @@ public class LineShape implements Shape{
 	/**
 	 * Return with first x coordinate value.
 	 */
-	public final float getX1(){
-		return x1;
+	public final float getX1(){ 
+		return x1; 
 	}
 	
 	/**
@@ -133,4 +140,5 @@ public class LineShape implements Shape{
 	public final float getY2(){
 		return y2;
 	}
+	
 }
