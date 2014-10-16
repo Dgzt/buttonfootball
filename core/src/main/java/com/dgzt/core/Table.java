@@ -208,10 +208,10 @@ final public class Table extends RectangleShape{
 			opponentButton.draw();
 		}
 		
+		ball.draw();
+		
 		leftGate.draw();
 		rightGate.draw();
-		
-		ball.draw();
 		
 		arrow.draw();
 	}
