@@ -96,6 +96,7 @@ final public class Table extends RectangleShape{
 		
 		box2DWorld = new World(new Vector2(0,0), true);
 		addBox2DTableWalls();
+		addBox2DGateWalls();
 		
 		map = new Map(shapeRenderer);
 		
@@ -311,6 +312,28 @@ final public class Table extends RectangleShape{
 		
 		// Add left Wall
 		addBox2DWall(0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
+	}
+	
+	/**
+	 * Add the box2D walls of gates.
+	 */
+	private void addBox2DGateWalls(){
+		final float leftGateX = 0;
+		final float rightGateX = Table.WIDTH - Gate.WIDTH;
+		final float topWallY = (Table.HEIGHT - Gate.HEIGHT - Gate.LINE_WIDTH) / 2;
+		final float bottomWallY = (Table.HEIGHT + Gate.HEIGHT - Gate.LINE_WIDTH) / 2;
+		
+		// Add top wall of left gate.
+		addBox2DWall(leftGateX, topWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		
+		// Add bottom wall of left gate.
+		addBox2DWall(leftGateX, bottomWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		
+		// Add top wall of right gate.
+		addBox2DWall(rightGateX, topWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		
+		// Add bottom wall of right gate.
+		addBox2DWall(rightGateX, bottomWallY, Gate.WIDTH, Gate.LINE_WIDTH);
 	}
 	
 	/**
