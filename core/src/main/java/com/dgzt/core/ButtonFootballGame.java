@@ -37,8 +37,8 @@ final public class ButtonFootballGame implements ApplicationListener {
 	/** The camera. */
 	private OrthographicCamera camera;
 	
-	/** The camera. */
-	private Table table;
+	/** The main window. */
+	private MainWindow mainWindow;
 	
 	// --------------------------------------------------
 	// ~ Override methods
@@ -56,9 +56,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 		Gdx.app.log(ButtonFootballGame.class.getName()+".create", "");
 		shapeRenderer = new ShapeRenderer();
 		
-		table = new Table(shapeRenderer);
-		
-		Gdx.input.setInputProcessor(new InputListener(table));
+		mainWindow = new MainWindow(shapeRenderer);
 	}
 
 	/**
@@ -70,24 +68,24 @@ final public class ButtonFootballGame implements ApplicationListener {
 		
 		camera.setToOrtho(true, width, height);
 		
-		float tableWidth;
-		float tableHeight;
+		float mainWindowWidth;
+		float mainWindowHeight;
 		
 		final double rate = (double)width/height;
 		
-		if( Table.WIDTH/Table.HEIGHT > rate ){
-			tableWidth = width;
-			tableHeight = Table.HEIGHT*(width/Table.WIDTH);
+		if( MainWindow.WIDTH/MainWindow.HEIGHT > rate ){
+			mainWindowWidth = width;
+			mainWindowHeight = MainWindow.HEIGHT*(width/MainWindow.WIDTH);
 		}else{
-			tableWidth = Table.WIDTH*(height/Table.HEIGHT);
-			tableHeight = height;
+			mainWindowWidth = MainWindow.WIDTH*(height/MainWindow.HEIGHT);
+			mainWindowHeight = height;
 		}
 		
-		final float tableX = (width-tableWidth)/2;
-		final float tableY = (height-tableHeight)/2;
-		final double scale = (double)tableWidth / Table.WIDTH;
+		final float mainWindowX = (width-mainWindowWidth)/2;
+		final float mainWindowY = (height-mainWindowHeight)/2;
+		final double scale = (double)mainWindowWidth / MainWindow.WIDTH;
 		
-		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
+		mainWindow.resize(mainWindowX, mainWindowY, mainWindowWidth, scale);
 	}
 
 	/**
@@ -100,7 +98,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);;	
 
-		table.draw();
+		mainWindow.draw();
 	}
 
 	/**
