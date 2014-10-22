@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.RectangleBorderShape;
+import com.dgzt.core.shape.Shape;
 
 /**
  * The scoreboard.
@@ -29,10 +30,26 @@ public class ScoreBoard extends RectangleBorderShape{
 	// --------------------------------------------------
 	
 	/** The width of scoreboard in cm. */
-	public static final float WIDTH = 60.0f;
+	public static final float WIDTH = 4 * Digit.WIDTH + Shape.LINE_WIDTH;
 	
 	/** The height of scoreboard in cm. */
-	public static final float HEIGHT = 20.0f;
+	public static final float HEIGHT = Digit.HEIGHT + Shape.LINE_WIDTH;
+	
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
+	
+	/** The first minute digit. */
+	private final Digit firstMinDigit;
+	
+	/** The second minute digit. */
+	private final Digit secondMinDigit;
+	
+	/** The first moment digit. */
+	private final Digit firstSecDigit;
+	
+	/** The second moment digit. */
+	private final Digit secondSecDigit;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -45,6 +62,45 @@ public class ScoreBoard extends RectangleBorderShape{
 	 */
 	public ScoreBoard(final ShapeRenderer shapeRenderer) {
 		super(shapeRenderer);
+		
+		firstMinDigit = new Digit(shapeRenderer);
+		secondMinDigit = new Digit(shapeRenderer);
+		firstSecDigit = new Digit(shapeRenderer);
+		secondSecDigit = new Digit(shapeRenderer);
+	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void resize(float x, float y, float width, float height, double scale) {
+		super.resize(x, y, width, height, scale);
+		
+		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float digitWidth = (float)(Digit.WIDTH * scale);
+		final float digitHeight = (float)(Digit.HEIGHT * scale);
+		
+		firstMinDigit.resize(x + halfLineWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+		secondMinDigit.resize(x + halfLineWidth + digitWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+		firstSecDigit.resize(x + halfLineWidth + 2*digitWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+		secondSecDigit.resize(x + halfLineWidth + 3*digitWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void draw() {
+		super.draw();
+		
+		firstMinDigit.draw();
+		secondMinDigit.draw();
+		firstSecDigit.draw();
+		secondSecDigit.draw();
 	}
 
 }

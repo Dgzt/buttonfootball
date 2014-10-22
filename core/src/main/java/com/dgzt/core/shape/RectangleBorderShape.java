@@ -102,6 +102,13 @@ public class RectangleBorderShape implements Shape{
 	// --------------------------------------------------
 
 	/**
+	 * Return with x coordinate value;
+	 */
+	public final float getX(){
+		return topLine.getX1();
+	}
+	
+	/**
 	 * Return with y coordinate value;
 	 */
 	public final float getY(){
