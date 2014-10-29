@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core;
+package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dgzt.core.shape.RectangleBorderShape;
