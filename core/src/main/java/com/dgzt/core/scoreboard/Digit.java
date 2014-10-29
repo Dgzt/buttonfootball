@@ -80,6 +80,12 @@ public class Digit implements Shape{
 	/** The top left vertical line. */
 	private final LineShape topLeftLine;
 	
+	/** The x coordinate value. */
+	private float x;
+	
+	/** The y coordinate value. */
+	private float y;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -113,6 +119,8 @@ public class Digit implements Shape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
+		this.x = x;
+		this.y = y;
 		final float horizontalLineDistance = (float)(HORIZONTAL_LINE_DISTANCE * scale);
 		final float verticalLineDistance = (float)(VERTICAL_LINE_DISTANCE * scale);
 		final float horizontalLineLength = (float)(HORIZONTAL_LINE_LENGTH * scale);
@@ -260,6 +268,24 @@ public class Digit implements Shape{
 		bottomLine.draw();
 		bottomLeftLine.draw();
 		topLeftLine.draw();
+	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value.
+	 */
+	public final float getX(){
+		return x;
+	}
+	
+	/**
+	 * Return with the y coordinate value.
+	 */
+	public final float getY(){
+		return y;
 	}
 	
 }

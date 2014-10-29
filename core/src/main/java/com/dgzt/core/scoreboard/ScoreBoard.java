@@ -30,7 +30,7 @@ public class ScoreBoard extends RectangleBorderShape{
 	// --------------------------------------------------
 	
 	/** The width of scoreboard in cm. */
-	public static final float WIDTH = 4 * Digit.WIDTH + Shape.LINE_WIDTH;
+	public static final float WIDTH = 4 * Digit.WIDTH + SecondCircles.WIDTH + Shape.LINE_WIDTH;
 	
 	/** The height of scoreboard in cm. */
 	public static final float HEIGHT = Digit.HEIGHT + Shape.LINE_WIDTH;
@@ -44,6 +44,9 @@ public class ScoreBoard extends RectangleBorderShape{
 	
 	/** The second minute digit. */
 	private final Digit secondMinDigit;
+	
+	/** The second circles. */
+	private final SecondCircles secondCircles;
 	
 	/** The first moment digit. */
 	private final Digit firstSecDigit;
@@ -65,6 +68,9 @@ public class ScoreBoard extends RectangleBorderShape{
 		
 		firstMinDigit = new Digit(shapeRenderer);
 		secondMinDigit = new Digit(shapeRenderer);
+		
+		secondCircles = new SecondCircles(shapeRenderer);
+		
 		firstSecDigit = new Digit(shapeRenderer);
 		secondSecDigit = new Digit(shapeRenderer);
 	}
@@ -77,17 +83,22 @@ public class ScoreBoard extends RectangleBorderShape{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void resize(float x, float y, float width, float height, double scale) {
+	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height, scale);
 		
 		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
 		final float digitWidth = (float)(Digit.WIDTH * scale);
 		final float digitHeight = (float)(Digit.HEIGHT * scale);
+		final float secondCirclesWidth = (float)(SecondCircles.WIDTH * scale);
+		final float secondCirclesHeight = (float)(SecondCircles.HEIGHT * scale);
 		
 		firstMinDigit.resize(x + halfLineWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
-		secondMinDigit.resize(x + halfLineWidth + digitWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
-		firstSecDigit.resize(x + halfLineWidth + 2*digitWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
-		secondSecDigit.resize(x + halfLineWidth + 3*digitWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+		secondMinDigit.resize(firstMinDigit.getX() + digitWidth, firstMinDigit.getY(), digitWidth, digitHeight, scale);
+		
+		secondCircles.resize(secondMinDigit.getX() + digitWidth, y, secondCirclesWidth, secondCirclesHeight, scale);
+		
+		firstSecDigit.resize(secondCircles.getX() + secondCircles.getWidth(), secondMinDigit.getY(), digitWidth, digitHeight, scale);
+		secondSecDigit.resize(firstSecDigit.getX() + digitWidth, firstSecDigit.getY(), digitWidth, digitHeight, scale);
 	}
 	
 	/**
@@ -99,6 +110,9 @@ public class ScoreBoard extends RectangleBorderShape{
 		
 		firstMinDigit.draw();
 		secondMinDigit.draw();
+		
+		secondCircles.draw();
+		
 		firstSecDigit.draw();
 		secondSecDigit.draw();
 	}
