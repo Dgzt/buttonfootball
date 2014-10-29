@@ -31,10 +31,10 @@ public class Digit implements Shape{
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
-	public static final float WIDTH = 10.0f;
+	public static final float WIDTH = 13.0f;
 	
 	/** The height value in cm. */
-	public static final float HEIGHT = 20.0f;
+	public static final float HEIGHT = 25.0f;
 	
 	// --------------------------------------------------
 	// ~ Private static members
