@@ -15,7 +15,6 @@
 package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.Shape;
 
 /**
@@ -23,36 +22,30 @@ import com.dgzt.core.shape.Shape;
  * 
  * @author Dgzt
  */
-public class ScoreBoard extends RectangleBorderShape{
-
+public class ScoreBoard implements Shape{
+	
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
 	
-	/** The width of scoreboard in cm. */
-	public static final float WIDTH = 4 * Digit.WIDTH + SecondCircles.WIDTH + Shape.LINE_WIDTH;
+	/** The width value in cm. */
+	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH + 2*Shape.LINE_WIDTH;
 	
-	/** The height of scoreboard in cm. */
-	public static final float HEIGHT = Digit.HEIGHT + Shape.LINE_WIDTH;
-	
+	/** The height value in cm. */
+	public static final float HEIGHT = TimeBoard.HEIGHT;
+
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The first minute digit. */
-	private final Digit firstMinDigit;
+	/** The time board. */
+	private final TimeBoard timeBoard;
 	
-	/** The second minute digit. */
-	private final Digit secondMinDigit;
+	/** The player's goal board. */
+	private final GoalBoard playerGoalBoard;
 	
-	/** The second circles. */
-	private final SecondCircles secondCircles;
-	
-	/** The first moment digit. */
-	private final Digit firstSecDigit;
-	
-	/** The second moment digit. */
-	private final Digit secondSecDigit;
+	/** The opponent's goal board. */
+	private final GoalBoard opponentGoalBoard;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -63,58 +56,49 @@ public class ScoreBoard extends RectangleBorderShape{
 	 * 
 	 * @param shapeRenderer - The shape renderer.
 	 */
-	public ScoreBoard(final ShapeRenderer shapeRenderer) {
-		super(shapeRenderer);
+	public ScoreBoard(final ShapeRenderer shapeRenderer){
+		timeBoard = new TimeBoard(shapeRenderer);
+		playerGoalBoard = new GoalBoard(shapeRenderer);
+		opponentGoalBoard = new GoalBoard(shapeRenderer);
+	}
+	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
+	
+	/**
+	 * Resize the shape.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 * @param scale - The scale value.
+	 */
+	public void resize(final float x, final float y, final float width, final float height, final double scale){
+		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale);
+		final float goalBoardWidth = (float)(GoalBoard.WIDTH * scale);
+		final float goalBoardHeight = (float)(GoalBoard.HEIGHT * scale);
+		final float timeBoardWidth = (float)(TimeBoard.WIDTH * scale);
+		final float timeBoardHeight = (float)(TimeBoard.HEIGHT * scale);
 		
-		firstMinDigit = new Digit(shapeRenderer);
-		secondMinDigit = new Digit(shapeRenderer);
-		
-		secondCircles = new SecondCircles(shapeRenderer);
-		
-		firstSecDigit = new Digit(shapeRenderer);
-		secondSecDigit = new Digit(shapeRenderer);
+		playerGoalBoard.resize(x + halfLineWidth, y + height - goalBoardHeight, goalBoardWidth, goalBoardHeight, scale);
+		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth() + halfLineWidth, y, timeBoardWidth, timeBoardHeight, scale);
+		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth() + halfLineWidth, playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
 	}
 	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resize(final float x, final float y, final float width, final float height, final double scale) {
-		super.resize(x, y, width, height, scale);
-		
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
-		final float digitWidth = (float)(Digit.WIDTH * scale);
-		final float digitHeight = (float)(Digit.HEIGHT * scale);
-		final float secondCirclesWidth = (float)(SecondCircles.WIDTH * scale);
-		final float secondCirclesHeight = (float)(SecondCircles.HEIGHT * scale);
-		
-		firstMinDigit.resize(x + halfLineWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
-		secondMinDigit.resize(firstMinDigit.getX() + digitWidth, firstMinDigit.getY(), digitWidth, digitHeight, scale);
-		
-		secondCircles.resize(secondMinDigit.getX() + digitWidth, y, secondCirclesWidth, secondCirclesHeight, scale);
-		
-		firstSecDigit.resize(secondCircles.getX() + secondCircles.getWidth(), secondMinDigit.getY(), digitWidth, digitHeight, scale);
-		secondSecDigit.resize(firstSecDigit.getX() + digitWidth, firstSecDigit.getY(), digitWidth, digitHeight, scale);
-	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void draw() {
-		super.draw();
-		
-		firstMinDigit.draw();
-		secondMinDigit.draw();
-		
-		secondCircles.draw();
-		
-		firstSecDigit.draw();
-		secondSecDigit.draw();
+		playerGoalBoard.draw();
+		timeBoard.draw();
+		opponentGoalBoard.draw();
 	}
 
 }

@@ -30,11 +30,17 @@ public class Digit implements Shape{
 	// ~ Public static members
 	// --------------------------------------------------
 	
-	/** The width value in cm. */
-	public static final float WIDTH = 13.0f;
+	/** The width value of time digit in cm. */
+	public static final float TIME_DIGIT_WIDTH = 13.0f;
 	
-	/** The height value in cm. */
-	public static final float HEIGHT = 25.0f;
+	/** The width value of goal digit in cm. */
+	public static final float GOAL_DIGIT_WIDTH = TIME_DIGIT_WIDTH * 0.5f;
+	
+	/** The height value of time digit in cm. */
+	public static final float TIME_DIGIT_HEIGHT = 25.0f;
+	
+	/** The height value of goal digit in cm. */
+	public static final float GOAL_DIGIT_HEIGHT = TIME_DIGIT_HEIGHT * 0.5f;
 	
 	// --------------------------------------------------
 	// ~ Private static members
@@ -45,12 +51,6 @@ public class Digit implements Shape{
 	
 	/** The vertical line distance in cm. */
 	private static final float VERTICAL_LINE_DISTANCE = 0.5f;
-	
-	/** The horizontal line length in cm. */
-	private static final float HORIZONTAL_LINE_LENGTH = WIDTH - 2 * HORIZONTAL_LINE_DISTANCE;
-	
-	/** The vertical line length in cm. */
-	private static final float VERTICAL_LINE_LENGTH = (HEIGHT - 3 * Shape.LINE_WIDTH - 6 * VERTICAL_LINE_DISTANCE) / 2;
 	
 	/** The color of lines. */
 	private static final Color DIGIT_COLOR = Color.WHITE;
@@ -86,6 +86,12 @@ public class Digit implements Shape{
 	/** The y coordinate value. */
 	private float y;
 	
+	/** The base horizontal line length. */
+	private final float baseHorizontalLineLength;
+	
+	/** The base vertical line length. */
+	private final float baseVerticalLineLength;
+	
 	/** The displaying number. */
 	private int number;
 	
@@ -97,9 +103,13 @@ public class Digit implements Shape{
 	 * The constructor.
 	 * 
 	 * @param shapeRenderer - The shape renderer.
+	 * @param baseWidth - The base width value.
+	 * @param baseHeight - The base height value.
 	 */
-	public Digit(final ShapeRenderer shapeRenderer){
-		setNumber(0);
+	public Digit(final ShapeRenderer shapeRenderer, final float baseWidth, final float baseHeight){
+		setNumber(0);;
+		this.baseHorizontalLineLength = baseWidth - 2 * HORIZONTAL_LINE_DISTANCE;
+		this.baseVerticalLineLength = (baseHeight - 3 * Shape.LINE_WIDTH - 6 * VERTICAL_LINE_DISTANCE) / 2;
 		
 		topLine = new LineShape(shapeRenderer, DIGIT_COLOR);
 		topRightLine = new LineShape(shapeRenderer, DIGIT_COLOR);
@@ -128,8 +138,8 @@ public class Digit implements Shape{
 		this.y = y;
 		final float horizontalLineDistance = (float)(HORIZONTAL_LINE_DISTANCE * scale);
 		final float verticalLineDistance = (float)(VERTICAL_LINE_DISTANCE * scale);
-		final float horizontalLineLength = (float)(HORIZONTAL_LINE_LENGTH * scale);
-		final float verticalLineLength = (float)(VERTICAL_LINE_LENGTH * scale);
+		final float horizontalLineLength = (float)(baseHorizontalLineLength * scale);
+		final float verticalLineLength = (float)(baseVerticalLineLength * scale);
 		
 		resizeTopLine(horizontalLineLength, x, y, width, horizontalLineDistance, scale);
 		resizeCenterLine(topLine.getX1(), topLine.getX2(), y, height, scale);

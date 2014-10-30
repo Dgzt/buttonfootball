@@ -34,7 +34,7 @@ public class SecondCircles implements Shape{
 	public static final float WIDTH = 10.0f;
 	
 	/** The height value in cm. */
-	public static final float HEIGHT = ScoreBoard.HEIGHT;
+	public static final float HEIGHT = TimeBoard.HEIGHT;
 	
 	// --------------------------------------------------
 	// ~ Private static members
