@@ -86,6 +86,9 @@ public class Digit implements Shape{
 	/** The y coordinate value. */
 	private float y;
 	
+	/** The displaying number. */
+	private int number;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -96,6 +99,8 @@ public class Digit implements Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public Digit(final ShapeRenderer shapeRenderer){
+		setNumber(0);
+		
 		topLine = new LineShape(shapeRenderer, DIGIT_COLOR);
 		topRightLine = new LineShape(shapeRenderer, DIGIT_COLOR);
 		centerLine = new LineShape(shapeRenderer, DIGIT_COLOR);
@@ -135,6 +140,23 @@ public class Digit implements Shape{
 		
 		resizeBottomLeftLine(topLeftLine.getX1(), verticalLineLength, centerLine.getY1(), verticalLineDistance, scale);
 		resizeBottomRightLine(topRightLine.getX1(), bottomLeftLine.getY1(), bottomLeftLine.getY2(), scale);
+	}
+	
+	/**
+	 * Set the number of digit. 
+	 * If the given number is lesser then 0, then the number will be equal with 0.
+	 * if the given number is bigger then 9, then the number will be equal with 9.
+	 * 
+	 * @param number - The number.
+	 */
+	public void setNumber(int number){
+		if(number < 0){
+			number = 0;
+		}else if(9 < number){
+			number = 9;
+		}
+		
+		this.number = number;
 	}
 	
 	// --------------------------------------------------
@@ -261,13 +283,27 @@ public class Digit implements Shape{
 	 */
 	@Override
 	public void draw() {
-		topLine.draw();
-		topRightLine.draw();
-		centerLine.draw();
-		bottomRightLine.draw();
-		bottomLine.draw();
-		bottomLeftLine.draw();
-		topLeftLine.draw();
+		if(number != 1 && number != 4){
+			topLine.draw();
+		}
+		if(number != 5 && number != 6){
+			topRightLine.draw();
+		}
+		if(number != 0 && number != 1 && number != 7){
+			centerLine.draw();
+		}
+		if(number != 2){
+			bottomRightLine.draw();
+		}
+		if(number != 1 && number != 4 && number != 7){
+			bottomLine.draw();
+		}
+		if(number != 1 && number != 3 && number != 4 && number != 5 && number != 7 && number != 9){
+			bottomLeftLine.draw();
+		}
+		if(number != 1 && number != 2 && number != 3 && number != 7){
+			topLeftLine.draw();
+		}
 	}
 	
 	// --------------------------------------------------
