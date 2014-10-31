@@ -29,14 +29,17 @@ public class ScoreBoard implements Shape{
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
-	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH + 2*Shape.LINE_WIDTH;
+	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH + Shape.LINE_WIDTH;
 	
 	/** The height value in cm. */
-	public static final float HEIGHT = TimeBoard.HEIGHT;
+	public static final float HEIGHT = HalfTimeBoard.HEIGHT + TimeBoard.HEIGHT;
 
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
+	
+	/** The half time board. */
+	private final HalfTimeBoard halfTimeBoard;
 	
 	/** The time board. */
 	private final TimeBoard timeBoard;
@@ -57,6 +60,8 @@ public class ScoreBoard implements Shape{
 	 * @param shapeRenderer - The shape renderer.
 	 */
 	public ScoreBoard(final ShapeRenderer shapeRenderer){
+		halfTimeBoard = new HalfTimeBoard(shapeRenderer);
+		
 		timeBoard = new TimeBoard(shapeRenderer);
 		playerGoalBoard = new GoalBoard(shapeRenderer);
 		opponentGoalBoard = new GoalBoard(shapeRenderer);
@@ -76,14 +81,17 @@ public class ScoreBoard implements Shape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale);
+		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfTimeBoardWidth = (float)(HalfTimeBoard.WIDTH * scale);
+		final float halfTimeBoardHeight = (float)(HalfTimeBoard.HEIGHT * scale);
 		final float goalBoardWidth = (float)(GoalBoard.WIDTH * scale);
 		final float goalBoardHeight = (float)(GoalBoard.HEIGHT * scale);
 		final float timeBoardWidth = (float)(TimeBoard.WIDTH * scale);
 		final float timeBoardHeight = (float)(TimeBoard.HEIGHT * scale);
 		
+		halfTimeBoard.resize(x + (width - halfTimeBoardWidth)/2, y, halfTimeBoardWidth, halfTimeBoardHeight, scale);
 		playerGoalBoard.resize(x + halfLineWidth, y + height - goalBoardHeight, goalBoardWidth, goalBoardHeight, scale);
-		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth() + halfLineWidth, y, timeBoardWidth, timeBoardHeight, scale);
+		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth() + halfLineWidth, y + halfTimeBoardHeight, timeBoardWidth, timeBoardHeight, scale);
 		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth() + halfLineWidth, playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
 	}
 	
@@ -96,6 +104,7 @@ public class ScoreBoard implements Shape{
 	 */
 	@Override
 	public void draw() {
+		halfTimeBoard.draw();
 		playerGoalBoard.draw();
 		timeBoard.draw();
 		opponentGoalBoard.draw();
