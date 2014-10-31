@@ -14,7 +14,10 @@
  */
 package com.dgzt.core.scoreboard;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.Shape;
 
@@ -26,7 +29,7 @@ import com.dgzt.core.shape.Shape;
 public class TimeBoard extends RectangleBorderShape{
 
 	// --------------------------------------------------
-	// ~ Static members
+	// ~ Public static members
 	// --------------------------------------------------
 	
 	/** The width of scoreboard in cm. */
@@ -34,6 +37,13 @@ public class TimeBoard extends RectangleBorderShape{
 	
 	/** The height of scoreboard in cm. */
 	public static final float HEIGHT = Digit.TIME_DIGIT_HEIGHT + Shape.LINE_WIDTH;
+	
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	/** 13 minute. */
+	private static final int HALF_TIME = 13 * 60;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -54,6 +64,9 @@ public class TimeBoard extends RectangleBorderShape{
 	/** The second moment digit. */
 	private final Digit secondSecDigit;
 	
+	/** The current time. */
+	private int currentTime;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -73,6 +86,40 @@ public class TimeBoard extends RectangleBorderShape{
 		
 		firstSecDigit = new Digit(shapeRenderer, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
 		secondSecDigit = new Digit(shapeRenderer, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
+		
+		currentTime = HALF_TIME;
+		setCurrentTime();
+		Timer.schedule(new Task() {
+			
+			@Override
+			public void run() {
+				--currentTime;
+				setCurrentTime();
+			}
+		}, 1,1);
+	}
+
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Set the current time on the digits.
+	 */
+	private void setCurrentTime(){
+		final int secondum = currentTime % 60;
+		final int minute = currentTime / 60;
+		final int secondSec = secondum % 10;
+		final int firstSec = secondum / 10;
+		final int secondMin = minute % 10;
+		final int firstMin = minute / 10;
+		
+		Gdx.app.log(TimeBoard.class.getName()+".setCurrentTime", "Min: "+String.valueOf(minute)+"\t Sec:"+String.valueOf(secondum));
+		
+		secondSecDigit.setNumber(secondSec);
+		firstSecDigit.setNumber(firstSec);
+		secondMinDigit.setNumber(secondMin);
+		firstMinDigit.setNumber(firstMin);
 	}
 	
 	// --------------------------------------------------
