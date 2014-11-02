@@ -15,14 +15,14 @@
 package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * Border of the rectangle.
  * 
  * @author Dgzt
  */
-public class RectangleBorderShape implements Shape{
+public class RectangleBorderShape{
 
 	// --------------------------------------------------
 	// ~ Private members
@@ -50,13 +50,13 @@ public class RectangleBorderShape implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public RectangleBorderShape(final ShapeRenderer shapeRenderer){
-		topLine = new LineShape(shapeRenderer, Color.WHITE);
-		rightLine = new LineShape(shapeRenderer, Color.WHITE);
-		bottomLine = new LineShape(shapeRenderer, Color.WHITE);
-		leftLine = new LineShape(shapeRenderer, Color.WHITE);
+	public RectangleBorderShape(final ShaderProgram shader){
+		topLine = new LineShape(shader, Color.WHITE);
+		rightLine = new LineShape(shader, Color.WHITE);
+		bottomLine = new LineShape(shader, Color.WHITE);
+		leftLine = new LineShape(shader, Color.WHITE);
 	}
 	
 	// --------------------------------------------------
@@ -74,22 +74,17 @@ public class RectangleBorderShape implements Shape{
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
 		this.scale = scale;
-		final float halfLineWidth = (float) (LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float) (LineShape.LINE_WIDTH * scale) / 2;
 		
-		topLine.resize(x - halfLineWidth, y, x + width + halfLineWidth, y, scale);
-		rightLine.resize(x + width, y - halfLineWidth, x + width, y + height + halfLineWidth, scale);
-		bottomLine.resize(x - halfLineWidth, y + height, x + width + halfLineWidth, y + height, scale);
-		leftLine.resize(x, y - halfLineWidth, x, y + height + halfLineWidth, scale);
+		topLine.resize(x -halfLineWidth, y, x + width +halfLineWidth, y, scale);
+		rightLine.resize(x + width, y -halfLineWidth, x + width, y + height+halfLineWidth, scale);
+		bottomLine.resize(x-halfLineWidth, y + height, x + width+halfLineWidth, y + height, scale);
+		leftLine.resize(x, y-halfLineWidth, x, y + height+halfLineWidth, scale);
 	}
 	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-
 	/**
-	 * {@inheritDoc}
+	 * Draw the rectangle border.
 	 */
-	@Override
 	public void draw(){
 		topLine.draw();
 		rightLine.draw();
@@ -119,7 +114,7 @@ public class RectangleBorderShape implements Shape{
 	 * Return with width value.
 	 */
 	public final float getWidth(){
-		final float lineWidth = (float) (LINE_WIDTH * scale);
+		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
 		
 		return topLine.getLength() - lineWidth;
 	}
@@ -128,7 +123,7 @@ public class RectangleBorderShape implements Shape{
 	 * Return width height value.
 	 */
 	public final float getHeight(){
-		final float lineWidth = (float) (LINE_WIDTH * scale);
+		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
 		
 		return rightLine.getLength() - lineWidth;
 	}

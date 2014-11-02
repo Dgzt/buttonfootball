@@ -14,26 +14,26 @@
  */
 package com.dgzt.core.scoreboard;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
-import com.dgzt.core.shape.Shape;
 
 /**
  * The goal board.
  * 
  * @author Dgzt
  */
-public class GoalBoard extends RectangleBorderShape{
+final public class GoalBoard extends RectangleBorderShape{
 	
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
-	public static final float WIDTH = 2 * Digit.GOAL_DIGIT_WIDTH + Shape.LINE_WIDTH;
+	public static final float WIDTH = 2 * Digit.GOAL_DIGIT_WIDTH + LineShape.LINE_WIDTH;
 	
 	/** The height value in cm. */
-	public static final float HEIGHT = (Digit.GOAL_DIGIT_HEIGHT + Shape.LINE_WIDTH);
+	public static final float HEIGHT = (Digit.GOAL_DIGIT_HEIGHT + LineShape.LINE_WIDTH);
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -52,13 +52,13 @@ public class GoalBoard extends RectangleBorderShape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public GoalBoard(final ShapeRenderer shapeRenderer) {
-		super(shapeRenderer);
+	public GoalBoard(final ShaderProgram shader) {
+		super(shader);
 		
-		firstDigit = new Digit(shapeRenderer, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
-		secondDigit = new Digit(shapeRenderer, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
+		firstDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
+		secondDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
 	}
 	
 	// --------------------------------------------------
@@ -72,7 +72,7 @@ public class GoalBoard extends RectangleBorderShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height, scale);
 		
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float digitWidth = (float)(Digit.GOAL_DIGIT_WIDTH * scale);
 		final float digitHeight = (float)(Digit.GOAL_DIGIT_HEIGHT * scale);
 		

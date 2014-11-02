@@ -19,13 +19,14 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleShape;
 
 /**
@@ -49,6 +50,7 @@ final public class Table extends RectangleShape{
 	// ~ Private static members
 	// --------------------------------------------------
 	
+	/** The Box2D wall size in cm. */
 	private static final float BOX2D_WALL_SIZE = 10.0f;
 	
 	// --------------------------------------------------
@@ -89,28 +91,28 @@ final public class Table extends RectangleShape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public Table( final ShapeRenderer shapeRenderer ){
-		super(shapeRenderer, Color.GRAY);
+	public Table(final ShaderProgram shader){
+		super(shader, Color.GRAY);
 		
 		box2DWorld = new World(new Vector2(0,0), true);
 		addBox2DTableWalls();
 		addBox2DGateWalls();
 		
-		map = new Map(shapeRenderer);
+		map = new Map(shader);
 		
-		leftGate = new Gate(shapeRenderer);
-		rightGate = new Gate(shapeRenderer);
+		leftGate = new Gate(shader);
+		rightGate = new Gate(shader);
 		
 		playerButtons = new ArrayList<Button>();
 		opponentButtons = new ArrayList<Button>();
 		
-		addButtons(shapeRenderer);
+		addButtons(shader);
 		
-		ball = new Button(this, shapeRenderer, box2DWorld, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
+		ball = new Button(this, shader, box2DWorld, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
 		
-		arrow = new Arrow(this, shapeRenderer);
+		arrow = new Arrow(this, shader);
 	}
 	
 	// --------------------------------------------------
@@ -223,9 +225,9 @@ final public class Table extends RectangleShape{
 	/**
 	 * Add buttons to the table.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	private void addButtons(final ShapeRenderer shapeRenderer){
+	private void addButtons(final ShaderProgram shader){
 		final float playerGoalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.PLAYER_OPPONENT_RADIUS;
 		final float opponentGoalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.PLAYER_OPPONENT_RADIUS;
 		final float goalKeeperY = Table.HEIGHT / 2;
@@ -237,41 +239,41 @@ final public class Table extends RectangleShape{
 		// ------------------
 		
 		// Add player goalkeeper
-		playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
 		
 		// Add player defenders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add player midfielders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add player forwards
-		playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
-		playerButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		
 		// Add opponent buttons
 		// --------------------
 		
 		// Add opponent goalkeeper
-		opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
 		
 		// Add opponent defenders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add opponent midfielders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 		}
 		
 		// Add opponent forwards
-		opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
-		opponentButtons.add(new Button(this, shapeRenderer, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
 	}
 	
 	/**
@@ -320,20 +322,20 @@ final public class Table extends RectangleShape{
 	private void addBox2DGateWalls(){
 		final float leftGateX = 0;
 		final float rightGateX = Table.WIDTH - Gate.WIDTH;
-		final float topWallY = (Table.HEIGHT - Gate.HEIGHT - Gate.LINE_WIDTH) / 2;
-		final float bottomWallY = (Table.HEIGHT + Gate.HEIGHT - Gate.LINE_WIDTH) / 2;
+		final float topWallY = (Table.HEIGHT - Gate.HEIGHT - LineShape.LINE_WIDTH) / 2;
+		final float bottomWallY = (Table.HEIGHT + Gate.HEIGHT - LineShape.LINE_WIDTH) / 2;
 		
 		// Add top wall of left gate.
-		addBox2DWall(leftGateX, topWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		addBox2DWall(leftGateX, topWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
 		
 		// Add bottom wall of left gate.
-		addBox2DWall(leftGateX, bottomWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		addBox2DWall(leftGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
 		
 		// Add top wall of right gate.
-		addBox2DWall(rightGateX, topWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		addBox2DWall(rightGateX, topWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
 		
 		// Add bottom wall of right gate.
-		addBox2DWall(rightGateX, bottomWallY, Gate.WIDTH, Gate.LINE_WIDTH);
+		addBox2DWall(rightGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
 	}
 	
 	/**

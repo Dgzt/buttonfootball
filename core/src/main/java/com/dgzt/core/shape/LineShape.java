@@ -15,25 +15,33 @@
 package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * Line shape.
  * 
  * @author Dgzt
  */
-public class LineShape implements Shape{
+public class LineShape extends Shape{
+	
+	// --------------------------------------------------
+	// ~ Public static members
+	// --------------------------------------------------
+	
+	/** The width of the line. */
+	public static final float LINE_WIDTH = 1.0f;
+	
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+
+	/** The number of the vertices. */
+	private static final int VERTICES_NUM = 4;
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
-	
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
-	
-	/** The color of the line. */
-	private final Color color;
 	
 	/** The first x coordinate value. */
 	private float x1;
@@ -47,9 +55,6 @@ public class LineShape implements Shape{
 	/** The second y coordinate value. */
 	private float y2;
 	
-	/** The width of the line. */
-	private float lineWidth;
-	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -57,12 +62,11 @@ public class LineShape implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 * @param color - The color.
 	 */
-	public LineShape(final ShapeRenderer shapeRenderer, final Color color){
-		this.shapeRenderer = shapeRenderer;
-		this.color = color;
+	public LineShape(final ShaderProgram shader, final Color color){
+		super(shader, GL20.GL_TRIANGLES, VERTICES_NUM, new short[]{0,1,2,2,3,1}, color);
 	}
 	
 	// --------------------------------------------------
@@ -84,7 +88,26 @@ public class LineShape implements Shape{
 		this.x2 = x2;
 		this.y2 = y2;
 		
-		lineWidth = (float) (LINE_WIDTH * scale);
+		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
+
+		final float vectorX = x2 - x1;
+		final float vectorY = y2 - y1;
+		
+		final float vectorLength = (float)Math.sqrt(Math.pow(vectorX, 2) + Math.pow(vectorY, 2));
+		
+		final float vectorXUnit = vectorX / vectorLength;
+		final float vectorYUnit = vectorY / vectorLength;
+		
+		final float vectorPXUnit = -vectorYUnit;
+		final float vectorPYUnit = vectorXUnit;
+		
+		final float[] vertices = new float[VERTICES_NUM * POSITION_NUM];
+		vertices[0] = x1 - lineWidth/2 * vectorPXUnit;		vertices[1] = y1 - lineWidth/2 * vectorPYUnit;
+		vertices[2] = x1 + lineWidth/2 * vectorPXUnit;		vertices[3] = y1 + lineWidth/2 * vectorPYUnit;
+		vertices[4] = x2 - lineWidth/2 * vectorPXUnit;		vertices[5] = y2 - lineWidth/2 * vectorPYUnit;
+		vertices[6] = x2 + lineWidth/2 * vectorPXUnit;		vertices[7] = y2 + lineWidth/2 * vectorPYUnit;
+		
+		setVertices(vertices);
 	}
 	
 	/**
@@ -95,21 +118,6 @@ public class LineShape implements Shape{
 	}
 	
 	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void draw() {
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(color);
-		shapeRenderer.rectLine(x1, y1, x2, y2, lineWidth);
-		shapeRenderer.end();
-	}
-	
-	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
 
@@ -117,7 +125,7 @@ public class LineShape implements Shape{
 	 * Return with first x coordinate value.
 	 */
 	public final float getX1(){ 
-		return x1; 
+		return x1;
 	}
 	
 	/**

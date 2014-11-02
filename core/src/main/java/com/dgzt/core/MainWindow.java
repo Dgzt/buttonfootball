@@ -15,16 +15,16 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.scoreboard.ScoreBoard;
-import com.dgzt.core.shape.Shape;
+import com.dgzt.core.shape.LineShape;
 
 /**
  * The main window.
  * 
  * @author Dgzt
  */
-public class MainWindow implements Shape{
+public class MainWindow{
 	
 	// --------------------------------------------------
 	// ~ Static members
@@ -34,7 +34,7 @@ public class MainWindow implements Shape{
 	public static float WIDTH = Table.WIDTH;
 
 	/** The height of main window in cm. */
-	public static float HEIGHT = ScoreBoard.HEIGHT + Shape.LINE_WIDTH + Table.HEIGHT;
+	public static float HEIGHT = ScoreBoard.HEIGHT + LineShape.LINE_WIDTH + Table.HEIGHT;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -53,11 +53,11 @@ public class MainWindow implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public MainWindow(final ShapeRenderer shapeRenderer){
-		scoreBoard = new ScoreBoard(shapeRenderer);
-		table = new Table(shapeRenderer);
+	public MainWindow(final ShaderProgram shader){
+		scoreBoard = new ScoreBoard(shader);
+		table = new Table(shader);
 		
 		Gdx.input.setInputProcessor(new InputListener(table));
 	}
@@ -75,7 +75,7 @@ public class MainWindow implements Shape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final double scale){
-		final float halfLineHeight = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineHeight = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		
 		final float scoreBoardWidth = (float)(ScoreBoard.WIDTH * scale);
 		final float scoreBoardHeight = (float)(ScoreBoard.HEIGHT * scale);
@@ -91,14 +91,9 @@ public class MainWindow implements Shape{
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
 	}
 	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-
 	/**
 	 * Draw the child objects.
 	 */
-	@Override
 	public void draw() {
 		scoreBoard.draw();
 		table.draw();
