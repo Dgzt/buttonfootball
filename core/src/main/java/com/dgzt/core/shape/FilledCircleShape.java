@@ -30,7 +30,7 @@ public class FilledCircleShape extends Shape{
 	// --------------------------------------------------
 	
 	/** The number of vertices. */
-	private static final int VERTICES_NUM = 361;
+	private static final int VERTICES_NUM = 362;
 	
 	// --------------------------------------------------
 	// ~ Private members
