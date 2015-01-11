@@ -9,9 +9,8 @@
 	<name>ButtonFootballGame Parent</name>
 
 	<properties>
-		<gdx.version>1.3.1</gdx.version>
+		<gdx.version>1.5.2</gdx.version>
 		<gwt.version>2.6.1</gwt.version>
-		<gwt.maven.version>2.6.1</gwt.maven.version>
 		<junit.version>4.11</junit.version>
 	</properties>
 	<dependencyManagement>
@@ -100,18 +99,6 @@
 
 		</dependencies>
 	</dependencyManagement>
-
-
-	<repositories>
-		<repository>
-			<id>gdx-nightlies</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
-		<repository>
-			<id>gdx-releases</id>
-			<url>https://oss.sonatype.org/content/repositories/releases/</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>
