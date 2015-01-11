@@ -3,34 +3,19 @@ ButtonFootball
 
 A button football game.
 
+Requirements:
+-------------
+
+ * Maven (>= 3.0.0)  [link](http://maven.apache.org/)
+ * JDK (>= 1.7) [link](http://www.oracle.com/)
+
+Run
+---
+
 HTML5
------
 
-Requirements:
+ * mvn -Phtml clean install
+ 
+Desktop
 
- * Emscripten (>= 1.22) [link](http://emscripten.org/)
-
-Complie
-
- * Change directory to 'emscripten'
- * $ emmake make
- * Open 'index.html' with a browser.
-
-Executable
-----------
-
-Requirements:
-
- * CMake (>= 2.8) [link](http://www.cmake.org/)
- * SDL2 [link](http://www.libsdl.org/)
- * OpenGL
- * Box2D [link](http://box2d.org/)
-
-Complie:
-
- * Create a 'build' directory in the root directory. Change directory to the 'build'.
- * $ cmake ..
- * $ make
- * $ make install             (as root)
- * buttonfootball
-
+ * mvn -Pdesktop clean install
