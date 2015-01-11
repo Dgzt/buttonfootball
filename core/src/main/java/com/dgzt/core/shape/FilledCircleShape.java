@@ -15,32 +15,27 @@
 package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * Circle shape.
  * 
  * @author Dgzt
  */
-public class FilledCircleShape implements Shape{
+public class FilledCircleShape extends Shape{
+	
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	/** The number of vertices. */
+	private static final int VERTICES_NUM = 362;
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
-	
-	/** The color of the circle */
-	private final Color color;
-	
-	/** The x coordinate value. */
-	private float x;
-	
-	/** The y coordinate value. */
-	private float y;
-	
 	/** The radius value. */
 	private float radius;
 	
@@ -51,12 +46,28 @@ public class FilledCircleShape implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
-	 * @param color - The color of the circle.
+	 * @param shader - The shader.
+	 * @param color - The color.
 	 */
-	public FilledCircleShape(final ShapeRenderer shapeRenderer, final Color color){
-		this.shapeRenderer = shapeRenderer;
-		this.color = color;
+	public FilledCircleShape(final ShaderProgram shader, final Color color){
+		super(shader, GL20.GL_TRIANGLE_FAN, FilledCircleShape.VERTICES_NUM, getIndices(), color);
+	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the indices.
+	 */
+	private static short[] getIndices(){
+		final short[] indices = new short[FilledCircleShape.VERTICES_NUM];
+		
+		for(short i=0;i<FilledCircleShape.VERTICES_NUM;++i){
+			indices[i]=i;
+		}
+		
+		return indices;
 	}
 	
 	// --------------------------------------------------
@@ -71,25 +82,20 @@ public class FilledCircleShape implements Shape{
 	 * @param radius - The radius value.
 	 */
 	public void resize(final float x, final float y, final float radius){
-		this.x = x;
-		this.y = y;
 		this.radius = radius;
-	}
-	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void draw() {
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(color);
-		shapeRenderer.circle(x, y, radius);
-		shapeRenderer.end();
 		
+		final float[] vertices = new float[FilledCircleShape.VERTICES_NUM * Shape.POSITION_NUM];
+		
+		vertices[0]=x;
+		vertices[1]=y;
+		for(int i=0;i<FilledCircleShape.VERTICES_NUM-1;++i){
+			final float angle = (float) Math.toRadians(i);
+			
+			vertices[i*Shape.POSITION_NUM+2]=x + (float)Math.sin( angle ) * radius;
+			vertices[i*Shape.POSITION_NUM+3]=y + (float)Math.cos( angle ) * radius;
+		}
+		
+		super.setVertices(vertices);
 	}
 	
 	// --------------------------------------------------
@@ -100,14 +106,14 @@ public class FilledCircleShape implements Shape{
 	 * Return with the x coordinate value.
 	 */
 	public final float getX(){
-		return x;
+		return getVertices()[0];
 	}
 	
 	/**
 	 * Return with the y coordinate value.
 	 */
 	public final float getY(){
-		return y;
+		return getVertices()[1];
 	}
 	
 	/**

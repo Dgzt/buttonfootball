@@ -15,24 +15,14 @@
 package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * Border of the circle.
  * 
  * @author Dgzt
  */
-final public class CircleBorderShape implements Shape{
-	
-	// --------------------------------------------------
-	// ~ Private members
-	// --------------------------------------------------
-	
-	/** The inner filled circle. */
-	private final FilledCircleShape innerCircle;
-	
-	/** The outer filled circle */
-	private final FilledCircleShape outerCircle;
+final public class CircleBorderShape extends ArcShape{
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -41,65 +31,11 @@ final public class CircleBorderShape implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
-	 * @param innerColor - The color of the inner circle.
-	 * @param outerColor - The color of the outer circle.
+	 * @param shader - The shader.
+	 * @param color - The color.
 	 */
-	public CircleBorderShape(final ShapeRenderer shapeRenderer, final Color innerColor, final Color outerColor){
-		innerCircle = new FilledCircleShape(shapeRenderer, innerColor);
-		outerCircle = new FilledCircleShape(shapeRenderer, outerColor);
-	}
-	
-	// --------------------------------------------------
-	// ~ Public methods
-	// --------------------------------------------------
-	
-	/**
-	 * Resize the shape.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param radius - The radius value.
-	 * @param scale - The scale value.
-	 */
-	public void resize(final float x, final float y, final float radius, final double scale){
-		outerCircle.resize(x, y, radius);
-		
-		final float lineWidth = (float) (LINE_WIDTH * scale);
-		
-		innerCircle.resize(x, y, radius - lineWidth);
-		
-	}
-	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void draw() {
-		outerCircle.draw();
-		innerCircle.draw();
-	}
-	
-	// --------------------------------------------------
-	// ~ Getter methods
-	// --------------------------------------------------
-	
-	/**
-	 * Return with the x coordinate value.
-	 */
-	public final float getX(){
-		return innerCircle.getX();
-	}
-	
-	/**
-	 * Return with the y coordinate value.
-	 */
-	public final float getY(){
-		return innerCircle.getY();
+	public CircleBorderShape(final ShaderProgram shader, final Color color){
+		super(shader, 0, 360, color);
 	}
 
 }

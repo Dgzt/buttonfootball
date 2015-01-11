@@ -15,16 +15,15 @@
 package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.shape.LineShape;
-import com.dgzt.core.shape.Shape;
 
 /**
  * Digit number.
  * 
  * @author Dgzt
  */
-public class Digit implements Shape{
+final public class Digit{
 	
 	// --------------------------------------------------
 	// ~ Public static members
@@ -102,22 +101,22 @@ public class Digit implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 * @param baseWidth - The base width value.
 	 * @param baseHeight - The base height value.
 	 */
-	public Digit(final ShapeRenderer shapeRenderer, final float baseWidth, final float baseHeight){
+	public Digit(final ShaderProgram shader, final float baseWidth, final float baseHeight){
 		setNumber(0);;
 		this.baseHorizontalLineLength = baseWidth - 2 * HORIZONTAL_LINE_DISTANCE;
-		this.baseVerticalLineLength = (baseHeight - 3 * Shape.LINE_WIDTH - 6 * VERTICAL_LINE_DISTANCE) / 2;
+		this.baseVerticalLineLength = (baseHeight - 3 * LineShape.LINE_WIDTH - 6 * VERTICAL_LINE_DISTANCE) / 2;
 		
-		topLine = new LineShape(shapeRenderer, DIGIT_COLOR);
-		topRightLine = new LineShape(shapeRenderer, DIGIT_COLOR);
-		centerLine = new LineShape(shapeRenderer, DIGIT_COLOR);
-		bottomRightLine = new LineShape(shapeRenderer, DIGIT_COLOR);
-		bottomLine = new LineShape(shapeRenderer, DIGIT_COLOR);
-		bottomLeftLine = new LineShape(shapeRenderer, DIGIT_COLOR);
-		topLeftLine = new LineShape(shapeRenderer, DIGIT_COLOR);
+		topLine = new LineShape(shader, DIGIT_COLOR);
+		topRightLine = new LineShape(shader, DIGIT_COLOR);
+		centerLine = new LineShape(shader, DIGIT_COLOR);
+		bottomRightLine = new LineShape(shader, DIGIT_COLOR);
+		bottomLine = new LineShape(shader, DIGIT_COLOR);
+		bottomLeftLine = new LineShape(shader, DIGIT_COLOR);
+		topLeftLine = new LineShape(shader, DIGIT_COLOR);
 	}
 	
 	// --------------------------------------------------
@@ -232,7 +231,7 @@ public class Digit implements Shape{
 	 * @param scale - The scale value.
 	 */
 	private void resizeTopLeftLine(final float height, final float topLineX, final float topLineY, final float verticalLineDistance, final double scale ){
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float x = topLineX + halfLineWidth;
 		final float y1 = topLineY + halfLineWidth + verticalLineDistance;
 		final float y2 = y1 + height;
@@ -249,7 +248,7 @@ public class Digit implements Shape{
 	 * @param scale - The scale value.
 	 */
 	private void resizeTopRightLine(final float y1, final float y2, final float topLineX2, final double scale){
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float x = topLineX2 - halfLineWidth;
 		
 		topRightLine.resize(x, y1, x, y2, scale);
@@ -265,7 +264,7 @@ public class Digit implements Shape{
 	 * @param scale - The scale value.
 	 */
 	private void resizeBottomLeftLine(final float x, final float height, final float centerLineY, final float verticalLineDistance, final double scale){
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float y1 = centerLineY + halfLineWidth + verticalLineDistance;
 		final float y2 = y1 + height;
 		
@@ -289,9 +288,8 @@ public class Digit implements Shape{
 	// --------------------------------------------------
 
 	/**
-	 * {@inheritDoc}
+	 * Draw the digit.
 	 */
-	@Override
 	public void draw() {
 		if(number != 1 && number != 4){
 			topLine.draw();

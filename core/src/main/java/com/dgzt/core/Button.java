@@ -15,7 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -93,15 +93,15 @@ final public class Button extends FilledCircleShape{
 	 * The constructor.
 	 * 
 	 * @param parent - The parent object.
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 * @param box2DWorld - The box2D world.
 	 * @param color - The color of button.
 	 * @param box2DX - The x coordinate value of button in Box2D.
 	 * @param box2DY - The y coordinate value of button in Box2D.
 	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
-	public Button(final Table parent, final ShapeRenderer shapeRenderer, final World box2DWorld, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
-		super(shapeRenderer, color);
+	public Button(final Table parent, final ShaderProgram shader, final World box2DWorld, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
+		super(shader, color);
 		this.parent = parent;
 		this.box2DX = box2DX;
 		this.box2DY = box2DY;

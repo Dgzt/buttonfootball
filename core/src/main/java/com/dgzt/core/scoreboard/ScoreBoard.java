@@ -14,22 +14,22 @@
  */
 package com.dgzt.core.scoreboard;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dgzt.core.shape.Shape;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.shape.LineShape;
 
 /**
  * The scoreboard.
  * 
  * @author Dgzt
  */
-public class ScoreBoard implements Shape{
+final public class ScoreBoard{
 	
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
-	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH + Shape.LINE_WIDTH;
+	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH + LineShape.LINE_WIDTH;
 	
 	/** The height value in cm. */
 	public static final float HEIGHT = HalfTimeBoard.HEIGHT + TimeBoard.HEIGHT;
@@ -57,14 +57,14 @@ public class ScoreBoard implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public ScoreBoard(final ShapeRenderer shapeRenderer){
-		halfTimeBoard = new HalfTimeBoard(shapeRenderer);
+	public ScoreBoard(final ShaderProgram shader){
+		halfTimeBoard = new HalfTimeBoard(shader);
 		
-		timeBoard = new TimeBoard(shapeRenderer);
-		playerGoalBoard = new GoalBoard(shapeRenderer);
-		opponentGoalBoard = new GoalBoard(shapeRenderer);
+		timeBoard = new TimeBoard(shader);
+		playerGoalBoard = new GoalBoard(shader);
+		opponentGoalBoard = new GoalBoard(shader);
 	}
 	
 	// --------------------------------------------------
@@ -81,7 +81,7 @@ public class ScoreBoard implements Shape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float halfTimeBoardWidth = (float)(HalfTimeBoard.WIDTH * scale);
 		final float halfTimeBoardHeight = (float)(HalfTimeBoard.HEIGHT * scale);
 		final float goalBoardWidth = (float)(GoalBoard.WIDTH * scale);
@@ -95,14 +95,9 @@ public class ScoreBoard implements Shape{
 		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth() + halfLineWidth, playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
 	}
 	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-	
 	/**
-	 * {@inheritDoc}
+	 * Draw the scoreboard.
 	 */
-	@Override
 	public void draw() {
 		halfTimeBoard.draw();
 		playerGoalBoard.draw();

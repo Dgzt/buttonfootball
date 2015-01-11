@@ -16,7 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.shape.LineShape;
 
 /**
@@ -47,10 +47,10 @@ final public class Arrow extends LineShape{
 	 * The constructor.
 	 * 
 	 * @param parent - The parent object.
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public Arrow(final Table parent, final ShapeRenderer shapeRenderer) {
-		super(shapeRenderer, Color.RED);
+	public Arrow(final Table parent, final ShaderProgram shader) {
+		super(shader, Color.RED);
 		this.parent = parent;
 		visible = false;
 	}

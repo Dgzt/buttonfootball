@@ -14,16 +14,19 @@
  */
 package com.dgzt.core.shape;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * Arc shape.
  * 
  * @author Dgzt
  */
-final public class ArcShape implements Shape{
+public class ArcShape extends Shape{
 	
 	// --------------------------------------------------
 	// ~ Static members
@@ -39,32 +42,17 @@ final public class ArcShape implements Shape{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
-	
-	/** The color of background. */
-	private final Color backgroundColor;
-	
-	/** The color of arc. */
-	private final Color arcColor;
-	
 	/** The start degrees. */
-	private final float start;
+	private final int startDegrees;
 	
 	/** The number of degrees. */
-	private final float degrees;
+	private final int degreesNum;
 	
 	/** The x coordinate value. */
 	private float x;
 	
 	/** The y coordinate value. */
-	private float y;
-	
-	/** The radius of arc. */
-	private float radius;
-	
-	/** The radius of background arc. */
-	private float smallRadius;
+	private float y;	
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -73,18 +61,43 @@ final public class ArcShape implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 * @param backgroundColor - The color of background.
 	 * @param arcColor - The color of arc.
 	 * @param start - The start degrees.
 	 * @param degrees - The number of degrees.
 	 */
-	public ArcShape(final ShapeRenderer shapeRenderer, final Color backgroundColor, final Color arcColor, final float start, final float degrees){
-		this.shapeRenderer = shapeRenderer;
-		this.backgroundColor = backgroundColor;
-		this.arcColor = arcColor;
-		this.start = start;
-		this.degrees = degrees;
+	public ArcShape(final ShaderProgram shader, final int startDegrees, final int degreesNum, final Color color ){
+		super(shader, GL20.GL_TRIANGLES, degreesNum*2, getIndices(degreesNum), color);
+		this.startDegrees = startDegrees;
+		this.degreesNum = degreesNum;
+	}
+
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the indices.
+	 * 
+	 * @param degrees - The number of degrees.
+	 */
+	private static short[] getIndices(final int degrees){
+		final List<Short> tmpList = new ArrayList<Short>();
+		for(short i=0,num=0;i<degrees*2;++i,++num){
+			if(num!=0 && num%3==0){
+				num=0;
+				i-=2;
+			}
+			tmpList.add(new Short(i));
+		}
+		
+		final short[] indices = new short[tmpList.size()];
+		for(int i=0; i < tmpList.size(); ++i){
+			indices[i]=tmpList.get(i).shortValue();
+		}
+		
+		return indices;
 	}
 	
 	// --------------------------------------------------
@@ -102,32 +115,29 @@ final public class ArcShape implements Shape{
 	public void resize(final float x, final float y, final float radius, final double scale){
 		this.x = x;
 		this.y = y;
-		this.radius = radius;
 		
-		final float lineWidth = (float) (LINE_WIDTH * scale);
+		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
 		
-		this.smallRadius = radius - lineWidth;
+		final float smallRadius = radius - lineWidth;
+		
+		final float[] vertices = new float[degreesNum*Shape.POSITION_NUM*2];
+		
+		
+		for(int i=0,degrees=startDegrees;degrees<startDegrees+degreesNum;++degrees){
+			final float angle = (float) Math.toRadians(degrees);
+			
+			vertices[i++]=x + (float)Math.sin( angle ) * radius;
+			vertices[i++]=y + (float)Math.cos( angle ) * radius;
+			
+			vertices[i++]=x + (float)Math.sin( angle ) * smallRadius;
+			vertices[i++]=y + (float)Math.cos( angle ) * smallRadius;
+		}
+		
+		super.setVertices(vertices);
 	}
 	
 	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void draw() {
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(arcColor);
-		shapeRenderer.arc(x, y, radius, start, degrees);
-		shapeRenderer.setColor(backgroundColor);
-		shapeRenderer.arc(x, y, smallRadius, start, degrees);
-		shapeRenderer.end();
-	}
-	
-	// --------------------------------------------------
-	// ~ Override methods
+	// ~ Getter methods
 	// --------------------------------------------------
 	
 	/**

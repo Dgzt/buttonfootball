@@ -15,28 +15,28 @@
 package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
-import com.dgzt.core.shape.Shape;
 
 /**
  * The time board.
  * 
  * @author Dgzt
  */
-public class TimeBoard extends RectangleBorderShape{
+final public class TimeBoard extends RectangleBorderShape{
 
 	// --------------------------------------------------
 	// ~ Public static members
 	// --------------------------------------------------
 	
 	/** The width of scoreboard in cm. */
-	public static final float WIDTH = 4 * Digit.TIME_DIGIT_WIDTH + SecondCircles.WIDTH + Shape.LINE_WIDTH;
+	public static final float WIDTH = 4 * Digit.TIME_DIGIT_WIDTH + SecondCircles.WIDTH + LineShape.LINE_WIDTH;
 	
 	/** The height of scoreboard in cm. */
-	public static final float HEIGHT = Digit.TIME_DIGIT_HEIGHT + Shape.LINE_WIDTH;
+	public static final float HEIGHT = Digit.TIME_DIGIT_HEIGHT + LineShape.LINE_WIDTH;
 	
 	// --------------------------------------------------
 	// ~ Private static members
@@ -74,18 +74,18 @@ public class TimeBoard extends RectangleBorderShape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public TimeBoard(final ShapeRenderer shapeRenderer) {
-		super(shapeRenderer);
+	public TimeBoard(final ShaderProgram shader) {
+		super(shader);
 		
-		firstMinDigit = new Digit(shapeRenderer, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
-		secondMinDigit = new Digit(shapeRenderer, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
+		firstMinDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
+		secondMinDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
 		
-		secondCircles = new SecondCircles(shapeRenderer);
+		secondCircles = new SecondCircles(shader);
 		
-		firstSecDigit = new Digit(shapeRenderer, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
-		secondSecDigit = new Digit(shapeRenderer, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
+		firstSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
+		secondSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT);
 		
 		currentTime = HALF_TIME;
 		setCurrentTime();
@@ -133,7 +133,7 @@ public class TimeBoard extends RectangleBorderShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height, scale);
 		
-		final float halfLineWidth = (float)(Shape.LINE_WIDTH * scale) / 2;
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float digitWidth = (float)(Digit.TIME_DIGIT_WIDTH * scale);
 		final float digitHeight = (float)(Digit.TIME_DIGIT_HEIGHT * scale);
 		final float secondCirclesWidth = (float)(SecondCircles.WIDTH * scale);

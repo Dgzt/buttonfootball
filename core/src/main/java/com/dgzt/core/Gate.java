@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 
@@ -66,19 +66,19 @@ final public class Gate extends RectangleBorderShape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public Gate(ShapeRenderer shapeRenderer) {
-		super(shapeRenderer);
+	public Gate(ShaderProgram shader) {
+		super(shader);
 
 		columnLines = new ArrayList<LineShape>();
 		for(int i=0; i < COLUMN_LINES; ++i){
-			columnLines.add(new LineShape(shapeRenderer, Color.WHITE));
+			columnLines.add(new LineShape(shader, Color.WHITE));
 		}
 		
 		rowLines = new ArrayList<LineShape>();
 		for(int i=0; i < ROW_LINES; ++i){
-			rowLines.add(new LineShape(shapeRenderer, Color.WHITE));
+			rowLines.add(new LineShape(shader, Color.WHITE));
 		}
 	}
 	

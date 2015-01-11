@@ -15,7 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.shape.ArcShape;
 import com.dgzt.core.shape.CircleBorderShape;
 import com.dgzt.core.shape.FilledCircleShape;
@@ -121,40 +121,40 @@ final public class Map extends RectangleShape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public Map(final ShapeRenderer shapeRenderer){
-		super(shapeRenderer, Color.GREEN);
+	public Map(final ShaderProgram shader){
+		super(shader, Color.GREEN);
 		
-		this.mapBorder = new RectangleBorderShape(shapeRenderer);
+		this.mapBorder = new RectangleBorderShape(shader);
 		
-		this.leftSector16 = new RectangleBorderShape(shapeRenderer);
-		this.rightSector16 = new RectangleBorderShape(shapeRenderer);
+		this.leftSector16 = new RectangleBorderShape(shader);
+		this.rightSector16 = new RectangleBorderShape(shader);
 		
-		this.leftSector5 = new RectangleBorderShape(shapeRenderer);
-		this.rightSector5 = new RectangleBorderShape(shapeRenderer);
+		this.leftSector5 = new RectangleBorderShape(shader);
+		this.rightSector5 = new RectangleBorderShape(shader);
 
-		this.centerBigCircle = new CircleBorderShape(shapeRenderer, Color.GREEN, Color.WHITE);
+		this.centerBigCircle = new CircleBorderShape(shader, Color.WHITE);
 		
-		this.centerLine = new LineShape(shapeRenderer, Color.WHITE);
+		this.centerLine = new LineShape(shader, Color.WHITE);
 		
-		this.centerSmallCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
+		this.centerSmallCircle = new FilledCircleShape(shader, Color.WHITE);
 		
-		this.leftSmallCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
+		this.leftSmallCircle = new FilledCircleShape(shader, Color.WHITE);
 		
-		this.rightSmallCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
+		this.rightSmallCircle = new FilledCircleShape(shader, Color.WHITE);
 		
-		this.topLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 0, 90);
+		this.topLeftSmallArc = new ArcShape(shader, 0, 90, Color.WHITE);
 		
-		this.topRightSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 90, 90);
+		this.topRightSmallArc = new ArcShape(shader, 270, 90, Color.WHITE);
 		
-		this.bottomRightSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 180, 90);
+		this.bottomRightSmallArc = new ArcShape(shader, 180, 90, Color.WHITE);
 		
-		this.bottomLeftSmallArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 270, 90);
+		this.bottomLeftSmallArc = new ArcShape(shader, 90, 90, Color.WHITE);
 		
-		this.leftBigArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 307, 105);
+		this.leftBigArc = new ArcShape(shader, 37, 105, Color.WHITE);
 		
-		this.rightBigArc = new ArcShape(shapeRenderer, Color.GREEN, Color.WHITE, 127, 105);
+		this.rightBigArc = new ArcShape(shader, 217, 105, Color.WHITE);
 	}
 	
 	// --------------------------------------------------
@@ -175,7 +175,7 @@ final public class Map extends RectangleShape{
 		
 		final float smallArcRadius = (float)(ArcShape.SMALL_RADIUS * scale);
 		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
-		final float smallCircleRadius = (float) (LINE_WIDTH * scale);
+		final float smallCircleRadius = (float) (LineShape.LINE_WIDTH * scale);
 		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_CIRCLE_DISTANCE * scale);
 		final float sector16Width = (float)((double)SECTOR_16_WIDTH * scale);
 		final float sector16Height = (float)((double)SECTOR_16_HEIGHT * scale);
@@ -479,4 +479,5 @@ final public class Map extends RectangleShape{
 		final float y2 = y1 + mapHeight;
 		centerLine.resize(x1, y1, x2, y2, scale);
 	}
+	
 }

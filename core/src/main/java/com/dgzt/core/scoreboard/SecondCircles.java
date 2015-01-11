@@ -15,16 +15,15 @@
 package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.shape.FilledCircleShape;
-import com.dgzt.core.shape.Shape;
 
 /**
  * The second circles container class.
  * 
  * @author Dgzt
  */
-public class SecondCircles implements Shape{
+final public class SecondCircles{
 	
 	// --------------------------------------------------
 	// ~ Public static members
@@ -66,11 +65,11 @@ public class SecondCircles implements Shape{
 	/**
 	 * The constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
+	 * @param shader - The shader.
 	 */
-	public SecondCircles(final ShapeRenderer shapeRenderer){
-		topCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
-		bottomCircle = new FilledCircleShape(shapeRenderer, Color.WHITE);
+	public SecondCircles(final ShaderProgram shader){
+		topCircle = new FilledCircleShape(shader, Color.WHITE);
+		bottomCircle = new FilledCircleShape(shader, Color.WHITE);
 	}
 	
 	// --------------------------------------------------
@@ -93,6 +92,14 @@ public class SecondCircles implements Shape{
 		
 		resizeTopCircle(circleRadius, x, y, width, height);
 		resizeBottomCircle(topCircle.getX(), circleRadius, y, height);
+	}
+	
+	/**
+	 * Draw the second circles.
+	 */
+	public void draw() {
+		topCircle.draw();
+		bottomCircle.draw();
 	}
 	
 	// --------------------------------------------------
@@ -127,19 +134,6 @@ public class SecondCircles implements Shape{
 		final float y = parentY + parentHeight / 3 * 2;
 		
 		bottomCircle.resize(x, y, radius);
-	}
-	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void draw() {
-		topCircle.draw();
-		bottomCircle.draw();
 	}
 	
 	// --------------------------------------------------

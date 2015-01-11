@@ -14,38 +14,24 @@
  */
 package com.dgzt.core.shape;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * The abstract shape.
  * 
  * @author Dgzt
  */
-public class RectangleShape implements Shape{
-	
+public class RectangleShape extends Shape{
+
 	// --------------------------------------------------
-	// ~ Private members
+	// ~ Private static members
 	// --------------------------------------------------
 	
-	/** The shape renderer. */
-	private final ShapeRenderer shapeRenderer;
-	
-	/** The x coordinate value. */
-	private float x;
-	
-	/** The y coordinate value. */
-	private float y;
-	
-	/** The width value. */
-	private float width;
-	
-	/** The height value. */
-	private float height;
-	
-	/** The color. */
-	private final Color color;
+	/** The number of vertices. */
+	private static final int VERTICES_NUM = 4;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -54,12 +40,11 @@ public class RectangleShape implements Shape{
 	/**
 	 * Constructor.
 	 * 
-	 * @param shapeRenderer - The shape renderer.
-	 * @param color - The color of the shape.
+	 * @param shader - The shader.
+	 * @param color - The color.
 	 */
-	public RectangleShape( final ShapeRenderer shapeRenderer, final Color color){
-		this.shapeRenderer = shapeRenderer;
-		this.color = color;
+	public RectangleShape(final ShaderProgram shader, final Color color){
+		super(shader, GL20.GL_TRIANGLES, VERTICES_NUM, new short[]{0,1,2,2,3,0}, color);
 	}
 	
 	// --------------------------------------------------
@@ -75,25 +60,15 @@ public class RectangleShape implements Shape{
 	 * @param height The height value.
 	 */
 	protected void resize(final float x, final float y, final float width, final float height){
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-	
-	// --------------------------------------------------
-	// ~ Override methods
-	// --------------------------------------------------	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void draw(){
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(color);
-		shapeRenderer.rect(x, y, width, height);
-		shapeRenderer.end();
+		Gdx.app.log(RectangleShape.class.getName()+".resize", "x: "+String.valueOf(x)+", y: "+String.valueOf(y));
+
+		final float[] vertices = new float[RectangleShape.VERTICES_NUM * Shape.POSITION_NUM];
+		vertices[0] = x;		vertices[1]  = y;
+		vertices[2] = x+width;	vertices[3]  = y;
+		vertices[4] = x+width;	vertices[5]  = y+height;
+		vertices[6] = x;		vertices[7]  = y+height;
+		
+		setVertices(vertices);
 	}
 	
 	// --------------------------------------------------
@@ -104,20 +79,23 @@ public class RectangleShape implements Shape{
 	 * Return with x coordinate value.
 	 */
 	public final float getX(){
-		return x;
+		return getVertices()[0];
 	}
 	
 	/**
 	 * Return with y coordinate value.
 	 */
 	public final float getY(){
-		return y;
+		return getVertices()[1];
 	}
 	
 	/**
 	 * Return with width value.
 	 */
 	public final float getWidth(){
-		return width;
+		final float[] vertices = getVertices();
+		
+		return vertices[2] - vertices[0];
+		
 	}
 }
