@@ -45,6 +45,12 @@ final public class TimeBoard extends RectangleBorderShape{
 	/** 13 minute. */
 	private static final int HALF_TIME = 13 * 60;
 	
+	/** The delay second of the timer. */
+	private static final int TIMER_DELAY_SECOND = 1;
+	
+	/** The interval second of the timer. */
+	private static final int TIMER_INTERVAL_SECOND = 1;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -66,6 +72,9 @@ final public class TimeBoard extends RectangleBorderShape{
 	
 	/** The current time. */
 	private int currentTime;
+	
+	/** Visible the second circles. */
+	private boolean visibleSecondCircles;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -89,14 +98,17 @@ final public class TimeBoard extends RectangleBorderShape{
 		
 		currentTime = HALF_TIME;
 		setCurrentTime();
+		visibleSecondCircles = isVisibleSecondCircles();
 		Timer.schedule(new Task() {
 			
 			@Override
 			public void run() {
 				--currentTime;
 				setCurrentTime();
+				
+				visibleSecondCircles = isVisibleSecondCircles();
 			}
-		}, 1,1);
+		}, TIMER_DELAY_SECOND, TIMER_INTERVAL_SECOND);
 	}
 
 	// --------------------------------------------------
@@ -120,6 +132,13 @@ final public class TimeBoard extends RectangleBorderShape{
 		firstSecDigit.setNumber(firstSec);
 		secondMinDigit.setNumber(secondMin);
 		firstMinDigit.setNumber(firstMin);
+	}
+	
+	/**
+	 * Return the visibility of second circles. The second circles visible every even second.
+	 */
+	private boolean isVisibleSecondCircles(){
+		return currentTime % 2 == 0;
 	}
 	
 	// --------------------------------------------------
@@ -158,7 +177,9 @@ final public class TimeBoard extends RectangleBorderShape{
 		firstMinDigit.draw();
 		secondMinDigit.draw();
 		
-		secondCircles.draw();
+		if(visibleSecondCircles){
+			secondCircles.draw();
+		}
 		
 		firstSecDigit.draw();
 		secondSecDigit.draw();
