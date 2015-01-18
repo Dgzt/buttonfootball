@@ -15,6 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.dgzt.core.shape.LineShape;
@@ -39,6 +40,9 @@ public class FPS extends RectangleBorderShape{
 	
 	/** The one second in nanosecond. */
 	private static final float ONE_SECOND_IN_NANOSECOND = 1000000000;
+	
+	/** The color. */
+	private static final Color COLOR = Color.RED;
 	
 	// --------------------------------------------------
 	// ~ Public static members
@@ -76,11 +80,11 @@ public class FPS extends RectangleBorderShape{
 	 * @param shader - The shader.
 	 */
 	public FPS(final ShaderProgram shader){
-		super(shader);
+		super(shader, COLOR);
 		visible = false;
 		
-		firstFpsDigit = new Digit(shader, DIGIT_WIDTH, DIGIT_HEIGHT);
-		secondFpsDigit = new Digit(shader, DIGIT_WIDTH, DIGIT_HEIGHT);
+		firstFpsDigit = new Digit(shader, DIGIT_WIDTH, DIGIT_HEIGHT, COLOR);
+		secondFpsDigit = new Digit(shader, DIGIT_WIDTH, DIGIT_HEIGHT, COLOR);
 		
 		startTime = TimeUtils.nanoTime();
 	}

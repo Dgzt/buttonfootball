@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.scoreboard;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.shape.LineShape;
 
@@ -25,7 +26,7 @@ import com.dgzt.core.shape.LineShape;
 final public class ScoreBoard{
 	
 	// --------------------------------------------------
-	// ~ Static members
+	// ~ Public static members
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
@@ -34,6 +35,13 @@ final public class ScoreBoard{
 	/** The height value in cm. */
 	public static final float HEIGHT = HalfTimeBoard.HEIGHT + TimeBoard.HEIGHT;
 
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	/** The color. */
+	private static final Color COLOR = Color.WHITE;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -60,11 +68,11 @@ final public class ScoreBoard{
 	 * @param shader - The shader.
 	 */
 	public ScoreBoard(final ShaderProgram shader){
-		halfTimeBoard = new HalfTimeBoard(shader);
+		halfTimeBoard = new HalfTimeBoard(shader, COLOR);
 		
-		timeBoard = new TimeBoard(shader);
-		playerGoalBoard = new GoalBoard(shader);
-		opponentGoalBoard = new GoalBoard(shader);
+		timeBoard = new TimeBoard(shader, COLOR);
+		playerGoalBoard = new GoalBoard(shader, COLOR);
+		opponentGoalBoard = new GoalBoard(shader, COLOR);
 	}
 	
 	// --------------------------------------------------

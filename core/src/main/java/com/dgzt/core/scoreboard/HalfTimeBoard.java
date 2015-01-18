@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.scoreboard;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.Digit;
 import com.dgzt.core.shape.LineShape;
@@ -51,11 +52,12 @@ final public class HalfTimeBoard extends RectangleBorderShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
+	 * @param color - The color.
 	 */
-	public HalfTimeBoard(ShaderProgram shader) {
-		super(shader);
+	public HalfTimeBoard(final ShaderProgram shader, final Color color) {
+		super(shader, color);
 		
-		digit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
+		digit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
 		digit.setNumber(1);
 	}
 	

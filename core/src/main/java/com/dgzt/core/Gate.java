@@ -49,6 +49,9 @@ final public class Gate extends RectangleBorderShape{
 	/** Number of row line. */
 	private static final int ROW_LINES = 3;
 	
+	/** The color. */
+	private static final Color COLOR = Color.WHITE;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -69,16 +72,16 @@ final public class Gate extends RectangleBorderShape{
 	 * @param shader - The shader.
 	 */
 	public Gate(ShaderProgram shader) {
-		super(shader);
+		super(shader, COLOR);
 
 		columnLines = new ArrayList<LineShape>();
 		for(int i=0; i < COLUMN_LINES; ++i){
-			columnLines.add(new LineShape(shader, Color.WHITE));
+			columnLines.add(new LineShape(shader, COLOR));
 		}
 		
 		rowLines = new ArrayList<LineShape>();
 		for(int i=0; i < ROW_LINES; ++i){
-			rowLines.add(new LineShape(shader, Color.WHITE));
+			rowLines.add(new LineShape(shader, COLOR));
 		}
 	}
 	
