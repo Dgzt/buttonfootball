@@ -15,6 +15,7 @@
 package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.Digit;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 
