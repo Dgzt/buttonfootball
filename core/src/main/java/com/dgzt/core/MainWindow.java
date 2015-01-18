@@ -63,7 +63,7 @@ public class MainWindow{
 		table = new Table(shader);
 		fps = new FPS(shader);
 		
-		Gdx.input.setInputProcessor(new InputListener(table));
+		Gdx.input.setInputProcessor(new InputListener(table, fps));
 	}
 	
 	// --------------------------------------------------

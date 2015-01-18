@@ -63,6 +63,9 @@ public class FPS extends RectangleBorderShape{
 	/** The start time. */
 	private float startTime;
 	
+	/** Visible this object. */
+	private boolean visible;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -74,6 +77,7 @@ public class FPS extends RectangleBorderShape{
 	 */
 	public FPS(final ShaderProgram shader){
 		super(shader);
+		visible = false;
 		
 		firstFpsDigit = new Digit(shader, DIGIT_WIDTH, DIGIT_HEIGHT);
 		secondFpsDigit = new Digit(shader, DIGIT_WIDTH, DIGIT_HEIGHT);
@@ -105,17 +109,31 @@ public class FPS extends RectangleBorderShape{
 	 */
 	@Override
 	public void draw() {
-		super.draw();
-		
-		firstFpsDigit.draw();
-		secondFpsDigit.draw();
-		
-		if(TimeUtils.nanoTime() - startTime > ONE_SECOND_IN_NANOSECOND){
-			firstFpsDigit.setNumber(Gdx.graphics.getFramesPerSecond() / 10);
-			secondFpsDigit.setNumber(Gdx.graphics.getFramesPerSecond() % 10);
-			
-			startTime = TimeUtils.nanoTime();
+		if(visible){
+			super.draw();
+
+			firstFpsDigit.draw();
+			secondFpsDigit.draw();
+
+			if(TimeUtils.nanoTime() - startTime > ONE_SECOND_IN_NANOSECOND){
+				firstFpsDigit.setNumber(Gdx.graphics.getFramesPerSecond() / 10);
+				secondFpsDigit.setNumber(Gdx.graphics.getFramesPerSecond() % 10);
+				
+				startTime = TimeUtils.nanoTime();
+			}
 		}
+	}
+	
+	// --------------------------------------------------
+	// ~ Setters / Getters
+	// --------------------------------------------------
+	
+	public boolean isVisible(){
+		return visible;
+	}
+	
+	public void setVisible(final boolean visible){
+		this.visible = visible;
 	}
 	
 }
