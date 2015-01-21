@@ -67,9 +67,13 @@ final public class ButtonFootballGame implements ApplicationListener {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
 		
-		Gdx.app.log(ButtonFootballGame.class.getName()+".create", "");
-		
 		shader = new ShaderProgram(Gdx.files.internal(VERTEX_SHADER).readString(), Gdx.files.internal(FRAGMENT_SHADER).readString());
+		
+		if(!shader.isCompiled()){
+			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Problem loading shader: " + shader.getLog());
+		}else if(!shader.getLog().isEmpty()){
+			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
+		}
 		
 		mainWindow = new MainWindow(shader);
 	}
