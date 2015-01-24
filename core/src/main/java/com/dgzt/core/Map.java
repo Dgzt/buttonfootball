@@ -126,13 +126,13 @@ final public class Map extends RectangleShape{
 	public Map(final ShaderProgram shader){
 		super(shader, Color.GREEN);
 		
-		this.mapBorder = new RectangleBorderShape(shader);
+		this.mapBorder = new RectangleBorderShape(shader, Color.WHITE);
 		
-		this.leftSector16 = new RectangleBorderShape(shader);
-		this.rightSector16 = new RectangleBorderShape(shader);
+		this.leftSector16 = new RectangleBorderShape(shader, Color.WHITE);
+		this.rightSector16 = new RectangleBorderShape(shader, Color.WHITE);
 		
-		this.leftSector5 = new RectangleBorderShape(shader);
-		this.rightSector5 = new RectangleBorderShape(shader);
+		this.leftSector5 = new RectangleBorderShape(shader, Color.WHITE);
+		this.rightSector5 = new RectangleBorderShape(shader, Color.WHITE);
 
 		this.centerBigCircle = new CircleBorderShape(shader, Color.WHITE);
 		

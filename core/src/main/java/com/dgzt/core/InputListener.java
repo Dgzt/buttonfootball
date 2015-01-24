@@ -15,6 +15,8 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 
 /**
@@ -31,6 +33,9 @@ final public class InputListener extends InputAdapter{
 	/** The table. */
 	private final Table table;
 	
+	/** The FPS rectangle. */
+	private final FPS fps;
+	
 	/** The last pressed mouse button. */
 	private int button;
 	
@@ -42,9 +47,11 @@ final public class InputListener extends InputAdapter{
 	 * The constructor.
 	 * 
 	 * @param table - The table.
+	 * @param fps - The FPS rectangle.
 	 */
-	public InputListener(final Table table){
+	public InputListener(final Table table, final FPS fps){
 		this.table = table;
+		this.fps = fps;
 	}
 	
 	// --------------------------------------------------
@@ -66,7 +73,7 @@ final public class InputListener extends InputAdapter{
 	}
 
 	/**
-	 * The mouse moving event.
+	 * The mouse moving events.
 	 */
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
@@ -77,7 +84,7 @@ final public class InputListener extends InputAdapter{
 	}
 
 	/**
-	 * The mouse releasing event.
+	 * The mouse releasing events.
 	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -86,6 +93,18 @@ final public class InputListener extends InputAdapter{
 		}
 		
 		return super.touchUp(screenX, screenY, pointer, button);
+	}
+
+	/**
+	 * The keyboard pressed events.
+	 */
+	@Override
+	public boolean keyDown(int keycode) {
+		if(Keys.F == keycode){
+			Gdx.app.log(InputListener.class.getName()+".keyDown", "'f' pressed.");
+			fps.setVisible(!fps.isVisible());
+		}
+		return super.keyDown(keycode);
 	}
 	
 }

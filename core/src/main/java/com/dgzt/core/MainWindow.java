@@ -46,6 +46,9 @@ public class MainWindow{
 	/** The table. */
 	private final Table table;
 	
+	/** The frame per second rectangle. */
+	private final FPS fps;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -58,8 +61,9 @@ public class MainWindow{
 	public MainWindow(final ShaderProgram shader){
 		scoreBoard = new ScoreBoard(shader);
 		table = new Table(shader);
+		fps = new FPS(shader);
 		
-		Gdx.input.setInputProcessor(new InputListener(table));
+		Gdx.input.setInputProcessor(new InputListener(table, fps));
 	}
 	
 	// --------------------------------------------------
@@ -87,8 +91,14 @@ public class MainWindow{
 		final float tableX = x  + (width - tableWidth) / 2;
 		final float tableY = scoreBoardY + scoreBoardHeight + halfLineHeight;
 		
+		final float fpsWidth = (float)(FPS.WIDTH * scale);
+		final float fpsHeight = (float)(FPS.HEIGHT * scale);
+		final float fpsX = x + width - fpsWidth;
+		final float fpsY = y + halfLineHeight;
+		
 		scoreBoard.resize(scoreBoardX, scoreBoardY, scoreBoardWidth, scoreBoardHeight, scale);
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
+		fps.resize(fpsX, fpsY, fpsWidth, fpsHeight, scale);
 	}
 	
 	/**
@@ -97,5 +107,6 @@ public class MainWindow{
 	public void draw() {
 		scoreBoard.draw();
 		table.draw();
+		fps.draw();
 	}
 }

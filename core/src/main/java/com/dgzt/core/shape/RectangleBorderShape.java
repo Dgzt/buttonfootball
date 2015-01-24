@@ -51,12 +51,13 @@ public class RectangleBorderShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
+	 * @param color - The color.
 	 */
-	public RectangleBorderShape(final ShaderProgram shader){
-		topLine = new LineShape(shader, Color.WHITE);
-		rightLine = new LineShape(shader, Color.WHITE);
-		bottomLine = new LineShape(shader, Color.WHITE);
-		leftLine = new LineShape(shader, Color.WHITE);
+	public RectangleBorderShape(final ShaderProgram shader, final Color color){
+		topLine = new LineShape(shader, color);
+		rightLine = new LineShape(shader, color);
+		bottomLine = new LineShape(shader, color);
+		leftLine = new LineShape(shader, color);
 	}
 	
 	// --------------------------------------------------

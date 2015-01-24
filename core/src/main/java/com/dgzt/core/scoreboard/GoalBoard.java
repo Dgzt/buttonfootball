@@ -14,7 +14,9 @@
  */
 package com.dgzt.core.scoreboard;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.Digit;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 
@@ -53,12 +55,13 @@ final public class GoalBoard extends RectangleBorderShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
+	 * @param color - The color.
 	 */
-	public GoalBoard(final ShaderProgram shader) {
-		super(shader);
+	public GoalBoard(final ShaderProgram shader, final Color color) {
+		super(shader, color);
 		
-		firstDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
-		secondDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT);
+		firstDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
+		secondDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
 	}
 	
 	// --------------------------------------------------

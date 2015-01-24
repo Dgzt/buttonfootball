@@ -31,31 +31,11 @@ final public class ButtonFootballGame implements ApplicationListener {
 	// ~ Private static members
 	// --------------------------------------------------
 	
-	/** The vertex shader. */
-	private static String VERTEX_SHADER = 
-		     "attribute vec4 a_position;    \n"
-		     + "attribute vec4 a_color;\n" 
-		     + "attribute vec2 a_texCoords;\n"
-		     + "uniform mat4 u_worldView;\n"
-		     + "varying vec4 v_color;"
-		     + "varying vec2 v_texCoords;"
-		     + "void main()                  \n"
-		     + "{                            \n"
-		     + "   v_color = a_color; \n"
-		     + "   v_texCoords = a_texCoords; \n"
-		     + "   gl_Position =  u_worldView * a_position; \n" +
-		     "}                            \n";
+	/** The path of the vertex shader. */
+	private static String VERTEX_SHADER = "shader.vsh";
 	
-	/** The fragment shader. */
-	private static String FRAGMENT_SHADER = 
-		     "#ifdef GL_ES                \n"
-		     + "precision mediump float;    \n"
-		     + "#endif                      \n"
-		     + "varying vec4 v_color;\n"
-		     + "void main()                 \n"
-		     + "{                           \n"
-		     + "  gl_FragColor = v_color;   \n"
-		     + "}";
+	/** The path of the fragment shader. */
+	private static String FRAGMENT_SHADER = "shader.fsh";
 	
 	/** The world view for uniform matrix. */
 	private static String WORLD_VIEW = "u_worldView";
@@ -87,8 +67,13 @@ final public class ButtonFootballGame implements ApplicationListener {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
 		
-		Gdx.app.log(ButtonFootballGame.class.getName()+".create", "");
-		shader = new ShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = new ShaderProgram(Gdx.files.internal(VERTEX_SHADER).readString(), Gdx.files.internal(FRAGMENT_SHADER).readString());
+		
+		if(!shader.isCompiled()){
+			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Problem loading shader: " + shader.getLog());
+		}else if(!shader.getLog().isEmpty()){
+			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
+		}
 		
 		mainWindow = new MainWindow(shader);
 	}

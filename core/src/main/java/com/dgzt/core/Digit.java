@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core.scoreboard;
+package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -50,9 +50,6 @@ final public class Digit{
 	
 	/** The vertical line distance in cm. */
 	private static final float VERTICAL_LINE_DISTANCE = 0.5f;
-	
-	/** The color of lines. */
-	private static final Color DIGIT_COLOR = Color.WHITE;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -104,19 +101,20 @@ final public class Digit{
 	 * @param shader - The shader.
 	 * @param baseWidth - The base width value.
 	 * @param baseHeight - The base height value.
+	 * @param color - The color.
 	 */
-	public Digit(final ShaderProgram shader, final float baseWidth, final float baseHeight){
+	public Digit(final ShaderProgram shader, final float baseWidth, final float baseHeight, final Color color){
 		setNumber(0);;
 		this.baseHorizontalLineLength = baseWidth - 2 * HORIZONTAL_LINE_DISTANCE;
 		this.baseVerticalLineLength = (baseHeight - 3 * LineShape.LINE_WIDTH - 6 * VERTICAL_LINE_DISTANCE) / 2;
 		
-		topLine = new LineShape(shader, DIGIT_COLOR);
-		topRightLine = new LineShape(shader, DIGIT_COLOR);
-		centerLine = new LineShape(shader, DIGIT_COLOR);
-		bottomRightLine = new LineShape(shader, DIGIT_COLOR);
-		bottomLine = new LineShape(shader, DIGIT_COLOR);
-		bottomLeftLine = new LineShape(shader, DIGIT_COLOR);
-		topLeftLine = new LineShape(shader, DIGIT_COLOR);
+		topLine = new LineShape(shader, color);
+		topRightLine = new LineShape(shader, color);
+		centerLine = new LineShape(shader, color);
+		bottomRightLine = new LineShape(shader, color);
+		bottomLine = new LineShape(shader, color);
+		bottomLeftLine = new LineShape(shader, color);
+		topLeftLine = new LineShape(shader, color);
 	}
 	
 	// --------------------------------------------------
