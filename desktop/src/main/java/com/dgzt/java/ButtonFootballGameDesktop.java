@@ -32,7 +32,7 @@ public class ButtonFootballGameDesktop {
 	 * @param args - The arguments.
 	 */
 	public static void main (String[] args) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new ButtonFootballGame(), config);
 	}
 }

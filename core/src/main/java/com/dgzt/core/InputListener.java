@@ -14,6 +14,7 @@
  */
 package com.dgzt.core;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
@@ -103,6 +104,8 @@ final public class InputListener extends InputAdapter{
 		if(Keys.F == keycode){
 			Gdx.app.log(InputListener.class.getName()+".keyDown", "'f' pressed.");
 			fps.setVisible(!fps.isVisible());
+		}else if(Keys.ESCAPE == keycode && Gdx.app.getType().equals(ApplicationType.Desktop)){
+			Gdx.app.exit();
 		}
 		return super.keyDown(keycode);
 	}
