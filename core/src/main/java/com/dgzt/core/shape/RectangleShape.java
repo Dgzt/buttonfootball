@@ -63,10 +63,10 @@ public class RectangleShape extends Shape{
 		Gdx.app.log(RectangleShape.class.getName()+".resize", "x: "+String.valueOf(x)+", y: "+String.valueOf(y));
 
 		final float[] vertices = new float[RectangleShape.VERTICES_NUM * Shape.POSITION_NUM];
-		vertices[0] = x;		vertices[1]  = y;
-		vertices[2] = x+width;	vertices[3]  = y;
-		vertices[4] = x+width;	vertices[5]  = y+height;
-		vertices[6] = x;		vertices[7]  = y+height;
+		vertices[0] = x;		vertices[1]  = Gdx.graphics.getHeight() - y;
+		vertices[2] = x+width;	vertices[3]  = Gdx.graphics.getHeight() - y;
+		vertices[4] = x+width;	vertices[5]  = Gdx.graphics.getHeight() - y-height;
+		vertices[6] = x;		vertices[7]  = Gdx.graphics.getHeight() - y-height;
 		
 		setVertices(vertices);
 	}
@@ -86,7 +86,7 @@ public class RectangleShape extends Shape{
 	 * Return with y coordinate value.
 	 */
 	public final float getY(){
-		return getVertices()[1];
+		return Gdx.graphics.getHeight() - getVertices()[1];
 	}
 	
 	/**

@@ -18,6 +18,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
@@ -46,6 +47,9 @@ final public class ButtonFootballGame implements ApplicationListener {
 	
 	/** The shader. */
 	private ShaderProgram shader;
+	
+	/** The sprite batch for show text. */
+	private SpriteBatch spriteBatch;
 
 	/** The camera. */
 	private OrthographicCamera camera;
@@ -63,11 +67,9 @@ final public class ButtonFootballGame implements ApplicationListener {
 	@Override
 	public void create () {
         camera = new OrthographicCamera();
-        camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.update();
 		
 		shader = new ShaderProgram(Gdx.files.internal(VERTEX_SHADER).readString(), Gdx.files.internal(FRAGMENT_SHADER).readString());
+		spriteBatch = new SpriteBatch();
 		
 		if(!shader.isCompiled()){
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Problem loading shader: " + shader.getLog());
@@ -75,7 +77,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
 		}
 		
-		mainWindow = new MainWindow(shader);
+		mainWindow = new MainWindow(shader, spriteBatch);
 	}
 
 	/**
@@ -85,8 +87,9 @@ final public class ButtonFootballGame implements ApplicationListener {
 	public void resize (int width, int height) {
 		Gdx.app.log(ButtonFootballGame.class.getName()+".resize", String.valueOf(width)+" x "+String.valueOf(height));
 		
-		camera.setToOrtho(true, width, height);
-
+		camera.setToOrtho(false, width, height);
+		spriteBatch.setProjectionMatrix(camera.combined);
+			
 		shader.begin();
 		shader.setUniformMatrix(WORLD_VIEW, camera.combined);
 		shader.end();

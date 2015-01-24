@@ -15,6 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.shape.LineShape;
@@ -57,11 +58,12 @@ public class MainWindow{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
+	 * @param spriteBatch - The sprite batch.
 	 */
-	public MainWindow(final ShaderProgram shader){
+	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch){
 		scoreBoard = new ScoreBoard(shader);
 		table = new Table(shader);
-		fps = new FPS(shader);
+		fps = new FPS(shader, spriteBatch);
 		
 		Gdx.input.setInputProcessor(new InputListener(table, fps));
 	}
@@ -91,14 +93,13 @@ public class MainWindow{
 		final float tableX = x  + (width - tableWidth) / 2;
 		final float tableY = scoreBoardY + scoreBoardHeight + halfLineHeight;
 		
-		final float fpsWidth = (float)(FPS.WIDTH * scale);
-		final float fpsHeight = (float)(FPS.HEIGHT * scale);
+		final float fpsWidth = FPS.WIDTH;
 		final float fpsX = x + width - fpsWidth;
-		final float fpsY = y + halfLineHeight;
+		final float fpsY = y;
 		
 		scoreBoard.resize(scoreBoardX, scoreBoardY, scoreBoardWidth, scoreBoardHeight, scale);
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
-		fps.resize(fpsX, fpsY, fpsWidth, fpsHeight, scale);
+		fps.resize(fpsX, fpsY);
 	}
 	
 	/**
