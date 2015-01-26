@@ -25,17 +25,17 @@ import com.dgzt.core.shape.LineShape;
  * 
  * @author Dgzt
  */
-public class MainWindow{
+final public class MainWindow{
 	
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
 	
 	/** The width of main window in cm. */
-	public static float WIDTH = Table.WIDTH;
+	public static final float WIDTH = Table.WIDTH;
 
 	/** The height of main window in cm. */
-	public static float HEIGHT = ScoreBoard.HEIGHT + LineShape.LINE_WIDTH + Table.HEIGHT;
+	public static final float HEIGHT = ScoreBoard.HEIGHT + LineShape.LINE_WIDTH + Table.HEIGHT;
 	
 	// --------------------------------------------------
 	// ~ Private members

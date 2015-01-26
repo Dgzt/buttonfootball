@@ -20,13 +20,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.dgzt.core.shape.Text;
 
 /**
  * Show the actual frame per second.
  * 
  * @author Dgzt
  */
-public class FPS extends Text{
+final public class FPS extends Text{
 	
 	// --------------------------------------------------
 	// ~ Private static members
