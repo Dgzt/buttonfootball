@@ -99,6 +99,7 @@ final public class Table extends RectangleShape{
 		super(shader, Color.GRAY);
 		
 		box2DWorld = new World(new Vector2(0,0), true);
+		box2DWorld.setContactListener(new MyContactListener());
 		addBox2DTableWalls();
 		addBox2DGateWalls();
 		
