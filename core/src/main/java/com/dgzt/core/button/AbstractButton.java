@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core;
+package com.dgzt.core.button;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -22,34 +22,16 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.Table;
 import com.dgzt.core.shape.FilledCircleShape;
 
 /**
- * The button object.
+ * The abstract button.
  * 
  * @author Dgzt
  */
-final public class Button extends FilledCircleShape{
+public class AbstractButton extends FilledCircleShape{
 
-	// --------------------------------------------------
-	// ~ Public static members
-	// --------------------------------------------------
-	
-	/** The color of the player's buttons. */
-	public static final Color PLAYER_COLOR = Color.RED;
-	
-	/** The color of the opponent's buttons. */
-	public static final Color OPPONENT_COLOR = Color.BLUE;
-	
-	/** The color of the ball. */
-	public static final Color BALL_COLOR = Color.BLACK;
-	
-	/** The radius of the players's and opponent's buttons in cm. */
-	public static final float PLAYER_OPPONENT_RADIUS = 2.5f;
-	
-	/** The radius of ball. */
-	public static final float BALL_RADIUS = 1.0f;
-	
 	// --------------------------------------------------
 	// ~ Private static members
 	// --------------------------------------------------
@@ -100,7 +82,7 @@ final public class Button extends FilledCircleShape{
 	 * @param box2DY - The y coordinate value of button in Box2D.
 	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
-	public Button(final Table parent, final ShaderProgram shader, final World box2DWorld, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
+	public AbstractButton(final Table parent, final ShaderProgram shader, final World box2DWorld, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
 		super(shader, color);
 		this.parent = parent;
 		this.box2DX = box2DX;

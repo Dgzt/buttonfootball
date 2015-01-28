@@ -26,6 +26,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.button.Ball;
+import com.dgzt.core.button.Button;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleShape;
 
@@ -73,7 +75,7 @@ final public class Table extends RectangleShape{
 	private final List<Button> opponentButtons;
 	
 	/** The ball. */
-	private final Button ball;
+	private final Ball ball;
 	
 	/** The arrow. */
 	private final Arrow arrow;
@@ -110,7 +112,7 @@ final public class Table extends RectangleShape{
 		
 		addButtons(shader);
 		
-		ball = new Button(this, shader, box2DWorld, Button.BALL_COLOR, Table.WIDTH / 2, Table.HEIGHT / 2, Button.BALL_RADIUS);
+		ball = new Ball(this, shader, box2DWorld, Table.WIDTH / 2, Table.HEIGHT / 2);
 		
 		arrow = new Arrow(this, shader);
 	}
@@ -228,8 +230,8 @@ final public class Table extends RectangleShape{
 	 * @param shader - The shader.
 	 */
 	private void addButtons(final ShaderProgram shader){
-		final float playerGoalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.PLAYER_OPPONENT_RADIUS;
-		final float opponentGoalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.PLAYER_OPPONENT_RADIUS;
+		final float playerGoalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.RADIUS;
+		final float opponentGoalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.RADIUS;
 		final float goalKeeperY = Table.HEIGHT / 2;
 		final float buttonDistanceX = Table.WIDTH / 2 / 4;
 		final float buttonDistanceY = Table.HEIGHT / 5;
@@ -239,41 +241,41 @@ final public class Table extends RectangleShape{
 		// ------------------
 		
 		// Add player goalkeeper
-		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY));
 		
 		// Add player defenders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add player midfielders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add player forwards
-		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
-		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
+		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
 		
 		// Add opponent buttons
 		// --------------------
 		
 		// Add opponent goalkeeper
-		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY));
 		
 		// Add opponent defenders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add opponent midfielders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add opponent forwards
-		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
-		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY, Button.PLAYER_OPPONENT_RADIUS));
+		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
+		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
 	}
 	
 	/**
