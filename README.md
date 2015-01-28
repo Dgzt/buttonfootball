@@ -3,6 +3,8 @@ ButtonFootball
 
 A button football game.
 
+** This game is under development, this isn't playable game now. **
+
 Requirements:
 -------------
 
@@ -19,3 +21,9 @@ HTML5
 Desktop
 
  * mvn -Pdesktop clean install
+ 
+ Commands
+ --------
+ 
+ `f`   : Show the FPS.
+ `ESC` : Quit the program (only in Desktop mode).
