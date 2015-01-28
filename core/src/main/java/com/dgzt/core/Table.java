@@ -17,7 +17,6 @@ package com.dgzt.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -102,6 +101,7 @@ final public class Table extends RectangleShape{
 		box2DWorld.setContactListener(new MyContactListener());
 		addBox2DTableWalls();
 		addBox2DGateWalls();
+		addBox2DGateSensors();
 		
 		map = new Map(shader);
 		
@@ -161,7 +161,6 @@ final public class Table extends RectangleShape{
 	public void mouseButtonPressed(final float x, final float y){
 		for(final Button playerButton : playerButtons){
 			if(playerButton.contains(x, y)){
-				Gdx.app.log(Table.class.getName()+".mouseButtonPressed", "contains");
 				arrow.show(playerButton);
 			}
 		}
@@ -280,14 +279,15 @@ final public class Table extends RectangleShape{
 	}
 	
 	/**
-	 * Add wall to the box2D.
+	 * Add box2D rectangle.
 	 * 
 	 * @param x - The x coordinate value.
 	 * @param y - The y coordinate value.
 	 * @param width - The width value.
 	 * @param height - The height value.
+	 * @param isSensor - Is the rectangle sensor?
 	 */
-	private void addBox2DWall(final float x, final float y, final float width, final float height){
+	private void addBox2DRectangle(final float x, final float y, final float width, final float height, final boolean isSensor){
 		final BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(x + width / 2, y + height / 2);
 		
@@ -299,7 +299,32 @@ final public class Table extends RectangleShape{
 		final FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1.0f;
+		fixtureDef.isSensor = isSensor;
 		body.createFixture(fixtureDef);
+	}
+	
+	/**
+	 * Add box2D wall.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 */
+	private void addBox2DWall(final float x, final float y, final float width, final float height){
+		addBox2DRectangle(x, y, width, height, false);
+	}
+	
+	/**
+	 * Add box2D rectangle sensor.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The x coordinate value.
+	 * @param width - The width value.
+	 * @param height - The height value.
+	 */
+	private void addBox2DSensor(final float x, final float y, final float width, final float height){
+		addBox2DRectangle(x, y, width, height, true);
 	}
 	
 	/**
@@ -339,6 +364,23 @@ final public class Table extends RectangleShape{
 		
 		// Add bottom wall of right gate.
 		addBox2DWall(rightGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
+	}
+	
+	/**
+	 * Add the sensor of gates to the ball.
+	 */
+	private void addBox2DGateSensors(){
+		final float sensorWidth = Gate.WIDTH - Button.BALL_RADIUS - LineShape.LINE_WIDTH;
+		final float sensorY = (Table.HEIGHT - Gate.HEIGHT + LineShape.LINE_WIDTH) / 2;
+		final float sensorHeight = Gate.HEIGHT - LineShape.LINE_WIDTH;
+		final float leftGateSensorX = 0;
+		final float rightGateSensorX = Table.WIDTH - sensorWidth;
+		
+		// Add the left gate sensor.
+		addBox2DSensor(leftGateSensorX, sensorY, sensorWidth, sensorHeight);
+		
+		// Add the right gate sensor.
+		addBox2DSensor(rightGateSensorX, sensorY, sensorWidth, sensorHeight);
 	}
 	
 	/**

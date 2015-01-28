@@ -14,7 +14,6 @@
  */
 package com.dgzt.core;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.button.Button;
@@ -66,7 +65,6 @@ final public class Arrow extends LineShape{
 	 * @param selectedButton - The selected player button.
 	 */
 	public void show(final Button selectedButton){
-		Gdx.app.log(Arrow.class.getName()+".show", String.valueOf(selectedButton.getX())+" x "+String.valueOf(selectedButton.getY()));
 		this.lastSelectedButton = selectedButton;
 		super.resize(selectedButton.getX(), selectedButton.getY(), selectedButton.getX(), selectedButton.getY(), parent.getScale());
 		visible = true;
@@ -80,7 +78,6 @@ final public class Arrow extends LineShape{
 	 */
 	public void setEndPoint(final float x, final float y){
 		if(visible){
-			Gdx.app.log(Arrow.class.getName()+".setEndPoint", String.valueOf(x)+" x "+String.valueOf(y));
 			super.resize(getX1(), getY1(), x, y, parent.getScale());
 		}
 	}
@@ -89,7 +86,6 @@ final public class Arrow extends LineShape{
 	 * Hide the arrow.
 	 */
 	public void hide(){
-		Gdx.app.log(Arrow.class.getName()+".hide", "");
 		visible = false;
 	}
 	
