@@ -22,9 +22,8 @@ Desktop
 
  * mvn -Pdesktop clean install
  
- Commands
- --------
+Commands
+--------
  
- `f`   : Show the FPS.
- 
- `ESC` : Quit the program (only in Desktop mode).
+ * `f`   : Show the FPS.
+ * `ESC` : Quit the program (only in Desktop mode).
