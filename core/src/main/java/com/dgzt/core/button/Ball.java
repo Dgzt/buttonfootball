@@ -25,6 +25,13 @@ import com.dgzt.core.Table;
  * @author Dgzt
  */
 public class Ball extends AbstractButton{
+
+	// --------------------------------------------------
+	// ~ Public static members
+	// --------------------------------------------------
+	
+	/** The radius of ball. */
+	public static final float RADIUS = 1.0f;
 	
 	// --------------------------------------------------
 	// ~ Private static members
@@ -32,9 +39,6 @@ public class Ball extends AbstractButton{
 	
 	/** The color of the ball. */
 	private static final Color COLOR = Color.BLACK;
-	
-	/** The radius of ball. */
-	private static final float RADIUS = 1.0f;
 	
 	// --------------------------------------------------
 	// ~ Constructors

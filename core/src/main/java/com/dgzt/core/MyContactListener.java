@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.dgzt.core.button.Ball;
+import com.dgzt.core.util.SensorUserDataEnum;
 
 /**
  * The Box2D contact listener.
@@ -37,6 +39,18 @@ public class MyContactListener implements ContactListener{
 	@Override
 	public void beginContact(Contact contact) {
 		Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "");
+		
+		if(contact.getFixtureA().getUserData() instanceof SensorUserDataEnum){
+			final SensorUserDataEnum userDataA = (SensorUserDataEnum) contact.getFixtureA().getUserData();
+			
+			if(userDataA.equals(SensorUserDataEnum.PLAYER_GATE_SENSOR) && contact.getFixtureB().getUserData() instanceof Ball){
+				Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Opponent goal!!");
+			}
+			
+			if(userDataA.equals(SensorUserDataEnum.OPPONENT_GATE_SENSOR) && contact.getFixtureB().getUserData() instanceof Ball){
+				Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Player goal!!");
+			}
+		}
 	}
 
 	/**
