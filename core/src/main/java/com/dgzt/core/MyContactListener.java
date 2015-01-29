@@ -59,6 +59,14 @@ public class MyContactListener implements ContactListener{
 	@Override
 	public void endContact(Contact contact) {
 		Gdx.app.log(MyContactListener.class.getName() + ".endContact", "");
+		
+		if(contact.getFixtureA().getUserData() instanceof SensorUserDataEnum){
+			final SensorUserDataEnum userDataA = (SensorUserDataEnum) contact.getFixtureA().getUserData();
+		
+			if(userDataA.equals(SensorUserDataEnum.MAP_SENSOR) && contact.getFixtureB().getUserData() instanceof Ball){
+				Gdx.app.log(MyContactListener.class.getName() + ".endContact", "Ball out the map.");
+			}
+		}
 	}
 
 	@Override

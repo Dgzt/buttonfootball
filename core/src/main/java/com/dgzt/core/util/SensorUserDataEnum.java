@@ -25,6 +25,8 @@ public enum SensorUserDataEnum {
 	PLAYER_GATE_SENSOR,
 	
 	/** Sensor for opponent's gate. */
-	OPPONENT_GATE_SENSOR;
-
+	OPPONENT_GATE_SENSOR,
+	
+	/** Sensor for map. */
+	MAP_SENSOR;
 }

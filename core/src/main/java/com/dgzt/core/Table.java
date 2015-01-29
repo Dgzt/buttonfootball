@@ -104,6 +104,7 @@ final public class Table extends RectangleShape{
 		addBox2DTableWalls();
 		addBox2DGateWalls();
 		addBox2DGateSensors();
+		addBox2DMapSensors();
 		
 		map = new Map(shader);
 		
@@ -386,6 +387,18 @@ final public class Table extends RectangleShape{
 		
 		// Add the right gate sensor.
 		addBox2DSensor(rightGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.OPPONENT_GATE_SENSOR);
+	}
+	
+	/**
+	 * Add the sensor of map to the button.
+	 */
+	private void addBox2DMapSensors(){
+		final float sensorWidth = Map.WIDTH + LineShape.LINE_WIDTH;
+		final float sensorHeight = Map.HEIGHT + LineShape.LINE_WIDTH;
+		final float sensorX = (Table.WIDTH - sensorWidth) / 2;
+		final float sensorY = (Table.HEIGHT - sensorHeight) / 2;
+		
+		addBox2DSensor(sensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.MAP_SENSOR);
 	}
 	
 	/**
