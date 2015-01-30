@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.Table;
+import com.dgzt.core.util.BitsUtil;
 
 /**
  * The ball.
@@ -61,5 +62,24 @@ public class Ball extends AbstractButton{
 	{
 		super(parent, shader, box2dWorld, COLOR, box2dx, box2dy, RADIUS);
 	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected short getCategoryBits() {
+		return BitsUtil.BALL_BITS;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected short getMaskBits() {
+		return BitsUtil.BUTTON_BITS | BitsUtil.WALL_BITS | BitsUtil.GATE_SENSOR_BITS | BitsUtil.MAP_SENSOR_BITS;
+	}
 }

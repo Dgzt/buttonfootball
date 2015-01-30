@@ -30,6 +30,7 @@ import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleShape;
+import com.dgzt.core.util.BitsUtil;
 import com.dgzt.core.util.SensorUserDataEnum;
 
 /**
@@ -290,8 +291,19 @@ final public class Table extends RectangleShape{
 	 * @param height - The height value.
 	 * @param isSensor - Is the rectangle sensor?
 	 * @param userData - The user data of fixture.
+	 * @param categoryBits - The category bits of filter.
+	 * @param maskBits - The mask bits of filter.
 	 */
-	private void addBox2DRectangle(final float x, final float y, final float width, final float height, final boolean isSensor, final SensorUserDataEnum userData){
+	private void addBox2DRectangle(
+			final float x, 
+			final float y, 
+			final float width, 
+			final float height, 
+			final boolean isSensor, 
+			final SensorUserDataEnum userData,
+			final short cateforyBits,
+			final short maskBits
+	){
 		final BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(x + width / 2, y + height / 2);
 		
@@ -304,6 +316,10 @@ final public class Table extends RectangleShape{
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1.0f;
 		fixtureDef.isSensor = isSensor;
+
+		fixtureDef.filter.categoryBits = cateforyBits;
+		fixtureDef.filter.maskBits = maskBits;
+
 		final Fixture fixture = body.createFixture(fixtureDef);
 		fixture.setUserData(userData);
 	}
@@ -317,7 +333,7 @@ final public class Table extends RectangleShape{
 	 * @param height - The height value.
 	 */
 	private void addBox2DWall(final float x, final float y, final float width, final float height){
-		addBox2DRectangle(x, y, width, height, false, null);
+		addBox2DRectangle(x, y, width, height, false, null, BitsUtil.WALL_BITS, (short) (BitsUtil.BALL_BITS | BitsUtil.BUTTON_BITS));
 	}
 	
 	/**
@@ -328,9 +344,19 @@ final public class Table extends RectangleShape{
 	 * @param width - The width value.
 	 * @param height - The height value.
 	 * @param userData - The user data of fixture.
+	 * @param categoryBits - The category bits of filter.
+	 * @param maskBits - The mask bits of filter.
 	 */
-	private void addBox2DSensor(final float x, final float y, final float width, final float height, final SensorUserDataEnum userData){
-		addBox2DRectangle(x, y, width, height, true, userData);
+	private void addBox2DSensor(
+			final float x, 
+			final float y, 
+			final float width, 
+			final float height, 
+			final SensorUserDataEnum userData,
+			final short categoryBits,
+			final short maskBits
+	){
+		addBox2DRectangle(x, y, width, height, true, userData, categoryBits, maskBits);
 	}
 	
 	/**
@@ -389,10 +415,10 @@ final public class Table extends RectangleShape{
 		final float rightGateSensorX = Table.WIDTH - sensorWidth;
 		
 		// Add the left gate sensor.
-		addBox2DSensor(leftGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.PLAYER_GATE_SENSOR);
+		addBox2DSensor(leftGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.PLAYER_GATE_SENSOR, BitsUtil.GATE_SENSOR_BITS, BitsUtil.BALL_BITS);
 		
 		// Add the right gate sensor.
-		addBox2DSensor(rightGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.OPPONENT_GATE_SENSOR);
+		addBox2DSensor(rightGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.OPPONENT_GATE_SENSOR, BitsUtil.GATE_SENSOR_BITS, BitsUtil.BALL_BITS);
 	}
 	
 	/**
@@ -404,7 +430,7 @@ final public class Table extends RectangleShape{
 		final float sensorX = (Table.WIDTH - sensorWidth) / 2;
 		final float sensorY = (Table.HEIGHT - sensorHeight) / 2;
 		
-		addBox2DSensor(sensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.MAP_SENSOR);
+		addBox2DSensor(sensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.MAP_SENSOR, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
 	}
 	
 	/**
