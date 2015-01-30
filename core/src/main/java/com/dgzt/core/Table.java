@@ -365,11 +365,17 @@ final public class Table extends RectangleShape{
 		// Add bottom wall of left gate.
 		addBox2DWall(leftGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
 		
+		// Add left wall of left gate.
+		addBox2DWall(0, topWallY, LineShape.LINE_WIDTH, Gate.HEIGHT);
+		
 		// Add top wall of right gate.
 		addBox2DWall(rightGateX, topWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
 		
 		// Add bottom wall of right gate.
 		addBox2DWall(rightGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
+		
+		// Add right wall of the right gate.
+		addBox2DWall(Table.WIDTH - LineShape.LINE_WIDTH, topWallY, LineShape.LINE_WIDTH, Gate.HEIGHT);
 	}
 	
 	/**
