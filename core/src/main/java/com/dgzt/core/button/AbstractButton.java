@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.Table;
@@ -30,7 +31,7 @@ import com.dgzt.core.shape.FilledCircleShape;
  * 
  * @author Dgzt
  */
-public class AbstractButton extends FilledCircleShape{
+public abstract class AbstractButton extends FilledCircleShape{
 
 	// --------------------------------------------------
 	// ~ Private static members
@@ -92,6 +93,20 @@ public class AbstractButton extends FilledCircleShape{
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
 	
+	// --------------------------------------------------
+	// ~ Abstract methods
+	// --------------------------------------------------
+	
+	/**
+	 * The category bits.
+	 */
+	protected abstract short getCategoryBits();
+	
+	/**
+	 * The mask bits.
+	 */
+	protected abstract short getMaskBits();
+
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
@@ -172,8 +187,12 @@ public class AbstractButton extends FilledCircleShape{
 		fixtureDef.density = FIXTURE_DEFINITION_DENSITY;
 		fixtureDef.friction = FIXTURE_DEFINITION_FRICTION;
 		fixtureDef.restitution = FIXTURE_DEFINITION_RESTITUTION;
+
+		fixtureDef.filter.categoryBits = getCategoryBits();
+		fixtureDef.filter.maskBits = getMaskBits();
 		
-		body.createFixture(fixtureDef);
+		final Fixture fixture = body.createFixture(fixtureDef);
+		fixture.setUserData(this);
 		
 		circle.dispose();
 		

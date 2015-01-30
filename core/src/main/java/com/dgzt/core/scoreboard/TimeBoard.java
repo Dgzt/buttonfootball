@@ -14,7 +14,6 @@
  */
 package com.dgzt.core.scoreboard;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Timer;
@@ -127,8 +126,6 @@ final public class TimeBoard extends RectangleBorderShape{
 		final int firstSec = secondum / 10;
 		final int secondMin = minute % 10;
 		final int firstMin = minute / 10;
-		
-		Gdx.app.log(TimeBoard.class.getName()+".setCurrentTime", "Min: "+String.valueOf(minute)+"\t Sec:"+String.valueOf(secondum));
 		
 		secondSecDigit.setNumber(secondSec);
 		firstSecDigit.setNumber(firstSec);

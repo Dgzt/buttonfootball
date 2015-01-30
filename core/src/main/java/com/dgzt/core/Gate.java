@@ -71,7 +71,7 @@ final public class Gate extends RectangleBorderShape{
 	 * 
 	 * @param shader - The shader.
 	 */
-	public Gate(ShaderProgram shader) {
+	public Gate(final ShaderProgram shader) {
 		super(shader, COLOR);
 
 		columnLines = new ArrayList<LineShape>();

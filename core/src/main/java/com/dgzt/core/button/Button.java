@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.Table;
+import com.dgzt.core.util.BitsUtil;
 
 /**
  * The player and opponent button.
@@ -61,6 +62,26 @@ public class Button extends AbstractButton{
 				final float box2dy) 
 	{
 		super(parent, shader, box2dWorld, color, box2dx, box2dy, RADIUS);
+	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected short getCategoryBits() {
+		return BitsUtil.BUTTON_BITS;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected short getMaskBits() {
+		return BitsUtil.BUTTON_BITS | BitsUtil.BALL_BITS | BitsUtil.WALL_BITS;
 	}
 
 }
