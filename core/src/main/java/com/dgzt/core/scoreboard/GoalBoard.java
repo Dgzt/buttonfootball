@@ -31,10 +31,10 @@ final public class GoalBoard extends RectangleBorderShape{
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
-	public static final float WIDTH = 2 * Digit.GOAL_DIGIT_WIDTH + LineShape.LINE_WIDTH;
+	public static final float WIDTH = 2*Digit.GOAL_DIGIT_WIDTH + 2*LineShape.LINE_WIDTH;
 	
 	/** The height value in cm. */
-	public static final float HEIGHT = (Digit.GOAL_DIGIT_HEIGHT + LineShape.LINE_WIDTH);
+	public static final float HEIGHT = (Digit.GOAL_DIGIT_HEIGHT + 2*LineShape.LINE_WIDTH);
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -74,11 +74,11 @@ final public class GoalBoard extends RectangleBorderShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height, scale);
 		
-		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
+		final float lineWidth = (float)(LineShape.LINE_WIDTH * scale);
 		final float digitWidth = (float)(Digit.GOAL_DIGIT_WIDTH * scale);
 		final float digitHeight = (float)(Digit.GOAL_DIGIT_HEIGHT * scale);
 		
-		firstDigit.resize(x + halfLineWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+		firstDigit.resize(x + lineWidth, y + lineWidth, digitWidth, digitHeight, scale);
 		secondDigit.resize(firstDigit.getX() + digitWidth, firstDigit.getY(), digitWidth, digitHeight, scale);
 	}
 

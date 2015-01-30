@@ -18,7 +18,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.scoreboard.ScoreBoard;
-import com.dgzt.core.shape.LineShape;
 
 /**
  * The main window.
@@ -35,7 +34,7 @@ final public class MainWindow{
 	public static final float WIDTH = Table.WIDTH;
 
 	/** The height of main window in cm. */
-	public static final float HEIGHT = ScoreBoard.HEIGHT + LineShape.LINE_WIDTH + Table.HEIGHT;
+	public static final float HEIGHT = ScoreBoard.HEIGHT +Table.HEIGHT;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -81,17 +80,15 @@ final public class MainWindow{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final double scale){
-		final float halfLineHeight = (float)(LineShape.LINE_WIDTH * scale) / 2;
-		
 		final float scoreBoardWidth = (float)(ScoreBoard.WIDTH * scale);
 		final float scoreBoardHeight = (float)(ScoreBoard.HEIGHT * scale);
 		final float scoreBoardX = x + (width - scoreBoardWidth) / 2;
-		final float scoreBoardY = y + halfLineHeight;
+		final float scoreBoardY = y;
 		
 		final float tableWidth = (float)(Table.WIDTH * scale);
 		final float tableHeight = (float)(Table.HEIGHT * scale);
 		final float tableX = x  + (width - tableWidth) / 2;
-		final float tableY = scoreBoardY + scoreBoardHeight + halfLineHeight;
+		final float tableY = scoreBoardY + scoreBoardHeight;
 		
 		final float fpsWidth = FPS.WIDTH;
 		final float fpsX = x + width - fpsWidth;

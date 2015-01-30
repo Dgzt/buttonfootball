@@ -19,14 +19,15 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.dgzt.core.util.SensorUserDataEnum;
+import com.dgzt.core.gate.LeftGate;
+import com.dgzt.core.gate.RightGate;
 
 /**
  * The Box2D contact listener.
  * 
  * @author Dgzt
  */
-public class MyContactListener implements ContactListener{
+public final class MyContactListener implements ContactListener{
 
 	// --------------------------------------------------
 	// ~ Override methods
@@ -39,16 +40,14 @@ public class MyContactListener implements ContactListener{
 	public void beginContact(Contact contact) {
 		Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "");
 		
-		if(contact.getFixtureA().getUserData() instanceof SensorUserDataEnum){
-			final SensorUserDataEnum userDataA = (SensorUserDataEnum) contact.getFixtureA().getUserData();
+		final Object userDataA = contact.getFixtureA().getUserData();
 			
-			if(userDataA.equals(SensorUserDataEnum.PLAYER_GATE_SENSOR)){
-				Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Opponent goal!!");
-			}
+		if(userDataA instanceof LeftGate){
+			Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Opponent goal!!");
+		}
 			
-			if(userDataA.equals(SensorUserDataEnum.OPPONENT_GATE_SENSOR)){
-				Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Player goal!!");
-			}
+		if(userDataA instanceof RightGate){
+			Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Player goal!!");
 		}
 	}
 
@@ -59,12 +58,10 @@ public class MyContactListener implements ContactListener{
 	public void endContact(Contact contact) {
 		Gdx.app.log(MyContactListener.class.getName() + ".endContact", "");
 		
-		if(contact.getFixtureA().getUserData() instanceof SensorUserDataEnum){
-			final SensorUserDataEnum userDataA = (SensorUserDataEnum) contact.getFixtureA().getUserData();
+		final Object userDataA = contact.getFixtureA().getUserData();
 		
-			if(userDataA.equals(SensorUserDataEnum.MAP_SENSOR)){
-				Gdx.app.log(MyContactListener.class.getName() + ".endContact", "Ball out the map.");
-			}
+		if(userDataA instanceof Map){
+			Gdx.app.log(MyContactListener.class.getName() + ".endContact", "Ball out the map.");
 		}
 	}
 

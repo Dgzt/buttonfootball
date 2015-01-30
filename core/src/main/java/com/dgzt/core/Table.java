@@ -20,18 +20,14 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
+import com.dgzt.core.gate.LeftGate;
+import com.dgzt.core.gate.RightGate;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleShape;
-import com.dgzt.core.util.BitsUtil;
-import com.dgzt.core.util.SensorUserDataEnum;
+import com.dgzt.core.util.Box2DUtil;
 
 /**
  * The table object.
@@ -65,10 +61,10 @@ final public class Table extends RectangleShape{
 	private final Map map;
 	
 	/** The left gate. */
-	private final Gate leftGate;
+	private final LeftGate leftGate;
 	
 	/** The right gate. */
-	private final Gate rightGate;
+	private final RightGate rightGate;
 	
 	/** The player's buttons. */
 	private final List<Button> playerButtons;
@@ -102,15 +98,12 @@ final public class Table extends RectangleShape{
 		
 		box2DWorld = new World(new Vector2(0,0), true);
 		box2DWorld.setContactListener(new MyContactListener());
-		addBox2DTableWalls();
-		addBox2DGateWalls();
-		addBox2DGateSensors();
-		addBox2DMapSensors();
+		addBox2DWalls();
 		
-		map = new Map(shader);
+		map = new Map(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
 		
-		leftGate = new Gate(shader);
-		rightGate = new Gate(shader);
+		leftGate = new LeftGate(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2 - LeftGate.WIDTH + LineShape.LINE_WIDTH, (Table.HEIGHT - LeftGate.HEIGHT) / 2);
+		rightGate = new RightGate(shader, box2DWorld, Table.WIDTH - (Table.WIDTH - Map.WIDTH) / 2  - LineShape.LINE_WIDTH, (Table.HEIGHT - RightGate.HEIGHT) / 2 );
 		
 		playerButtons = new ArrayList<Button>();
 		opponentButtons = new ArrayList<Button>();
@@ -139,11 +132,11 @@ final public class Table extends RectangleShape{
 		super.resize(x, y, width, height);
 		this.scale = scale;
 		
-		resizeMap(x, y, width, height, scale);
+		map.resize(x, y, scale);
 		
-		resizeLeftGate(y, height, map.getX(), scale);
+		leftGate.resize(x, y, scale);
 		
-		resizeRightGate(map.getX(), map.getWidth(), leftGate.getY(), leftGate.getWidth(), leftGate.getHeight(), scale);
+		rightGate.resize(x, y, scale);
 		
 		for(final Button playerButton : playerButtons){
 			playerButton.resize();
@@ -283,204 +276,20 @@ final public class Table extends RectangleShape{
 	}
 	
 	/**
-	 * Add box2D rectangle.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param isSensor - Is the rectangle sensor?
-	 * @param userData - The user data of fixture.
-	 * @param categoryBits - The category bits of filter.
-	 * @param maskBits - The mask bits of filter.
-	 */
-	private void addBox2DRectangle(
-			final float x, 
-			final float y, 
-			final float width, 
-			final float height, 
-			final boolean isSensor, 
-			final SensorUserDataEnum userData,
-			final short cateforyBits,
-			final short maskBits
-	){
-		final BodyDef bodyDef = new BodyDef();
-		bodyDef.position.set(x + width / 2, y + height / 2);
-		
-		final Body body = box2DWorld.createBody(bodyDef);
-		
-		final PolygonShape shape = new PolygonShape();
-		shape.setAsBox(width / 2, height / 2);
-		
-		final FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-		fixtureDef.density = 1.0f;
-		fixtureDef.isSensor = isSensor;
-
-		fixtureDef.filter.categoryBits = cateforyBits;
-		fixtureDef.filter.maskBits = maskBits;
-
-		final Fixture fixture = body.createFixture(fixtureDef);
-		fixture.setUserData(userData);
-	}
-	
-	/**
-	 * Add box2D wall.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 */
-	private void addBox2DWall(final float x, final float y, final float width, final float height){
-		addBox2DRectangle(x, y, width, height, false, null, BitsUtil.WALL_BITS, (short) (BitsUtil.BALL_BITS | BitsUtil.BUTTON_BITS));
-	}
-	
-	/**
-	 * Add box2D rectangle sensor.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The x coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param userData - The user data of fixture.
-	 * @param categoryBits - The category bits of filter.
-	 * @param maskBits - The mask bits of filter.
-	 */
-	private void addBox2DSensor(
-			final float x, 
-			final float y, 
-			final float width, 
-			final float height, 
-			final SensorUserDataEnum userData,
-			final short categoryBits,
-			final short maskBits
-	){
-		addBox2DRectangle(x, y, width, height, true, userData, categoryBits, maskBits);
-	}
-	
-	/**
 	 * Add the box2D walls of table.
 	 */
-	private void addBox2DTableWalls(){
+	private void addBox2DWalls(){
 		// Add top wall
-		addBox2DWall(0, 0 - BOX2D_WALL_SIZE, Table.WIDTH, BOX2D_WALL_SIZE);
+		Box2DUtil.addWall(box2DWorld, 0, 0 - BOX2D_WALL_SIZE, Table.WIDTH, BOX2D_WALL_SIZE);
 		
 		// Add right wall
-		addBox2DWall(Table.WIDTH, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
+		Box2DUtil.addWall(box2DWorld, Table.WIDTH, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
 		
 		// Add bottom wall
-		addBox2DWall(0, Table.HEIGHT, Table.WIDTH, BOX2D_WALL_SIZE);
+		Box2DUtil.addWall(box2DWorld, 0, Table.HEIGHT, Table.WIDTH, BOX2D_WALL_SIZE);
 		
 		// Add left Wall
-		addBox2DWall(0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
-	}
-	
-	/**
-	 * Add the box2D walls of gates.
-	 */
-	private void addBox2DGateWalls(){
-		final float leftGateX = 0;
-		final float rightGateX = Table.WIDTH - Gate.WIDTH;
-		final float topWallY = (Table.HEIGHT - Gate.HEIGHT - LineShape.LINE_WIDTH) / 2;
-		final float bottomWallY = (Table.HEIGHT + Gate.HEIGHT - LineShape.LINE_WIDTH) / 2;
-		
-		// Add top wall of left gate.
-		addBox2DWall(leftGateX, topWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
-		
-		// Add bottom wall of left gate.
-		addBox2DWall(leftGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
-		
-		// Add left wall of left gate.
-		addBox2DWall(0, topWallY, LineShape.LINE_WIDTH, Gate.HEIGHT);
-		
-		// Add top wall of right gate.
-		addBox2DWall(rightGateX, topWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
-		
-		// Add bottom wall of right gate.
-		addBox2DWall(rightGateX, bottomWallY, Gate.WIDTH, LineShape.LINE_WIDTH);
-		
-		// Add right wall of the right gate.
-		addBox2DWall(Table.WIDTH - LineShape.LINE_WIDTH, topWallY, LineShape.LINE_WIDTH, Gate.HEIGHT);
-	}
-	
-	/**
-	 * Add the sensor of gates to the ball.
-	 */
-	private void addBox2DGateSensors(){
-		final float sensorWidth = Gate.WIDTH - Ball.RADIUS - LineShape.LINE_WIDTH / 2;
-		final float sensorY = (Table.HEIGHT - Gate.HEIGHT + LineShape.LINE_WIDTH) / 2;
-		final float sensorHeight = Gate.HEIGHT - LineShape.LINE_WIDTH;
-		final float leftGateSensorX = 0;
-		final float rightGateSensorX = Table.WIDTH - sensorWidth;
-		
-		// Add the left gate sensor.
-		addBox2DSensor(leftGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.PLAYER_GATE_SENSOR, BitsUtil.GATE_SENSOR_BITS, BitsUtil.BALL_BITS);
-		
-		// Add the right gate sensor.
-		addBox2DSensor(rightGateSensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.OPPONENT_GATE_SENSOR, BitsUtil.GATE_SENSOR_BITS, BitsUtil.BALL_BITS);
-	}
-	
-	/**
-	 * Add the sensor of map to the button.
-	 */
-	private void addBox2DMapSensors(){
-		final float sensorWidth = Map.WIDTH + LineShape.LINE_WIDTH;
-		final float sensorHeight = Map.HEIGHT + LineShape.LINE_WIDTH;
-		final float sensorX = (Table.WIDTH - sensorWidth) / 2;
-		final float sensorY = (Table.HEIGHT - sensorHeight) / 2;
-		
-		addBox2DSensor(sensorX, sensorY, sensorWidth, sensorHeight, SensorUserDataEnum.MAP_SENSOR, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
-	}
-	
-	/**
-	 * Resize the map.
-	 * 
-	 * @param tableX - The x coordinate value of map.
-	 * @param tableY - The y coordinate value of map.
-	 * @param tableWidth - The width value of map.
-	 * @param tableHeight - The height value of map.
-	 * @param scale - The scale value.
-	 */
-	private void resizeMap(final float tableX, final float tableY, final float tableWidth, final float tableHeight, final double scale){
-		final float width = (float) ((double)Map.WIDTH * scale);
-		final float height = (float) ((double)Map.HEIGHT * scale);
-		final float x = tableX + (tableWidth - width)/2;
-		final float y = tableY + (tableHeight - height)/2;
-		
-		map.resize( x, y, width, height, scale );
-	}
-	
-	/**
-	 * Resize the left gate.
-	 * 
-	 * @param tableY - The y coordinate value of table.
-	 * @param tableHeight - The height value of table.
-	 * @param mapX - The x coordinate value of map.
-	 * @param scale - The scale value.
-	 */
-	private void resizeLeftGate(final float tableY, final float tableHeight, final float mapX, final double scale){
-		final float width = (float)(Gate.WIDTH * scale);
-		final float height = (float)(Gate.HEIGHT * scale);
-		final float x = mapX - width;
-		final float y = tableY + (tableHeight - height) / 2;
-		
-		leftGate.resize(x, y, width, height, scale);
-	}
-	
-	/**
-	 * Resize the right gate.
-	 * 
-	 * @param mapX - The x coordiante value of map.
-	 * @param mapWidth - The width value of map.
-	 * @param y - The y coordinate value of right gate.
-	 * @param width - The width value of right gate.
-	 * @param height - The height value of right gate.
-	 * @param scale - The scale value.
-	 */
-	private void resizeRightGate(final float mapX, final float mapWidth, final float y, final float width, final float height, final double scale){
-		final float x = mapX + mapWidth;
-		rightGate.resize(x, y, width, height, scale);
+		Box2DUtil.addWall(box2DWorld, 0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
 	}
 	
 	// --------------------------------------------------

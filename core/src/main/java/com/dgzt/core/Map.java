@@ -16,12 +16,15 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.shape.ArcShape;
 import com.dgzt.core.shape.CircleBorderShape;
 import com.dgzt.core.shape.FilledCircleShape;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
+import com.dgzt.core.util.BitsUtil;
+import com.dgzt.core.util.Box2DUtil;
 
 /**
  * The map object.
@@ -65,6 +68,12 @@ final public class Map extends RectangleShape{
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------	
+	
+	/** The x coordinate value in box2D */
+	private final float box2DX;
+	
+	/** The y coordinate value in box2D */
+	private final float box2DY;
 	
 	/** The border of the map. */
 	private final RectangleBorderShape mapBorder;
@@ -122,9 +131,14 @@ final public class Map extends RectangleShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
+	 * @param box2DWorld - The world of the Box2D.
+	 * @param box2DX - The x coordinate value in Box2D.
+	 * @param box2DY - The y coordinate value in Box2D.
 	 */
-	public Map(final ShaderProgram shader){
+	public Map(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
 		super(shader, Color.GREEN);
+		this.box2DX = box2DX;
+		this.box2DY = box2DY;
 		
 		this.mapBorder = new RectangleBorderShape(shader, Color.WHITE);
 		
@@ -155,6 +169,8 @@ final public class Map extends RectangleShape{
 		this.leftBigArc = new ArcShape(shader, 37, 105, Color.WHITE);
 		
 		this.rightBigArc = new ArcShape(shader, 217, 105, Color.WHITE);
+		
+		addSensor(box2DWorld);
 	}
 	
 	// --------------------------------------------------
@@ -164,13 +180,16 @@ final public class Map extends RectangleShape{
 	/**
 	 * Resize the map and the child objects.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
+	 * @param tableX - The x coordinate value of table.
+	 * @param tableY - The y coordinate value of table.
 	 * @param scale - The scale value.
 	 */
-	public void resize(final float x, final float y, final float width, final float height, final double scale ) {
+	public void resize(final float tableX, final float tableY, final double scale ) {
+		final float x = tableX + (float)(box2DX * scale);
+		final float y = tableY + (float)(box2DY * scale);
+		final float width = (float)(Map.WIDTH * scale);
+		final float height = (float)(Map.HEIGHT * scale);
+		
 		super.resize(x, y, width, height);
 		
 		final float smallArcRadius = (float)(ArcShape.SMALL_RADIUS * scale);
@@ -250,6 +269,15 @@ final public class Map extends RectangleShape{
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
+	
+	/**
+	 * Add the sensor to the box2D.
+	 * 
+	 * @param box2DWorld - The world of the Box2D.
+	 */
+	private void addSensor(final World box2DWorld){
+		Box2DUtil.addSensor(box2DWorld, box2DX, box2DY, Map.WIDTH, Map.HEIGHT, this, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
+	}
 	
 	/**
 	 * Resize the top left small arc.
@@ -479,5 +507,5 @@ final public class Map extends RectangleShape{
 		final float y2 = y1 + mapHeight;
 		centerLine.resize(x1, y1, x2, y2, scale);
 	}
-	
+
 }
