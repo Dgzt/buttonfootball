@@ -43,11 +43,11 @@ public class MyContactListener implements ContactListener{
 		if(contact.getFixtureA().getUserData() instanceof SensorUserDataEnum){
 			final SensorUserDataEnum userDataA = (SensorUserDataEnum) contact.getFixtureA().getUserData();
 			
-			if(userDataA.equals(SensorUserDataEnum.PLAYER_GATE_SENSOR) && contact.getFixtureB().getUserData() instanceof Ball){
+			if(userDataA.equals(SensorUserDataEnum.PLAYER_GATE_SENSOR)){
 				Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Opponent goal!!");
 			}
 			
-			if(userDataA.equals(SensorUserDataEnum.OPPONENT_GATE_SENSOR) && contact.getFixtureB().getUserData() instanceof Ball){
+			if(userDataA.equals(SensorUserDataEnum.OPPONENT_GATE_SENSOR)){
 				Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Player goal!!");
 			}
 		}
@@ -63,7 +63,7 @@ public class MyContactListener implements ContactListener{
 		if(contact.getFixtureA().getUserData() instanceof SensorUserDataEnum){
 			final SensorUserDataEnum userDataA = (SensorUserDataEnum) contact.getFixtureA().getUserData();
 		
-			if(userDataA.equals(SensorUserDataEnum.MAP_SENSOR) && contact.getFixtureB().getUserData() instanceof Ball){
+			if(userDataA.equals(SensorUserDataEnum.MAP_SENSOR)){
 				Gdx.app.log(MyContactListener.class.getName() + ".endContact", "Ball out the map.");
 			}
 		}
