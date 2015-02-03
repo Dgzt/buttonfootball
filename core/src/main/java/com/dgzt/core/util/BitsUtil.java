@@ -20,6 +20,10 @@ package com.dgzt.core.util;
  * @author Dgzt
  */
 public class BitsUtil {
+	
+	// --------------------------------------------------
+	// ~ Public static members
+	// --------------------------------------------------
 
 	/** 
 	 * Bits for ball. 
