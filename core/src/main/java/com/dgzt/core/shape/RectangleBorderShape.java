@@ -40,7 +40,6 @@ public class RectangleBorderShape{
 	/** The left line. */
 	private final LineShape leftLine;
 	
-	/** The scale value. */
 	private double scale;
 	
 	// --------------------------------------------------
@@ -77,10 +76,10 @@ public class RectangleBorderShape{
 		this.scale = scale;
 		final float halfLineWidth = (float) (LineShape.LINE_WIDTH * scale) / 2;
 		
-		topLine.resize(x -halfLineWidth, y, x + width +halfLineWidth, y, scale);
-		rightLine.resize(x + width, y -halfLineWidth, x + width, y + height+halfLineWidth, scale);
-		bottomLine.resize(x-halfLineWidth, y + height, x + width+halfLineWidth, y + height, scale);
-		leftLine.resize(x, y-halfLineWidth, x, y + height+halfLineWidth, scale);
+		topLine.resize(x, y + halfLineWidth, x + width, y + halfLineWidth, scale);
+		rightLine.resize(x + width - halfLineWidth, y, x + width - halfLineWidth, y + height, scale);
+		bottomLine.resize(x, y + height - halfLineWidth, x + width, y + height - halfLineWidth, scale);
+		leftLine.resize(x + halfLineWidth, y, x + halfLineWidth, y + height, scale);
 	}
 	
 	/**
@@ -108,24 +107,22 @@ public class RectangleBorderShape{
 	 * Return with y coordinate value;
 	 */
 	public final float getY(){
-		return topLine.getY1();
+		final float halfLineWidth = (float) (LineShape.LINE_WIDTH * scale) / 2;
+		
+		return topLine.getY1() - halfLineWidth;
 	}
 	
 	/**
 	 * Return with width value.
 	 */
 	public final float getWidth(){
-		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
-		
-		return topLine.getLength() - lineWidth;
+		return topLine.getLength();
 	}
 	
 	/**
 	 * Return width height value.
 	 */
 	public final float getHeight(){
-		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
-		
-		return rightLine.getLength() - lineWidth;
+		return rightLine.getLength();
 	}
 }

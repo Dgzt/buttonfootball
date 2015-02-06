@@ -33,10 +33,10 @@ final public class TimeBoard extends RectangleBorderShape{
 	// --------------------------------------------------
 	
 	/** The width of scoreboard in cm. */
-	public static final float WIDTH = 4 * Digit.TIME_DIGIT_WIDTH + SecondCircles.WIDTH + LineShape.LINE_WIDTH;
+	public static final float WIDTH = 4*Digit.TIME_DIGIT_WIDTH + SecondCircles.WIDTH + 2*LineShape.LINE_WIDTH;
 	
 	/** The height of scoreboard in cm. */
-	public static final float HEIGHT = Digit.TIME_DIGIT_HEIGHT + LineShape.LINE_WIDTH;
+	public static final float HEIGHT = Digit.TIME_DIGIT_HEIGHT + 2*LineShape.LINE_WIDTH;
 	
 	// --------------------------------------------------
 	// ~ Private static members
@@ -151,13 +151,13 @@ final public class TimeBoard extends RectangleBorderShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale) {
 		super.resize(x, y, width, height, scale);
 		
-		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
+		final float lineWidth = (float)(LineShape.LINE_WIDTH * scale);
 		final float digitWidth = (float)(Digit.TIME_DIGIT_WIDTH * scale);
 		final float digitHeight = (float)(Digit.TIME_DIGIT_HEIGHT * scale);
 		final float secondCirclesWidth = (float)(SecondCircles.WIDTH * scale);
 		final float secondCirclesHeight = (float)(SecondCircles.HEIGHT * scale);
 		
-		firstMinDigit.resize(x + halfLineWidth, y + halfLineWidth, digitWidth, digitHeight, scale);
+		firstMinDigit.resize(x + lineWidth, y + lineWidth, digitWidth, digitHeight, scale);
 		secondMinDigit.resize(firstMinDigit.getX() + digitWidth, firstMinDigit.getY(), digitWidth, digitHeight, scale);
 		
 		secondCircles.resize(secondMinDigit.getX() + digitWidth, y, secondCirclesWidth, secondCirclesHeight, scale);

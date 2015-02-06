@@ -16,7 +16,6 @@ package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.dgzt.core.shape.LineShape;
 
 /**
  * The scoreboard.
@@ -30,7 +29,7 @@ final public class ScoreBoard{
 	// --------------------------------------------------
 	
 	/** The width value in cm. */
-	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH + LineShape.LINE_WIDTH;
+	public static final float WIDTH = 2*GoalBoard.WIDTH + TimeBoard.WIDTH;
 	
 	/** The height value in cm. */
 	public static final float HEIGHT = HalfTimeBoard.HEIGHT + TimeBoard.HEIGHT;
@@ -89,7 +88,6 @@ final public class ScoreBoard{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
-		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
 		final float halfTimeBoardWidth = (float)(HalfTimeBoard.WIDTH * scale);
 		final float halfTimeBoardHeight = (float)(HalfTimeBoard.HEIGHT * scale);
 		final float goalBoardWidth = (float)(GoalBoard.WIDTH * scale);
@@ -98,9 +96,9 @@ final public class ScoreBoard{
 		final float timeBoardHeight = (float)(TimeBoard.HEIGHT * scale);
 		
 		halfTimeBoard.resize(x + (width - halfTimeBoardWidth)/2, y, halfTimeBoardWidth, halfTimeBoardHeight, scale);
-		playerGoalBoard.resize(x + halfLineWidth, y + height - goalBoardHeight, goalBoardWidth, goalBoardHeight, scale);
-		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth() + halfLineWidth, y + halfTimeBoardHeight, timeBoardWidth, timeBoardHeight, scale);
-		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth() + halfLineWidth, playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
+		playerGoalBoard.resize(x, y + height - goalBoardHeight, goalBoardWidth, goalBoardHeight, scale);
+		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth(), y + halfTimeBoardHeight, timeBoardWidth, timeBoardHeight, scale);
+		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth(), playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
 	}
 	
 	/**
