@@ -63,10 +63,9 @@ public class ArcShape extends Shape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param backgroundColor - The color of background.
-	 * @param arcColor - The color of arc.
-	 * @param start - The start degrees.
-	 * @param degrees - The number of degrees.
+	 * @param startDegrees - The start degrees.
+	 * @param degreesNum - The number of degrees.
+	 * @param color - The color.
 	 */
 	public ArcShape(final ShaderProgram shader, final int startDegrees, final int degreesNum, final Color color ){
 		super(shader, GL20.GL_TRIANGLES, degreesNum*2, getIndices(degreesNum), color);

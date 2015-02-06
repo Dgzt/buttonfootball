@@ -166,9 +166,9 @@ final public class Map extends RectangleShape{
 		
 		this.bottomLeftSmallArc = new ArcShape(shader, 90, 90, Color.WHITE);
 		
-		this.leftBigArc = new ArcShape(shader, 37, 105, Color.WHITE);
+		this.leftBigArc = new ArcShape(shader, 37, 109, Color.WHITE);
 		
-		this.rightBigArc = new ArcShape(shader, 217, 105, Color.WHITE);
+		this.rightBigArc = new ArcShape(shader, 217, 109, Color.WHITE);
 		
 		addSensor(box2DWorld);
 	}
