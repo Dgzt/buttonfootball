@@ -20,6 +20,20 @@
 			<artifactId>gdx</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-headless</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-platform</artifactId>
+			<classifier>natives-desktop</classifier>
+			<scope>test</scope>
+		</dependency>
+		
+		
 		<!-- libGDX - box2D -->
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
@@ -37,8 +51,9 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
-		
+				
 	</dependencies>
 
 	<build>
