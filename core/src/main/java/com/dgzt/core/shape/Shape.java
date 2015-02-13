@@ -80,13 +80,25 @@ public abstract class Shape {
 		final VertexAttribute positionAttr = new VertexAttribute(Usage.Position, POSITION_NUM, POSITION_ATTR);
 		final VertexAttribute colorAttr = new VertexAttribute(Usage.ColorPacked, COLOR_NUM, COLOR_ATTR);
 		
-		mesh = new Mesh(true, verticesNum, indices.length, positionAttr, colorAttr);
+		mesh = getMesh(true, verticesNum, indices.length, positionAttr, colorAttr);
 		mesh.setIndices(indices);
 	}
 
 	// --------------------------------------------------
 	// ~ Protected methods
 	// --------------------------------------------------
+	
+	/**
+	 * Create mesh. The test files can override this method.
+	 * 
+	 * @param isStatic - Is static.
+	 * @param verticesNum - The number of vertices.
+	 * @param maxIndices - The max indices.
+	 * @param vattribs - The attributes.
+	 */
+	protected Mesh getMesh(final boolean isStatic, final int verticesNum, final int maxIndices, final VertexAttribute... vAttribs){
+		return new Mesh(isStatic, verticesNum, maxIndices, vAttribs);
+	}
 	
 	/**
 	 * Set the vertices.

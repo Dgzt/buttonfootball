@@ -12,6 +12,7 @@
 		<gdx.version>1.5.2</gdx.version>
 		<gwt.version>2.6.1</gwt.version>
 		<junit.version>4.11</junit.version>
+		<mockito.version>1.10.19</mockito.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -110,6 +111,12 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito.version}</version>
 			</dependency>
 
 		</dependencies>
