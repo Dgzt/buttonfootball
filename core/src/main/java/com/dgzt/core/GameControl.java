@@ -25,10 +25,21 @@ import com.dgzt.core.scoreboard.GoalBoard;
 public final class GameControl {
 	
 	// --------------------------------------------------
+	// ~ Private enums
+	// --------------------------------------------------
+	
+	/** The game statuses. */
+	private enum GameStatus{ PLAYER_IN_GAME, WAITING_AFTER_PLAYER };
+	
+	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
+	/** The main window. */
 	private final MainWindow mainWindow;
+	
+	/** The actual status of the game. */
+	private GameStatus gameStatus;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -41,6 +52,8 @@ public final class GameControl {
 	 */
 	public GameControl(final MainWindow mainWindow){
 		this.mainWindow = mainWindow;
+		
+		this.gameStatus = GameStatus.PLAYER_IN_GAME;
 	}
 	
 	// --------------------------------------------------
@@ -67,7 +80,31 @@ public final class GameControl {
 	 * The all button is stopped event.
 	 */
 	public void allButtonIsStopped(){
-		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStooped()", "");
+		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
 	}
-
+	
+	/** 
+	 * The player stepped 
+	 */
+	public void playerStepped(){
+		gameStatus = GameStatus.WAITING_AFTER_PLAYER;
+	}
+	
+	/** 
+	 * Return true when the player step now.
+	 */
+	public boolean isPlayerStep(){
+		return gameStatus == GameStatus.PLAYER_IN_GAME;
+	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/** 
+	 * Return with the actual status of game.
+	 */
+	public GameStatus getGameStatus() {
+		return gameStatus;
+	}
 }

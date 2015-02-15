@@ -75,9 +75,6 @@ final public class Table extends RectangleShape{
 	/** The ball. */
 	private final Ball ball;
 	
-	/** The arrow. */
-	private final Arrow arrow;
-	
 	/** The box2d world. */
 	private final World box2DWorld;
 	
@@ -113,8 +110,6 @@ final public class Table extends RectangleShape{
 		addButtons(shader, eventListener);
 		
 		ball = new Ball(this, shader, eventListener, box2DWorld, Table.WIDTH / 2, Table.HEIGHT / 2);
-		
-		arrow = new Arrow(this, shader);
 	}
 	
 	// --------------------------------------------------
@@ -151,42 +146,6 @@ final public class Table extends RectangleShape{
 		ball.resize();
 	}
 	
-	/**
-	 * Setup the arrow if contains the given position a player button.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 */
-	public void mouseButtonPressed(final float x, final float y){
-		for(final Button playerButton : playerButtons){
-			if(playerButton.contains(x, y)){
-				arrow.show(playerButton);
-			}
-		}
-	}
-	
-	/**
-	 * Set the new ends point of the arrow.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 */
-	public void mouseButtonMoved(final float x, final float y){
-		arrow.setEndPoint(x, y);
-	}
-	
-	/**
-	 * Move the selected button and hide the arrow if the arrow is visible.
-	 */
-	public void mouseButtonReleased(){
-		if(arrow.isVisible()){
-			arrow.hide();
-			
-			final Button movingButton = arrow.getLastSelectedButton();
-			movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
-		}
-	}
-	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -215,8 +174,6 @@ final public class Table extends RectangleShape{
 		
 		leftGate.draw();
 		rightGate.draw();
-		
-		arrow.draw();
 	}
 	
 	// --------------------------------------------------
@@ -298,6 +255,13 @@ final public class Table extends RectangleShape{
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
+
+	/**
+	 * Return with the player's buttons.
+	 */
+	public List<Button> getPlayerButtons() {
+		return playerButtons;
+	}
 	
 	/**
 	 * Return with the left gate.
@@ -319,5 +283,5 @@ final public class Table extends RectangleShape{
 	public final double getScale(){
 		return scale;
 	}
-	
+
 }

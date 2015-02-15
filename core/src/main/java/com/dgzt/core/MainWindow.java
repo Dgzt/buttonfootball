@@ -17,6 +17,7 @@ package com.dgzt.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.ScoreBoard;
 
 /**
@@ -40,7 +41,10 @@ final public class MainWindow{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The scoreboard. */
+	/** The game control. */
+	private final GameControl gameControl;
+	
+	/** The score board. */
 	private final ScoreBoard scoreBoard;
 	
 	/** The table. */
@@ -48,6 +52,9 @@ final public class MainWindow{
 	
 	/** The frame per second rectangle. */
 	private final FPS fps;
+	
+	/** The arrow. */
+	private final Arrow arrow;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -60,13 +67,15 @@ final public class MainWindow{
 	 * @param spriteBatch - The sprite batch.
 	 */
 	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch){
-		final GameControl gameControl = new GameControl(this);
+		gameControl = new GameControl(this);
 		
 		scoreBoard = new ScoreBoard(shader);
 		table = new Table(shader, gameControl);
 		fps = new FPS(shader, spriteBatch);
 		
-		Gdx.input.setInputProcessor(new InputListener(table, fps));
+		arrow = new Arrow(table, shader);
+		
+		Gdx.input.setInputProcessor(new InputListener(this, gameControl));
 	}
 	
 	// --------------------------------------------------
@@ -108,6 +117,45 @@ final public class MainWindow{
 		scoreBoard.draw();
 		table.draw();
 		fps.draw();
+		
+		arrow.draw();
+	}
+	
+	/**
+	 * Setup the arrow if contains the given position a player button.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 */
+	public void mouseButtonPressed(final float x, final float y){
+		for(final Button playerButton : table.getPlayerButtons()){
+			if(playerButton.contains(x, y)){
+				arrow.show(playerButton);
+			}
+		}
+	}
+	
+	/**
+	 * Set the new ends point of the arrow.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param y - The y coordinate value.
+	 */
+	public void mouseButtonMoved(final float x, final float y){
+		arrow.setEndPoint(x, y);
+	}
+	
+	/**
+	 * Move the selected button and hide the arrow if the arrow is visible.
+	 */
+	public void mouseButtonReleased(){
+		if(arrow.isVisible()){
+			arrow.hide();
+			
+			final Button movingButton = arrow.getLastSelectedButton();
+			movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
+			gameControl.playerStepped();
+		}
 	}
 	
 	// --------------------------------------------------
@@ -115,9 +163,15 @@ final public class MainWindow{
 	// --------------------------------------------------
 	
 	/**
-	 * Get the scoreboard.
+	 * Return with the score board.
 	 */
 	public ScoreBoard getScoreBoard() {
 		return scoreBoard;
 	}
+
+	/** Return with the FPS. */
+	public FPS getFPS() {
+		return fps;
+	}
+
 }

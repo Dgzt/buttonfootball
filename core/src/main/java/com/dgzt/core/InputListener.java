@@ -32,10 +32,10 @@ final public class InputListener extends InputAdapter{
 	// --------------------------------------------------
 
 	/** The table. */
-	private final Table table;
+	private final MainWindow mainWindow;
 	
-	/** The FPS rectangle. */
-	private final FPS fps;
+	/** The game control. */
+	private final GameControl gameControl;
 	
 	/** The last pressed mouse button. */
 	private int button;
@@ -47,12 +47,12 @@ final public class InputListener extends InputAdapter{
 	/**
 	 * The constructor.
 	 * 
-	 * @param table - The table.
-	 * @param fps - The FPS rectangle.
+	 * @param mainWindow - The main window.
+	 * @param gameControl - The game control.
 	 */
-	public InputListener(final Table table, final FPS fps){
-		this.table = table;
-		this.fps = fps;
+	public InputListener(final MainWindow mainWindow, final GameControl gameControl){
+		this.mainWindow = mainWindow;
+		this.gameControl = gameControl;
 	}
 	
 	// --------------------------------------------------
@@ -66,8 +66,8 @@ final public class InputListener extends InputAdapter{
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		this.button = button;
 		
-		if(button == Buttons.LEFT){
-			table.mouseButtonPressed(screenX, screenY);
+		if(button == Buttons.LEFT && gameControl.isPlayerStep()){
+			mainWindow.mouseButtonPressed(screenX, screenY);
 		}
 		
 		return super.touchDown(screenX, screenY, pointer, button);
@@ -78,8 +78,8 @@ final public class InputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if(button == Buttons.LEFT){
-			table.mouseButtonMoved(screenX, screenY);
+		if(button == Buttons.LEFT && gameControl.isPlayerStep()){
+			mainWindow.mouseButtonMoved(screenX, screenY);
 		}
 		return super.touchDragged(screenX, screenY, pointer);
 	}
@@ -89,8 +89,8 @@ final public class InputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(button == Buttons.LEFT){
-			table.mouseButtonReleased();
+		if(button == Buttons.LEFT && gameControl.isPlayerStep()){
+			mainWindow.mouseButtonReleased();
 		}
 		
 		return super.touchUp(screenX, screenY, pointer, button);
@@ -103,6 +103,7 @@ final public class InputListener extends InputAdapter{
 	public boolean keyDown(int keycode) {
 		if(Keys.F == keycode){
 			Gdx.app.log(InputListener.class.getName()+".keyDown", "'f' pressed.");
+			final FPS fps = mainWindow.getFPS();
 			fps.setVisible(!fps.isVisible());
 		}else if(Keys.ESCAPE == keycode && Gdx.app.getType().equals(ApplicationType.Desktop)){
 			Gdx.app.exit();
