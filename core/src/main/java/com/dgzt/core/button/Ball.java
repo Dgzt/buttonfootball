@@ -17,6 +17,7 @@ package com.dgzt.core.button;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.EventListener;
 import com.dgzt.core.Table;
 import com.dgzt.core.util.BitsUtil;
 
@@ -50,17 +51,19 @@ public class Ball extends AbstractButton{
 	 * 
 	 * @param parent - The parent.
 	 * @param shader - The shader.
+	 * @param eventListener - The event listener.
 	 * @param box2dWorld - The box2D world.
 	 * @param box2dx - The x coordinate value in the Box2D.
 	 * @param box2dy - The y coordinate value in the box2D.
 	 */
 	public Ball(final Table parent, 
-				final ShaderProgram shader, 
+				final ShaderProgram shader,
+				final EventListener eventListener,
 				final World box2dWorld,
 				final float box2dx, 
 				final float box2dy) 
 	{
-		super(parent, shader, box2dWorld, COLOR, box2dx, box2dy, RADIUS);
+		super(parent, shader, eventListener, box2dWorld, COLOR, box2dx, box2dy, RADIUS);
 	}
 	
 	// --------------------------------------------------

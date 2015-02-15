@@ -23,17 +23,21 @@ import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.gate.RightGate;
 
 /**
- * The Box2D contact listener.
+ * The event listener.
  * 
  * @author Dgzt
  */
-public final class MyContactListener implements ContactListener{
+public final class EventListener implements ContactListener{
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
+	/** The game control. */
 	private final GameControl gameControl;
+	
+	/** The number of the mooving buttons. */
+	private short moovingButtonNum;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -44,10 +48,32 @@ public final class MyContactListener implements ContactListener{
 	 * 
 	 * @param gameControl - The game control.
 	 */
-	public MyContactListener(final GameControl gameControl){
+	public EventListener(final GameControl gameControl){
 		this.gameControl = gameControl;
+		this.moovingButtonNum = 0;
 	}
+	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
 
+	/**
+	 * The button is start mooving.
+	 */
+	public void buttonStartMooving(){
+		++moovingButtonNum;
+	}
+	
+	/**
+	 * The button is stopped.
+	 */
+	public void buttonEndMooving(){
+		--moovingButtonNum;
+		if(moovingButtonNum == 0){
+			gameControl.allButtonIsStopped();
+		}
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -57,17 +83,17 @@ public final class MyContactListener implements ContactListener{
 	 */
 	@Override
 	public void beginContact(Contact contact) {
-		Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "");
+		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
 		
 		final Object userDataA = contact.getFixtureA().getUserData();
 			
 		if(userDataA instanceof LeftGate){
-			Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Opponent goal!!");
+			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Opponent goal!!");
 			gameControl.opponentGoal();
 		}
 			
 		if(userDataA instanceof RightGate){
-			Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Player goal!!");
+			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Player goal!!");
 			gameControl.playerGoal();
 		}
 	}
@@ -77,12 +103,12 @@ public final class MyContactListener implements ContactListener{
 	 */
 	@Override
 	public void endContact(Contact contact) {
-		Gdx.app.log(MyContactListener.class.getName() + ".endContact", "");
+		Gdx.app.log(EventListener.class.getName() + ".endContact", "");
 		
 		final Object userDataA = contact.getFixtureA().getUserData();
 		
 		if(userDataA instanceof Map){
-			Gdx.app.log(MyContactListener.class.getName() + ".endContact", "Ball out the map.");
+			Gdx.app.log(EventListener.class.getName() + ".endContact", "Ball out the map.");
 		}
 	}
 

@@ -14,6 +14,7 @@
  */
 package com.dgzt.core;
 
+import com.badlogic.gdx.Gdx;
 import com.dgzt.core.scoreboard.GoalBoard;
 
 /**
@@ -60,6 +61,13 @@ public final class GameControl {
 	public void playerGoal(){
 		final GoalBoard opponentGoalBoard = mainWindow.getScoreBoard().getOpponentGoalBoard();
 		opponentGoalBoard.setNumber(opponentGoalBoard.getNumber() + 1);
+	}
+	
+	/**
+	 * The all button is stopped event.
+	 */
+	public void allButtonIsStopped(){
+		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStooped()", "");
 	}
 
 }

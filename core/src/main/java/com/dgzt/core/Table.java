@@ -98,7 +98,8 @@ final public class Table extends RectangleShape{
 		super(shader, Color.GRAY);
 		
 		box2DWorld = new World(new Vector2(0,0), true);
-		box2DWorld.setContactListener(new MyContactListener(gameControl));
+		final EventListener eventListener = new EventListener(gameControl);
+		box2DWorld.setContactListener(eventListener);
 		addBox2DWalls();
 		
 		map = new Map(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
@@ -109,9 +110,9 @@ final public class Table extends RectangleShape{
 		playerButtons = new ArrayList<Button>();
 		opponentButtons = new ArrayList<Button>();
 		
-		addButtons(shader);
+		addButtons(shader, eventListener);
 		
-		ball = new Ball(this, shader, box2DWorld, Table.WIDTH / 2, Table.HEIGHT / 2);
+		ball = new Ball(this, shader, eventListener, box2DWorld, Table.WIDTH / 2, Table.HEIGHT / 2);
 		
 		arrow = new Arrow(this, shader);
 	}
@@ -226,8 +227,9 @@ final public class Table extends RectangleShape{
 	 * Add buttons to the table.
 	 * 
 	 * @param shader - The shader.
+	 * @param eventListener - The event listener.
 	 */
-	private void addButtons(final ShaderProgram shader){
+	private void addButtons(final ShaderProgram shader, final EventListener eventListener){
 		final float playerGoalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.RADIUS;
 		final float opponentGoalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.RADIUS;
 		final float goalKeeperY = Table.HEIGHT / 2;
@@ -239,41 +241,41 @@ final public class Table extends RectangleShape{
 		// ------------------
 		
 		// Add player goalkeeper
-		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY));
+		playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY));
 		
 		// Add player defenders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY));
+			playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add player midfielders
 		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY));
+			playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add player forwards
-		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
-		playerButtons.add(new Button(this, shader, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
+		playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
+		playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
 		
 		// Add opponent buttons
 		// --------------------
 		
 		// Add opponent goalkeeper
-		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY));
+		opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY));
 		
 		// Add opponent defenders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY));
+			opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add opponent midfielders
 		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY));
+			opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY));
 		}
 		
 		// Add opponent forwards
-		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
-		opponentButtons.add(new Button(this, shader, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
+		opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
+		opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
 	}
 	
 	/**

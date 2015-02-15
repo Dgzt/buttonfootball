@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.button;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.EventListener;
 import com.dgzt.core.Table;
 import com.dgzt.core.shape.FilledCircleShape;
 
@@ -56,6 +58,9 @@ public abstract class AbstractButton extends FilledCircleShape{
 	/** The parent object. */
 	private final Table parent;
 	
+	/** The event listener. */
+	private final EventListener eventListener;
+	
 	/** The x coordinate value in Box2D. */
 	private float box2DX;
 	
@@ -68,6 +73,9 @@ public abstract class AbstractButton extends FilledCircleShape{
 	/** The box2D body. */
 	private final Body box2DBody;
 	
+	/** Is the button mooving? */
+	private boolean mooving;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -77,18 +85,30 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * 
 	 * @param parent - The parent object.
 	 * @param shader - The shader.
+	 * @param eventListener - The event listener.
 	 * @param box2DWorld - The box2D world.
 	 * @param color - The color of button.
 	 * @param box2DX - The x coordinate value of button in Box2D.
 	 * @param box2DY - The y coordinate value of button in Box2D.
 	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
-	public AbstractButton(final Table parent, final ShaderProgram shader, final World box2DWorld, final Color color, final float box2DX, final float box2DY, final float box2DRadius) {
+	public AbstractButton(
+			final Table parent, 
+			final ShaderProgram shader,
+			final EventListener eventListener, 
+			final World box2DWorld, 
+			final Color color, 
+			final float box2DX, 
+			final float box2DY, 
+			final float box2DRadius
+	) {
 		super(shader, color);
 		this.parent = parent;
+		this.eventListener = eventListener;
 		this.box2DX = box2DX;
 		this.box2DY = box2DY;
 		this.box2DRadius = box2DRadius;
+		this.mooving = false;
 		
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
@@ -157,6 +177,16 @@ public abstract class AbstractButton extends FilledCircleShape{
 			box2DY = box2DBody.getPosition().y;
 
 			resize();
+			
+			if(mooving == false){
+				mooving = true;
+				Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Start mooving.");
+				eventListener.buttonStartMooving();
+			}
+		}else if(mooving == true){
+			mooving = false;
+			Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Stop mooving.");
+			eventListener.buttonEndMooving();
 		}
 		
 		super.draw();
