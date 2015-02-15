@@ -27,7 +27,7 @@ import com.badlogic.gdx.Gdx;
  * @author Dgzt
  */
 @RunWith(GdxTestRunner.class)
-public class AssetFilesTest {
+public final class AssetFilesTest {
 	
 	// --------------------------------------------------
 	// ~ Private static members

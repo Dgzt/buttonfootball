@@ -32,7 +32,7 @@ import com.dgzt.core.BaseShapeTester;
  * 
  * @author Dgzt
  */
-public class ShapeTest extends BaseShapeTester{
+public final class ShapeTest extends BaseShapeTester{
 	
 	// --------------------------------------------------
 	// ~ Static members

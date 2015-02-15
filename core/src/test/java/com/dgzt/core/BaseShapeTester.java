@@ -62,7 +62,7 @@ public class BaseShapeTester {
 	 * 
 	 * @author Dgzt
 	 */
-	private class VerticesAnswer implements Answer<Object>{
+	private final class VerticesAnswer implements Answer<Object>{
 		
 		// --------------------------------------------------
 		// ~ Private members
