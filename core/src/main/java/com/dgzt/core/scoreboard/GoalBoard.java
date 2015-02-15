@@ -92,5 +92,26 @@ final public class GoalBoard extends RectangleBorderShape{
 		firstDigit.draw();
 		secondDigit.draw();
 	}
-
+	
+	// --------------------------------------------------
+	// ~ Getter / Setter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Set the number of digits.
+	 * 
+	 * @param number - The number.
+	 */
+	public void setNumber(final int number){
+		firstDigit.setNumber(number / 10);
+		secondDigit.setNumber(number % 10);
+	}
+	
+	/**
+	 * Get the number of digits.
+	 */
+	public int getNumber(){
+		return firstDigit.getNumber() * 10 + secondDigit.getNumber();
+	}
+	
 }

@@ -28,6 +28,25 @@ import com.dgzt.core.gate.RightGate;
  * @author Dgzt
  */
 public final class MyContactListener implements ContactListener{
+	
+	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
+	
+	private final GameControl gameControl;
+	
+	// --------------------------------------------------
+	// ~ Constructors
+	// --------------------------------------------------
+	
+	/**
+	 * The constructor.
+	 * 
+	 * @param gameControl - The game control.
+	 */
+	public MyContactListener(final GameControl gameControl){
+		this.gameControl = gameControl;
+	}
 
 	// --------------------------------------------------
 	// ~ Override methods
@@ -44,10 +63,12 @@ public final class MyContactListener implements ContactListener{
 			
 		if(userDataA instanceof LeftGate){
 			Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Opponent goal!!");
+			gameControl.opponentGoal();
 		}
 			
 		if(userDataA instanceof RightGate){
 			Gdx.app.log(MyContactListener.class.getName() + ".beginContact", "Player goal!!");
+			gameControl.playerGoal();
 		}
 	}
 

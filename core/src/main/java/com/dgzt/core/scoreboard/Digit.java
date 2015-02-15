@@ -149,23 +149,6 @@ final public class Digit{
 		resizeBottomRightLine(topRightLine.getX1(), bottomLeftLine.getY1(), bottomLeftLine.getY2(), scale);
 	}
 	
-	/**
-	 * Set the number of digit. 
-	 * If the given number is lesser then 0, then the number will be equal with 0.
-	 * if the given number is bigger then 9, then the number will be equal with 9.
-	 * 
-	 * @param number - The number.
-	 */
-	public void setNumber(int number){
-		if(number < 0){
-			number = 0;
-		}else if(9 < number){
-			number = 9;
-		}
-		
-		this.number = number;
-	}
-	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
@@ -313,7 +296,7 @@ final public class Digit{
 	}
 	
 	// --------------------------------------------------
-	// ~ Getter methods
+	// ~ Getter / Setter methods
 	// --------------------------------------------------
 	
 	/**
@@ -328,6 +311,30 @@ final public class Digit{
 	 */
 	public final float getY(){
 		return y;
+	}
+	
+	/**
+	 * Set the number of digit. 
+	 * If the given number is lesser then 0, then the number will be equal with 0.
+	 * if the given number is bigger then 9, then the number will be equal with 9.
+	 * 
+	 * @param number - The number.
+	 */
+	public void setNumber(int number){
+		if(number < 0){
+			number = 0;
+		}else if(9 < number){
+			number = 9;
+		}
+		
+		this.number = number;
+	}
+	
+	/**
+	 * Get the number of digit.
+	 */
+	public int getNumber(){
+		return number;
 	}
 	
 }

@@ -60,8 +60,10 @@ final public class MainWindow{
 	 * @param spriteBatch - The sprite batch.
 	 */
 	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch){
+		final GameControl gameControl = new GameControl(this);
+		
 		scoreBoard = new ScoreBoard(shader);
-		table = new Table(shader);
+		table = new Table(shader, gameControl);
 		fps = new FPS(shader, spriteBatch);
 		
 		Gdx.input.setInputProcessor(new InputListener(table, fps));
@@ -106,5 +108,16 @@ final public class MainWindow{
 		scoreBoard.draw();
 		table.draw();
 		fps.draw();
+	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Get the scoreboard.
+	 */
+	public ScoreBoard getScoreBoard() {
+		return scoreBoard;
 	}
 }

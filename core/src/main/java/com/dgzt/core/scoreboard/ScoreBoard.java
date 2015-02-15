@@ -110,5 +110,22 @@ final public class ScoreBoard{
 		timeBoard.draw();
 		opponentGoalBoard.draw();
 	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
 
+	/**
+	 * Get the player's goal board.
+	 */
+	public GoalBoard getPlayerGoalBoard() {
+		return playerGoalBoard;
+	}
+
+	/**
+	 * Get the opponent's goal board.
+	 */
+	public GoalBoard getOpponentGoalBoard() {
+		return opponentGoalBoard;
+	}
 }

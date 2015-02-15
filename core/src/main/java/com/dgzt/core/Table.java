@@ -92,12 +92,13 @@ final public class Table extends RectangleShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
+	 * @param gameControl - The game control.
 	 */
-	public Table(final ShaderProgram shader){
+	public Table(final ShaderProgram shader, final GameControl gameControl){
 		super(shader, Color.GRAY);
 		
 		box2DWorld = new World(new Vector2(0,0), true);
-		box2DWorld.setContactListener(new MyContactListener());
+		box2DWorld.setContactListener(new MyContactListener(gameControl));
 		addBox2DWalls();
 		
 		map = new Map(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
