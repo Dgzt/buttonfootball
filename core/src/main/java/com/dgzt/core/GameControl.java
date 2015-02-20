@@ -81,6 +81,8 @@ public final class GameControl {
 	 */
 	public void allButtonIsStopped(){
 		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
+
+		mainWindow.showPlayerBallArea();
 	}
 	
 	/** 

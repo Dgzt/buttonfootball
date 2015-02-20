@@ -56,6 +56,12 @@ final public class MainWindow{
 	/** The arrow. */
 	private final Arrow arrow;
 	
+	/** The ball area for player. */
+	private final BallArea playerBallArea;
+	
+	/** The scale. */
+	private double scale;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -75,6 +81,8 @@ final public class MainWindow{
 		
 		arrow = new Arrow(table, shader);
 		
+		playerBallArea = new BallArea(shader, Button.PLAYER_COLOR);
+		
 		Gdx.input.setInputProcessor(new InputListener(this, gameControl));
 	}
 	
@@ -91,6 +99,8 @@ final public class MainWindow{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x, final float y, final float width, final double scale){
+		this.scale = scale;
+		
 		final float scoreBoardWidth = (float)(ScoreBoard.WIDTH * scale);
 		final float scoreBoardHeight = (float)(ScoreBoard.HEIGHT * scale);
 		final float scoreBoardX = x + (width - scoreBoardWidth) / 2;
@@ -108,6 +118,8 @@ final public class MainWindow{
 		scoreBoard.resize(scoreBoardX, scoreBoardY, scoreBoardWidth, scoreBoardHeight, scale);
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
 		fps.resize(fpsX, fpsY);
+		
+		playerBallArea.resize(table.getBall(), scale);
 	}
 	
 	/**
@@ -119,6 +131,10 @@ final public class MainWindow{
 		fps.draw();
 		
 		arrow.draw();
+		
+		if(playerBallArea.isVisible()){
+			playerBallArea.draw();
+		}
 	}
 	
 	/**
@@ -156,6 +172,15 @@ final public class MainWindow{
 			movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
 			gameControl.playerStepped();
 		}
+	}
+	
+	/**
+	 * Show the player's ball area.
+	 */
+	public void showPlayerBallArea(){
+		playerBallArea.resize(table.getBall(), scale);
+		
+		playerBallArea.setVisible(true);
 	}
 	
 	// --------------------------------------------------
