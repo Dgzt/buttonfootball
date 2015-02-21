@@ -15,6 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.button.Button;
@@ -56,8 +57,8 @@ final public class MainWindow{
 	/** The arrow. */
 	private final Arrow arrow;
 	
-	/** The ball area for player. */
-	private final BallArea playerBallArea;
+	/** The ball area. */
+	private final BallArea ballArea;
 	
 	/** The scale. */
 	private double scale;
@@ -81,7 +82,7 @@ final public class MainWindow{
 		
 		arrow = new Arrow(table, shader);
 		
-		playerBallArea = new BallArea(shader, Button.PLAYER_COLOR);
+		ballArea = new BallArea(shader, table.getBall());
 		
 		Gdx.input.setInputProcessor(new InputListener(this, gameControl));
 	}
@@ -119,7 +120,7 @@ final public class MainWindow{
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
 		fps.resize(fpsX, fpsY);
 		
-		playerBallArea.resize(table.getBall(), scale);
+		ballArea.resize(scale);
 	}
 	
 	/**
@@ -132,8 +133,8 @@ final public class MainWindow{
 		
 		arrow.draw();
 		
-		if(playerBallArea.isVisible()){
-			playerBallArea.draw();
+		if(ballArea.isVisible()){
+			ballArea.draw();
 		}
 	}
 	
@@ -175,12 +176,14 @@ final public class MainWindow{
 	}
 	
 	/**
-	 * Show the player's ball area.
+	 * Show the ball area with the given color.
+	 * 
+	 * @param color - The new color.
 	 */
-	public void showPlayerBallArea(){
-		playerBallArea.resize(table.getBall(), scale);
+	public void showBallArea(final Color color){
+		ballArea.resize(color, scale);
 		
-		playerBallArea.setVisible(true);
+		ballArea.setVisible(true);
 	}
 	
 	// --------------------------------------------------

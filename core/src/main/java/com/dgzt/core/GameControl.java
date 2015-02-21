@@ -15,6 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
+import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.GoalBoard;
 
 /**
@@ -82,7 +83,7 @@ public final class GameControl {
 	public void allButtonIsStopped(){
 		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
 
-		mainWindow.showPlayerBallArea();
+		mainWindow.showBallArea(Button.PLAYER_COLOR);
 	}
 	
 	/** 

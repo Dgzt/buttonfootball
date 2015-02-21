@@ -53,11 +53,11 @@ public abstract class Shape {
 	/** The type of the shape. */
 	private final int type;
 	
-	/** The color. */
-	private final Color color;
-	
 	/** The mesh. */
 	private final Mesh mesh;
+	
+	/** The color. */
+	private Color color;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -146,4 +146,23 @@ public abstract class Shape {
 		mesh.render(shader, type);
 	}
 
+	// --------------------------------------------------
+	// ~ Getter / Setter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the color.
+	 */
+	public Color getColor() {
+		return color;
+	}
+
+	/**
+	 * Set the color.
+	 * 
+	 * @param color - The new color.
+	 */
+	public void setColor(Color color) {
+		this.color = color;
+	}
 }

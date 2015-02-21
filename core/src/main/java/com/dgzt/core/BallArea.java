@@ -34,11 +34,17 @@ public class BallArea extends FilledCircleShape{
 	private static final float ALPHA = 0.75f;
 	
 	/** The radius. */
-	private static final float RADIUS = 3.0f;
+	private static final float RADIUS = 4.5f;
+	
+	/** Temporary color for constructor. */
+	private static final Color TEMP_COLOR = Color.BLACK;
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
+	
+	/** The ball. */
+	private final Ball ball;
 	
 	/** The area visiblity. */
 	private boolean visible;
@@ -51,10 +57,12 @@ public class BallArea extends FilledCircleShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param color - The color.
+	 * @param ball - The ball.
 	 */
-	public BallArea(final ShaderProgram shader, final Color color) {
-		super(shader, new Color(color.r, color.g, color.b, ALPHA));
+	public BallArea(final ShaderProgram shader, final Ball ball) {
+		super(shader, TEMP_COLOR);
+		
+		this.ball = ball;
 	}
 	
 	// --------------------------------------------------
@@ -62,12 +70,23 @@ public class BallArea extends FilledCircleShape{
 	// --------------------------------------------------
 	
 	/**
-	 * Resize the area.
+	 * Resize the area with new color.
 	 * 
-	 * @param ball - The ball.
+	 * @param color - The color.
 	 * @param scale - The scale.
 	 */
-	public void resize(final Ball ball, final double scale){
+	public void resize(final Color color, final double scale){
+		setColor(new Color(color.r, color.g, color.b, ALPHA));
+		
+		resize(scale);
+	}
+	
+	/**
+	 * Resize the area.
+	 * 
+	 * @param scale - The scale.
+	 */
+	public void resize(final double scale){
 		final float radius = (float)(RADIUS * scale);
 		
 		super.resize(ball.getX(), ball.getY(), radius);
