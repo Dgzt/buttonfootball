@@ -42,8 +42,13 @@ public final class GameControl {
 	// ~ Private enums
 	// --------------------------------------------------
 	
-	/** The game statuses. */
-	private enum GameStatus{ PLAYER_IN_GAME, WAITING_AFTER_PLAYER, OPPONENT_IN_GAME };
+	/** The status of the game. */
+	private enum GameStatus{ 
+		PLAYER_IN_GAME, 
+		WAITING_AFTER_PLAYER, 
+		OPPONENT_IN_GAME, 
+		WAITING_AFTER_OPPONENT 
+	};
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -51,6 +56,9 @@ public final class GameControl {
 	
 	/** The main window. */
 	private final MainWindow mainWindow;
+	
+	/** The bot. */
+	private final Bot bot;
 	
 	/** The actual status of the game. */
 	private GameStatus gameStatus;
@@ -69,6 +77,7 @@ public final class GameControl {
 	 */
 	public GameControl(final MainWindow mainWindow){
 		this.mainWindow = mainWindow;
+		this.bot = new Bot(this);
 		
 		this.gameStatus = GameStatus.PLAYER_IN_GAME;
 		this.stepNum = 0;
@@ -100,13 +109,23 @@ public final class GameControl {
 	public void allButtonIsStopped(){
 		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
 
-		mainWindow.showBallArea(Button.PLAYER_COLOR);
+		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
+			mainWindow.showBallArea(Button.PLAYER_COLOR);
+		}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+			mainWindow.showBallArea(Button.OPPONENT_COLOR);
+		}
 		
 		Timer.schedule(new Task(){
 
 			@Override
 			public void run() {
-				afterPlayerBallArea();
+				mainWindow.hideBallArea();
+				
+				if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
+					afterPlayerBallArea();
+				}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+					afterOpponentBallArea();
+				}
 			}
 			
 		}, WAITING_AREA_SEC);
@@ -117,6 +136,11 @@ public final class GameControl {
 	 */
 	public void playerStepped(){
 		gameStatus = GameStatus.WAITING_AFTER_PLAYER;
+		++stepNum;
+	}
+	
+	public void opponentStepepd(){
+		gameStatus = GameStatus.WAITING_AFTER_OPPONENT;
 		++stepNum;
 	}
 	
@@ -144,6 +168,26 @@ public final class GameControl {
 		}else{
 			stepNum = 0;
 			gameStatus = GameStatus.OPPONENT_IN_GAME;
+			bot.step();
+			opponentStepepd();
+		}
+	}
+	
+	/**
+	 * After when end of the opponent's ball area.
+	 */
+	private void afterOpponentBallArea(){
+		Gdx.app.log(GameControl.class.getName() + ".afterOpponentBallArea()", "");
+		
+		final List<Button> opponentButtons = mainWindow.getTable().getOpponentButtons();
+		
+		if(isActualPlayerStepAgain(opponentButtons)){
+			gameStatus = GameStatus.OPPONENT_IN_GAME;
+			bot.step();
+			opponentStepepd();
+		}else{
+			stepNum = 0;
+			gameStatus = GameStatus.PLAYER_IN_GAME;
 		}
 	}
 	
@@ -173,4 +217,16 @@ public final class GameControl {
 			return false;
 		}
 	}
+
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the main window.
+	 */
+	public MainWindow getMainWindow() {
+		return mainWindow;
+	}
+	
 }

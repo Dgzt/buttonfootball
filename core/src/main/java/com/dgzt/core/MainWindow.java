@@ -186,6 +186,13 @@ final public class MainWindow{
 		ballArea.setVisible(true);
 	}
 	
+	/**
+	 * Hide the ball area.
+	 */
+	public void hideBallArea(){
+		ballArea.setVisible(false);
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
