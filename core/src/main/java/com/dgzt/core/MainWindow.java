@@ -197,9 +197,18 @@ final public class MainWindow{
 		return scoreBoard;
 	}
 
-	/** Return with the FPS. */
+	/** 
+	 * Return with the FPS. 
+	 */
 	public FPS getFPS() {
 		return fps;
+	}
+	
+	/**
+	 * Return with the table.
+	 */
+	public Table getTable() {
+		return table;
 	}
 
 }

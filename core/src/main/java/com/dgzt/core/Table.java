@@ -257,13 +257,6 @@ final public class Table extends RectangleShape{
 	// --------------------------------------------------
 
 	/**
-	 * Return with the player's buttons.
-	 */
-	public List<Button> getPlayerButtons() {
-		return playerButtons;
-	}
-	
-	/**
 	 * Return with the left gate.
 	 */
 	public LeftGate getLeftGate() {
@@ -275,6 +268,20 @@ final public class Table extends RectangleShape{
 	 */
 	public RightGate getRightGate() {
 		return rightGate;
+	}
+	
+	/**
+	 * Return with the player's buttons.
+	 */
+	public List<Button> getPlayerButtons() {
+		return playerButtons;
+	}
+	
+	/**
+	 * Return with the opponent's buttons.
+	 */
+	public List<Button> getOpponentButtons() {
+		return opponentButtons;
 	}
 	
 	/**

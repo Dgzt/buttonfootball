@@ -26,15 +26,15 @@ import com.dgzt.core.shape.FilledCircleShape;
  */
 public class BallArea extends FilledCircleShape{
 	
+	/** The radius. */
+	public static final float RADIUS = 4.5f;
+	
 	// --------------------------------------------------
 	// ~ Private static members
 	// --------------------------------------------------
 	
 	/** The alpha value. */
 	private static final float ALPHA = 0.75f;
-	
-	/** The radius. */
-	private static final float RADIUS = 4.5f;
 	
 	/** Temporary color for constructor. */
 	private static final Color TEMP_COLOR = Color.BLACK;
