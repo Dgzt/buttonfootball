@@ -240,4 +240,21 @@ public abstract class AbstractGate extends RectangleBorderShape{
 		Box2DUtil.addWall(box2DWorld, box2DX + AbstractGate.WIDTH - LineShape.LINE_WIDTH, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
 	}
 	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value in Box2D.
+	 */
+	public float getBox2DX() {
+		return box2DX;
+	}
+
+	/**
+	 * Return with the y coordinate value in Box2D.
+	 */
+	public float getBox2DY() {
+		return box2DY;
+	}
 }

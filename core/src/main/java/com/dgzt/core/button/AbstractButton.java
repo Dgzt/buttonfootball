@@ -232,4 +232,22 @@ public abstract class AbstractButton extends FilledCircleShape{
 		return body;
 	}
 
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value in Box2D.
+	 */
+	public float getBox2DX() {
+		return box2DX;
+	}
+
+	/**
+	 * Return with the y coordiante value in Box2D.
+	 */
+	public float getBox2DY() {
+		return box2DY;
+	}
+	
 }

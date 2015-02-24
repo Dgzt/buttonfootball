@@ -98,7 +98,7 @@ final public class Table extends RectangleShape{
 		super(shader, Color.GRAY);
 		
 		box2DWorld = new World(new Vector2(0,0), true);
-		final EventListener eventListener = new EventListener(gameControl);
+		final EventListener eventListener = new EventListener(this, gameControl);
 		box2DWorld.setContactListener(eventListener);
 		addBox2DWalls();
 		
@@ -300,9 +300,24 @@ final public class Table extends RectangleShape{
 	// --------------------------------------------------
 	
 	/**
+	 * Return with the left gate.
+	 */
+	public LeftGate getLeftGate() {
+		return leftGate;
+	}
+
+	/**
+	 * Return with the right gate.
+	 */
+	public RightGate getRightGate() {
+		return rightGate;
+	}
+	
+	/**
 	 * Return with the actual scale value.
 	 */
 	public final double getScale(){
 		return scale;
 	}
+	
 }

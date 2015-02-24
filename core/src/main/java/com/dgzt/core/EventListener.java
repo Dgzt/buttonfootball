@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.dgzt.core.button.Ball;
+import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.gate.RightGate;
 
@@ -33,6 +35,9 @@ public final class EventListener implements ContactListener{
 	// ~ Private members
 	// --------------------------------------------------
 	
+	/** The table. */
+	private final Table table;
+	
 	/** The game control. */
 	private final GameControl gameControl;
 	
@@ -46,9 +51,11 @@ public final class EventListener implements ContactListener{
 	/**
 	 * The constructor.
 	 * 
+	 * @param table - The table.
 	 * @param gameControl - The game control.
 	 */
-	public EventListener(final GameControl gameControl){
+	public EventListener(final Table table, final GameControl gameControl){
+		this.table = table;
 		this.gameControl = gameControl;
 		this.moovingButtonNum = 0;
 	}
@@ -108,7 +115,17 @@ public final class EventListener implements ContactListener{
 		final Object userDataA = contact.getFixtureA().getUserData();
 		
 		if(userDataA instanceof Map){
-			Gdx.app.log(EventListener.class.getName() + ".endContact", "Ball out the map.");
+			final Ball ball = (Ball) contact.getFixtureB().getUserData();
+			final LeftGate leftGate = table.getLeftGate();
+			final RightGate rightGate = table.getRightGate();
+			
+			if(
+				(ball.getBox2DY() < leftGate.getBox2DY() || ball.getBox2DY() > leftGate.getBox2DY() + AbstractGate.HEIGHT) // Left gate
+				|| 
+				(ball.getBox2DY() < rightGate.getBox2DY() || ball.getBox2DY() > rightGate.getBox2DY() + AbstractGate.HEIGHT) // Right gate
+			){
+				Gdx.app.log(EventListener.class.getName() + ".endContact", "Ball out the map.");
+			}
 		}
 	}
 
