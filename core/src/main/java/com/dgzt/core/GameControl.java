@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.GoalBoard;
+import com.dgzt.core.type.StepType;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -63,6 +64,9 @@ public final class GameControl {
 	/** The actual status of the game. */
 	private GameStatus gameStatus;
 	
+	/** The type of the step process. */
+	private final StepType stepType;
+	
 	/** Number of steps when the player stepped in a line. */
 	private short stepNum;
 	
@@ -74,13 +78,31 @@ public final class GameControl {
 	 * The constructor.
 	 * 
 	 * @param mainWindow - The main window.
+	 * @param stepType - The type of step process.
 	 */
-	public GameControl(final MainWindow mainWindow){
+	public GameControl(final MainWindow mainWindow, final StepType stepType){
+		Gdx.app.log(GameControl.class.getName() + ".init", "stepType: " + stepType);
+		
 		this.mainWindow = mainWindow;
+		this.stepType = stepType;
 		this.bot = new Bot(this);
 		
-		this.gameStatus = GameStatus.PLAYER_IN_GAME;
 		this.stepNum = 0;
+		
+		if(stepType.equals(StepType.NORMAL) || stepType.equals(StepType.ALWAYS_PLAYER)){
+			this.gameStatus = GameStatus.PLAYER_IN_GAME;
+		}else{
+			this.gameStatus = GameStatus.OPPONENT_IN_GAME;
+			Timer.schedule(new Task(){
+
+				@Override
+				public void run() {
+					bot.step();
+					opponentStepepd();
+				}
+				
+			}, 1);
+		}
 	}
 	
 	// --------------------------------------------------
@@ -163,7 +185,7 @@ public final class GameControl {
 		
 		final List<Button> playerButtons = mainWindow.getTable().getPlayerButtons();
 		
-		if(isActualPlayerStepAgain(playerButtons)){
+		if(stepType.equals(StepType.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
 			gameStatus = GameStatus.PLAYER_IN_GAME;
 		}else{
 			stepNum = 0;
@@ -181,7 +203,7 @@ public final class GameControl {
 		
 		final List<Button> opponentButtons = mainWindow.getTable().getOpponentButtons();
 		
-		if(isActualPlayerStepAgain(opponentButtons)){
+		if(stepType.equals(StepType.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
 			gameStatus = GameStatus.OPPONENT_IN_GAME;
 			bot.step();
 			opponentStepepd();

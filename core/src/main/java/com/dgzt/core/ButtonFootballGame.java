@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.type.StepType;
 
 /**
  * The game listener.
@@ -54,8 +55,24 @@ final public class ButtonFootballGame implements ApplicationListener {
 	/** The camera. */
 	private OrthographicCamera camera;
 	
+	/** The type of step process. */
+	private final StepType stepType;
+	
 	/** The main window. */
 	private MainWindow mainWindow;
+	
+	// --------------------------------------------------
+	// ~ Constructors
+	// --------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param stepType - The type of the process type.
+	 */
+	public ButtonFootballGame(final StepType stepType) {
+		this.stepType = stepType;
+	}
 	
 	// --------------------------------------------------
 	// ~ Override methods
@@ -81,7 +98,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
 		}
 		
-		mainWindow = new MainWindow(shader, spriteBatch);
+		mainWindow = new MainWindow(shader, spriteBatch, stepType);
 	}
 
 	/**

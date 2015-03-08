@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.ScoreBoard;
+import com.dgzt.core.type.StepType;
 
 /**
  * The main window.
@@ -72,9 +73,10 @@ final public class MainWindow{
 	 * 
 	 * @param shader - The shader.
 	 * @param spriteBatch - The sprite batch.
+	 * @param stepType - The type of step process.
 	 */
-	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch){
-		gameControl = new GameControl(this);
+	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final StepType stepType){
+		gameControl = new GameControl(this, stepType);
 		
 		scoreBoard = new ScoreBoard(shader);
 		table = new Table(shader, gameControl);

@@ -18,6 +18,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.dgzt.core.ButtonFootballGame;
+import com.dgzt.core.type.StepType;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
@@ -88,7 +89,7 @@ public class ButtonFootballGameHtml extends GwtApplication {
 			}
 		});
 		
-		return new ButtonFootballGame();
+		return new ButtonFootballGame(StepType.NORMAL);
 	}
 	
 	// --------------------------------------------------

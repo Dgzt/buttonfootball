@@ -14,15 +14,18 @@
 
 	<properties>
 		<mainClass>com.dgzt.java.ButtonFootballGameDesktop</mainClass>
+		<jcommander.version>1.47</jcommander.version>
 	</properties>
 
 	<dependencies>
+		<!-- ButtonFootball -->
 		<dependency>
 			<groupId>com.dgzt</groupId>
 			<artifactId>buttonfootball-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- LibGDX -->
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
@@ -44,6 +47,14 @@
 			<artifactId>gdx-box2d-platform</artifactId>
 			<classifier>natives-desktop</classifier>
 		</dependency>
+		
+		<!-- Arguments parser -->
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>${jcommander.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
