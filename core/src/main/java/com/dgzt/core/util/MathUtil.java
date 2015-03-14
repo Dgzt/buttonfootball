@@ -50,4 +50,41 @@ public class MathUtil {
 		return Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
 	}
 	
+	/**
+	 * Point distance to line segment.
+	 * 
+	 * @param pointX - The x coordinate value of point.
+	 * @param pointY - The y coordinate value of point.
+	 * @param lineP1X - The x coordinate value of first point of line segment.
+	 * @param lineP1Y - The y coordinate value of first point of line segment.
+	 * @param lineP2X - The x coordinate value of second point of line segment.
+	 * @param lineP2Y - The y coordinate value of second point of line segment.
+	 * @return
+	 */
+	public static double distance(
+			final float pointX, 
+			final float pointY, 
+			final float lineP1X, 
+			final float lineP1Y, 
+			final float lineP2X,
+			final float lineP2Y
+	){
+		final double lineLength = Math.pow(distance(lineP1X, lineP1Y, lineP2X, lineP2Y), 2);
+		
+		if(lineLength == 0){
+			return distance(pointX, pointY, lineP1X, lineP1Y);
+		}
+		
+		final double t = ((pointX - lineP1X) * (lineP2X - lineP1X) + (pointY - lineP1Y) * (lineP2Y - lineP1Y)) / lineLength;
+
+		if(t < 0){
+			return distance(pointX, pointY, lineP1X, lineP1Y);
+		}
+		if(t > 1){
+			return distance(pointX, pointY, lineP2X, lineP2Y);
+		}
+		
+		return distance(pointX, pointY, (float) (lineP1X + t * (lineP2X - lineP1X)), (float) (lineP1Y + t * (lineP2Y - lineP1Y)) );
+	}
+	
 }

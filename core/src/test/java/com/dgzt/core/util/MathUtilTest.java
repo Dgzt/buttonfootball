@@ -65,5 +65,33 @@ public class MathUtilTest {
 		
 		assertEquals(distance, MathUtil.distance(x1, y1, x2, y2), DELTA);
 	}
+	
+	/**
+	 * test for {@link MathUtil#distance(float, float, float, float, float, float)} method.
+	 */
+	@Test
+	public void test_distancePointToLineSegment(){
+		final float linePoint1X = 200.0f;
+		final float linePoint1Y = 50.0f;
+		
+		final float linePoint2X = 200.0f;
+		final float linePoint2Y = 350.0f;
+		
+		final float point1X = 50.0f;
+		final float point1Y = 50.0f;
+		final float point1Distance = 150.0f;
+		
+		final float point2X = 50.0f;
+		final float point2Y = 100.0f;
+		final float point2Distance = 150.0f;
+		
+		final float point3X = 50.0f;
+		final float point3Y = 450.0f;
+		final float point3Distance = 180.27756377319946f;
+		
+		assertEquals(point1Distance, MathUtil.distance(point1X, point1Y, linePoint1X, linePoint1Y, linePoint2X, linePoint2Y), DELTA);
+		assertEquals(point2Distance, MathUtil.distance(point2X, point2Y, linePoint1X, linePoint1Y, linePoint2X, linePoint2Y), DELTA);
+		assertEquals(point3Distance, MathUtil.distance(point3X, point3Y, linePoint1X, linePoint1Y, linePoint2X, linePoint2Y), DELTA);
+	}
 
 }
