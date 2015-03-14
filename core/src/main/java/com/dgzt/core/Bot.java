@@ -67,7 +67,9 @@ public class Bot {
 			}
 		}
 		
-		lowestDistanceButton.move((float) lowestDistance, (float) lowestDistance); 
+		final float power = 4;
+		
+		lowestDistanceButton.move(power * (ball.getBox2DX() - lowestDistanceButton.getBox2DX()), power * (ball.getBox2DY() - lowestDistanceButton.getBox2DY())); 
 	}
 	
 }
