@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.dgzt.core.type.StepType;
+import com.dgzt.core.setting.Settings;
 
 /**
  * The game listener.
@@ -55,8 +55,8 @@ final public class ButtonFootballGame implements ApplicationListener {
 	/** The camera. */
 	private OrthographicCamera camera;
 	
-	/** The type of step process. */
-	private final StepType stepType;
+	/** The settings. */
+	private final Settings settings;
 	
 	/** The main window. */
 	private MainWindow mainWindow;
@@ -68,10 +68,10 @@ final public class ButtonFootballGame implements ApplicationListener {
 	/**
 	 * Constructor.
 	 * 
-	 * @param stepType - The type of the process type.
+	 * @param settings - The settings.
 	 */
-	public ButtonFootballGame(final StepType stepType) {
-		this.stepType = stepType;
+	public ButtonFootballGame(final Settings settings) {
+		this.settings = settings;
 	}
 	
 	// --------------------------------------------------
@@ -98,7 +98,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
 		}
 		
-		mainWindow = new MainWindow(shader, spriteBatch, stepType);
+		mainWindow = new MainWindow(shader, spriteBatch, settings);
 	}
 
 	/**

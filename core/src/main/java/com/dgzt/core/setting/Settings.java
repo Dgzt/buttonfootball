@@ -12,48 +12,57 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core.type;
+package com.dgzt.core.setting;
+
+import com.dgzt.core.GameConstans;
 
 /**
- * The step process type.
+ * The settings.
  * 
  * @author Dgzt
  */
-public enum StepType {
-	
-	/** The normal step. */
-	NORMAL("normal"),
-	
-	/** Only the player step. */
-	ALWAYS_PLAYER("always_player"),
-	
-	/** Only the bot step. */
-	ALWAYS_BOT("always_bot");
+public class Settings {
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
+
+	/** The step mode. */
+	private StepMode stepMode;
 	
-	private String stepType;
+	/** The sec of the ball area. */
+	private int ballAreaSec;
 	
 	// --------------------------------------------------
-	// ~ Constructors
+	// ~ Constructors.
 	// --------------------------------------------------
 	
-	StepType(final String stepType){
-		this.stepType = stepType;
+	/**
+	 * Constructor.
+	 */
+	public Settings(){
+		stepMode = GameConstans.DEFAULT_STEP_MODE;
+		ballAreaSec = GameConstans.DEFAULT_BALL_AREA_SEC;
 	}
 	
 	// --------------------------------------------------
-	// ~ Override methods
+	// ~ Getter / Setter methods
 	// --------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return stepType;
+	public StepMode getStepMode() {
+		return stepMode;
+	}
+
+	public void setStepMode(StepMode stepMode) {
+		this.stepMode = stepMode;
+	}
+
+	public int getBallAreaSec() {
+		return ballAreaSec;
+	}
+
+	public void setBallAreaSec(int ballAreaSec) {
+		this.ballAreaSec = ballAreaSec;
 	}
 	
 }

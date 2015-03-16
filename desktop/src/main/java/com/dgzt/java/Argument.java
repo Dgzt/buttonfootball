@@ -16,7 +16,9 @@ package com.dgzt.java;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.dgzt.core.type.StepType;
+import com.dgzt.core.GameConstans;
+import com.dgzt.core.setting.Settings;
+import com.dgzt.core.setting.StepMode;
 
 /**
  * The arguments for game.
@@ -24,27 +26,53 @@ import com.dgzt.core.type.StepType;
  * @author Dgzt
  */
 @Parameters(separators = "=")
-public class ButtonFootballArgument {
+public class Argument {
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 
-	/** The type of step process. */
-	@Parameter(names = "--steptype", description = "The type of step process.")
-	private StepType stepType = StepType.NORMAL;
+	/** The mode of step process. */
+	@Parameter(names = "--stepmode", description = "The mode of step process.")
+	private StepMode stepMode = GameConstans.DEFAULT_STEP_MODE;
+	
+	@Parameter(names = "--ballareasec", description = "The sec of the ball area.")
+	private int ballAreaSec = GameConstans.DEFAULT_BALL_AREA_SEC;
+	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
+	
+	/**
+	 * Convert to {@link Settings}.
+	 */
+	public Settings toSettings(){
+		final Settings settings = new Settings();
+		
+		settings.setStepMode(stepMode);
+		settings.setBallAreaSec(ballAreaSec);
+		
+		return settings;
+	}
 	
 	// --------------------------------------------------
 	// ~ Getter / Setter methods
 	// --------------------------------------------------
 
-	public StepType getStepType() {
-		return stepType;
+	public StepMode getStepMode() {
+		return stepMode;
 	}
 
-	public void setStepType(final StepType stepType) {
-		this.stepType = stepType;
+	public void setStepMode(final StepMode stepMode) {
+		this.stepMode = stepMode;
 	}
-	
+
+	public int getBallAreaSec() {
+		return ballAreaSec;
+	}
+
+	public void setBallAreaSec(int ballAreaSec) {
+		this.ballAreaSec = ballAreaSec;
+	}
 	
 }

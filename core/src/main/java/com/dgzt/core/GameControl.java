@@ -22,7 +22,8 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.GoalBoard;
-import com.dgzt.core.type.StepType;
+import com.dgzt.core.setting.Settings;
+import com.dgzt.core.setting.StepMode;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -31,13 +32,6 @@ import com.dgzt.core.util.MathUtil;
  * @author Dgzt
  */
 public final class GameControl {
-
-	// --------------------------------------------------
-	// ~ Private static members
-	// --------------------------------------------------
-	
-	/** The ball area's waiting time. */
-	private static final int WAITING_AREA_SEC = 5;
 	
 	// --------------------------------------------------
 	// ~ Private enums
@@ -58,14 +52,14 @@ public final class GameControl {
 	/** The main window. */
 	private final MainWindow mainWindow;
 	
+	/** The settings. */
+	private final Settings settings;
+	
 	/** The bot. */
 	private final Bot bot;
 	
 	/** The actual status of the game. */
 	private GameStatus gameStatus;
-	
-	/** The type of the step process. */
-	private final StepType stepType;
 	
 	/** Number of steps when the player stepped in a line. */
 	private short stepNum;
@@ -78,18 +72,18 @@ public final class GameControl {
 	 * The constructor.
 	 * 
 	 * @param mainWindow - The main window.
-	 * @param stepType - The type of step process.
+	 * @param settings - The settings.
 	 */
-	public GameControl(final MainWindow mainWindow, final StepType stepType){
-		Gdx.app.log(GameControl.class.getName() + ".init", "stepType: " + stepType);
+	public GameControl(final MainWindow mainWindow, final Settings settings){
+		Gdx.app.log(GameControl.class.getName() + ".init", "settings: " + settings);
 		
 		this.mainWindow = mainWindow;
-		this.stepType = stepType;
+		this.settings = settings;
 		this.bot = new Bot(this);
 		
 		this.stepNum = 0;
 		
-		if(stepType.equals(StepType.NORMAL) || stepType.equals(StepType.ALWAYS_PLAYER)){
+		if(settings.getStepMode().equals(StepMode.NORMAL) || settings.getStepMode().equals(StepMode.ALWAYS_PLAYER)){
 			this.gameStatus = GameStatus.PLAYER_IN_GAME;
 		}else{
 			this.gameStatus = GameStatus.OPPONENT_IN_GAME;
@@ -150,7 +144,7 @@ public final class GameControl {
 				}
 			}
 			
-		}, WAITING_AREA_SEC);
+		}, settings.getBallAreaSec());
 	}
 	
 	/** 
@@ -185,7 +179,7 @@ public final class GameControl {
 		
 		final List<Button> playerButtons = mainWindow.getTable().getPlayerButtons();
 		
-		if(stepType.equals(StepType.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
+		if(settings.getStepMode().equals(StepMode.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
 			gameStatus = GameStatus.PLAYER_IN_GAME;
 		}else{
 			stepNum = 0;
@@ -203,7 +197,7 @@ public final class GameControl {
 		
 		final List<Button> opponentButtons = mainWindow.getTable().getOpponentButtons();
 		
-		if(stepType.equals(StepType.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
+		if(settings.getStepMode().equals(StepMode.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
 			gameStatus = GameStatus.OPPONENT_IN_GAME;
 			bot.step();
 			opponentStepepd();

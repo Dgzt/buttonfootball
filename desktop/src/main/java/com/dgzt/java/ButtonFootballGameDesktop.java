@@ -33,13 +33,13 @@ public class ButtonFootballGameDesktop {
 	 */
 	public static void main (String[] args) {
 		
-		final ButtonFootballArgument bfa = new ButtonFootballArgument();
+		final Argument bfa = new Argument();
 		new JCommander(bfa, args);
-		
 		
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 800;
 		config.height = 600;
-		new LwjglApplication(new ButtonFootballGame(bfa.getStepType()), config);
+		new LwjglApplication(new ButtonFootballGame(bfa.toSettings()), config);
 	}
+
 }
