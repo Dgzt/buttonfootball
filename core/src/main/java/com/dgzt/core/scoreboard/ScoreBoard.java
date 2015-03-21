@@ -128,4 +128,12 @@ final public class ScoreBoard{
 	public GoalBoard getOpponentGoalBoard() {
 		return opponentGoalBoard;
 	}
+
+	/**
+	 * Return with the time board.
+	 */
+	public TimeBoard getTimeBoard() {
+		return timeBoard;
+	}
+	
 }

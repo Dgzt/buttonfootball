@@ -29,4 +29,7 @@ public class GameConstans {
 	/** The default sec of the ball area. */
 	public static int DEFAULT_BALL_AREA_SEC = 5;
 	
+	/** The default half time in sec. */
+	public static int DEFAULT_HALF_TIME = 13 * 60;
+	
 }

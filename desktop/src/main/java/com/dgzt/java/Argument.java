@@ -39,6 +39,9 @@ public class Argument {
 	@Parameter(names = "--ballareasec", description = "The sec of the ball area.")
 	private int ballAreaSec = GameConstans.DEFAULT_BALL_AREA_SEC;
 	
+	@Parameter(names = "--halftime", description = "The half time.")
+	private int halfTime = GameConstans.DEFAULT_HALF_TIME;
+	
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
@@ -51,6 +54,7 @@ public class Argument {
 		
 		settings.setStepMode(stepMode);
 		settings.setBallAreaSec(ballAreaSec);
+		settings.setHalfTime(halfTime);
 		
 		return settings;
 	}
@@ -73,6 +77,14 @@ public class Argument {
 
 	public void setBallAreaSec(int ballAreaSec) {
 		this.ballAreaSec = ballAreaSec;
+	}
+
+	public int getHalfTime() {
+		return halfTime;
+	}
+
+	public void setHalfTime(int halfTime) {
+		this.halfTime = halfTime;
 	}
 	
 }

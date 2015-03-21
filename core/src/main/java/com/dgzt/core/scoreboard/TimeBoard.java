@@ -42,9 +42,6 @@ final public class TimeBoard extends RectangleBorderShape{
 	// ~ Private static members
 	// --------------------------------------------------
 	
-	/** 13 minute. */
-	private static final int HALF_TIME = 13 * 60;
-	
 	/** The delay second of the timer. */
 	private static final int TIMER_DELAY_SECOND = 1;
 	
@@ -76,6 +73,9 @@ final public class TimeBoard extends RectangleBorderShape{
 	/** Visible the second circles. */
 	private boolean visibleSecondCircles;
 	
+	/** The half time. */
+	private int halfTime;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -88,6 +88,7 @@ final public class TimeBoard extends RectangleBorderShape{
 	 */
 	public TimeBoard(final ShaderProgram shader, final Color color) {
 		super(shader, color);
+		this.halfTime = 0;
 		
 		firstMinDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
 		secondMinDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
@@ -96,8 +97,17 @@ final public class TimeBoard extends RectangleBorderShape{
 		
 		firstSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
 		secondSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
-		
-		currentTime = HALF_TIME;
+	}
+
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Start the time board.
+	 */
+	public void start(){
+		currentTime = halfTime;
 		setCurrentTime();
 		visibleSecondCircles = isVisibleSecondCircles();
 		Timer.schedule(new Task() {
@@ -111,7 +121,7 @@ final public class TimeBoard extends RectangleBorderShape{
 			}
 		}, TIMER_DELAY_SECOND, TIMER_INTERVAL_SECOND);
 	}
-
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
@@ -182,6 +192,19 @@ final public class TimeBoard extends RectangleBorderShape{
 		
 		firstSecDigit.draw();
 		secondSecDigit.draw();
+	}
+
+	// --------------------------------------------------
+	// ~ Getter / Setter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Set the half time.
+	 * 
+	 * @param halfTime - The new half time.
+	 */
+	public void setHalfTime(int halfTime) {
+		this.halfTime = halfTime;
 	}
 
 }

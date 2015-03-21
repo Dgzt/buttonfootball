@@ -33,6 +33,9 @@ public class Settings {
 	/** The sec of the ball area. */
 	private int ballAreaSec;
 	
+	/** The half time in sec. */
+	private int halfTime;
+	
 	// --------------------------------------------------
 	// ~ Constructors.
 	// --------------------------------------------------
@@ -43,6 +46,7 @@ public class Settings {
 	public Settings(){
 		stepMode = GameConstans.DEFAULT_STEP_MODE;
 		ballAreaSec = GameConstans.DEFAULT_BALL_AREA_SEC;
+		halfTime = GameConstans.DEFAULT_HALF_TIME;
 	}
 	
 	// --------------------------------------------------
@@ -63,6 +67,26 @@ public class Settings {
 
 	public void setBallAreaSec(int ballAreaSec) {
 		this.ballAreaSec = ballAreaSec;
+	}
+
+	public int getHalfTime() {
+		return halfTime;
+	}
+
+	public void setHalfTime(int halfTime) {
+		this.halfTime = halfTime;
+	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Settings { stepMode = " + stepMode + ", ballAreaSec = " + ballAreaSec + ", halfTime = " + halfTime + " }";
 	}
 	
 }

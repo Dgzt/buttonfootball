@@ -78,6 +78,9 @@ public final class GameControl {
 		this.settings = settings;
 		this.bot = new Bot(this);
 		
+		mainWindow.getScoreBoard().getTimeBoard().setHalfTime(settings.getHalfTime());
+		mainWindow.getScoreBoard().getTimeBoard().start();
+		
 		if(settings.getStepMode().equals(StepMode.NORMAL) || settings.getStepMode().equals(StepMode.ALWAYS_PLAYER)){
 			this.gameStatus = GameStatus.PLAYER_IN_GAME;
 		}else{

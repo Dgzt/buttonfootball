@@ -76,9 +76,10 @@ final public class MainWindow{
 	 * @param settings - The settings.
 	 */
 	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings){
+		scoreBoard = new ScoreBoard(shader);
+		
 		gameControl = new GameControl(this, settings);
 		
-		scoreBoard = new ScoreBoard(shader);
 		table = new Table(shader, gameControl);
 		fps = new FPS(shader, spriteBatch);
 		
