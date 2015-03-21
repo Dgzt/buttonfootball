@@ -61,9 +61,6 @@ public final class GameControl {
 	/** The actual status of the game. */
 	private GameStatus gameStatus;
 	
-	/** Number of steps when the player stepped in a line. */
-	private short stepNum;
-	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -80,8 +77,6 @@ public final class GameControl {
 		this.mainWindow = mainWindow;
 		this.settings = settings;
 		this.bot = new Bot(this);
-		
-		this.stepNum = 0;
 		
 		if(settings.getStepMode().equals(StepMode.NORMAL) || settings.getStepMode().equals(StepMode.ALWAYS_PLAYER)){
 			this.gameStatus = GameStatus.PLAYER_IN_GAME;
@@ -152,12 +147,10 @@ public final class GameControl {
 	 */
 	public void playerStepped(){
 		gameStatus = GameStatus.WAITING_AFTER_PLAYER;
-		++stepNum;
 	}
 	
 	public void opponentStepepd(){
 		gameStatus = GameStatus.WAITING_AFTER_OPPONENT;
-		++stepNum;
 	}
 	
 	/** 
@@ -182,7 +175,6 @@ public final class GameControl {
 		if(settings.getStepMode().equals(StepMode.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
 			gameStatus = GameStatus.PLAYER_IN_GAME;
 		}else{
-			stepNum = 0;
 			gameStatus = GameStatus.OPPONENT_IN_GAME;
 			bot.step();
 			opponentStepepd();
@@ -202,7 +194,6 @@ public final class GameControl {
 			bot.step();
 			opponentStepepd();
 		}else{
-			stepNum = 0;
 			gameStatus = GameStatus.PLAYER_IN_GAME;
 		}
 	}
@@ -225,7 +216,7 @@ public final class GameControl {
 		}
 		
 		Gdx.app.log(GameControl.class.getName() + ".isActualPlayerStepAgain()", "lowestDistance: " + String.valueOf(lowestDistance));
-		if(lowestDistance <= BallArea.RADIUS + Button.RADIUS && stepNum < 2){
+		if(lowestDistance <= BallArea.RADIUS + Button.RADIUS){
 			Gdx.app.log(GameControl.class.getName() + ".isActualPlayerStepAgain()", "Actual player step again");
 			return true;
 		}else{
