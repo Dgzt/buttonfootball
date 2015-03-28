@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.setting;
 
+import com.dgzt.core.Player;
 import com.dgzt.core.GameConstans;
 
 /**
@@ -28,7 +29,7 @@ public class Settings {
 	// --------------------------------------------------
 	
 	/** The player who will first step in the first half. */
-	private FirstStep firstStep;
+	private Player firstStep;
 
 	/** The step mode. */
 	private StepMode stepMode;
@@ -57,11 +58,11 @@ public class Settings {
 	// ~ Getter / Setter methods
 	// --------------------------------------------------
 	
-	public FirstStep getFirstStep(){
+	public Player getFirstStep(){
 		return firstStep;
 	}
 	
-	public void setFirstStep(final FirstStep firstStep){
+	public void setFirstStep(final Player firstStep){
 		this.firstStep = firstStep;
 	}
 

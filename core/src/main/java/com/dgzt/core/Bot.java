@@ -31,8 +31,11 @@ public class Bot {
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The game control. */
-	private final GameControl gameControl;
+	/** The bot's buttons. */
+	private final List<Button> botButtons;
+	
+	/** The ball. */
+	private final Ball ball;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -41,19 +44,18 @@ public class Bot {
 	/**
 	 * The constructor.
 	 * 
-	 * @param gameControl - The game control.
+	 * @param botButtons - The bot's buttons.
+	 * @param ball - The ball.
 	 */
-	public Bot(final GameControl gameControl){
-		this.gameControl = gameControl;
+	public Bot(final List<Button> botButtons, final Ball ball){
+		this.botButtons = botButtons;
+		this.ball = ball;
 	}
 	
 	/**
 	 * The bot step.
 	 */
 	public void step(){
-		final Ball ball = gameControl.getMainWindow().getTable().getBall();
-		final List<Button> botButtons = gameControl.getMainWindow().getTable().getOpponentButtons();
-		
 		// TODO - Temp step
 		
 		double lowestDistance = Double.MAX_VALUE;

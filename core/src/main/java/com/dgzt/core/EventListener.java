@@ -35,11 +35,8 @@ public final class EventListener implements ContactListener{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The table. */
-	private final Table table;
-	
-	/** The game control. */
-	private final GameControl gameControl;
+	/** The main window. */
+	private final MainWindow mainWindow;
 	
 	/** The number of the mooving buttons. */
 	private short moovingButtonNum;
@@ -51,12 +48,10 @@ public final class EventListener implements ContactListener{
 	/**
 	 * The constructor.
 	 * 
-	 * @param table - The table.
-	 * @param gameControl - The game control.
+	 * @param mainWindow - The main window.
 	 */
-	public EventListener(final Table table, final GameControl gameControl){
-		this.table = table;
-		this.gameControl = gameControl;
+	public EventListener(final MainWindow mainWindow){
+		this.mainWindow = mainWindow;
 		this.moovingButtonNum = 0;
 	}
 	
@@ -77,7 +72,7 @@ public final class EventListener implements ContactListener{
 	public void buttonEndMooving(){
 		--moovingButtonNum;
 		if(moovingButtonNum == 0){
-			gameControl.allButtonIsStopped();
+			mainWindow.getGameControl().allButtonIsStopped();
 		}
 	}
 	
@@ -96,12 +91,12 @@ public final class EventListener implements ContactListener{
 			
 		if(userDataA instanceof LeftGate){
 			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Opponent goal!!");
-			gameControl.opponentGoal();
+			mainWindow.getGameControl().opponentGoal();
 		}
 			
 		if(userDataA instanceof RightGate){
 			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Player goal!!");
-			gameControl.playerGoal();
+			mainWindow.getGameControl().playerGoal();
 		}
 	}
 
@@ -116,8 +111,8 @@ public final class EventListener implements ContactListener{
 		
 		if(userDataA instanceof Map){
 			final Ball ball = (Ball) contact.getFixtureB().getUserData();
-			final LeftGate leftGate = table.getLeftGate();
-			final RightGate rightGate = table.getRightGate();
+			final LeftGate leftGate = mainWindow.getTable().getLeftGate();
+			final RightGate rightGate = mainWindow.getTable().getRightGate();
 			
 			if(
 				(ball.getBox2DY() < leftGate.getBox2DY() || ball.getBox2DY() > leftGate.getBox2DY() + AbstractGate.HEIGHT) // Left gate

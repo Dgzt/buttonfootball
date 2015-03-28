@@ -14,7 +14,6 @@
  */
 package com.dgzt.core;
 
-import com.dgzt.core.setting.FirstStep;
 import com.dgzt.core.setting.StepMode;
 
 /**
@@ -25,7 +24,7 @@ import com.dgzt.core.setting.StepMode;
 public class GameConstans {
 
 	/** The default first step. */
-	public static FirstStep DEFAULT_FIRST_STEP = FirstStep.PLAYER;
+	public static Player DEFAULT_FIRST_STEP = Player.PLAYER;
 	
 	/** The default step mode. */
 	public static StepMode DEFAULT_STEP_MODE = StepMode.NORMAL;

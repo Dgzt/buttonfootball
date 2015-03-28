@@ -19,7 +19,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
@@ -75,9 +74,6 @@ final public class Table extends RectangleShape{
 	/** The ball. */
 	private final Ball ball;
 	
-	/** The box2d world. */
-	private final World box2DWorld;
-	
 	/** The actual scale value. */
 	private double scale;
 	
@@ -89,15 +85,13 @@ final public class Table extends RectangleShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param gameControl - The game control.
+	 * @param box2DWorld - The box2D world.
+	 * @param eventListener - The event listener.
 	 */
-	public Table(final ShaderProgram shader, final GameControl gameControl){
+	public Table(final ShaderProgram shader, final World box2DWorld, final EventListener eventListener){
 		super(shader, Color.GRAY);
 		
-		box2DWorld = new World(new Vector2(0,0), true);
-		final EventListener eventListener = new EventListener(this, gameControl);
-		box2DWorld.setContactListener(eventListener);
-		addBox2DWalls();
+		addBox2DWalls(box2DWorld);
 		
 		map = new Map(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
 		
@@ -107,7 +101,7 @@ final public class Table extends RectangleShape{
 		playerButtons = new ArrayList<Button>();
 		opponentButtons = new ArrayList<Button>();
 		
-		addButtons(shader, eventListener);
+		addButtons(shader, eventListener, box2DWorld);
 		
 		ball = new Ball(this, shader, eventListener, box2DWorld, Table.WIDTH / 2, Table.HEIGHT / 2);
 	}
@@ -146,6 +140,70 @@ final public class Table extends RectangleShape{
 		ball.resize();
 	}
 	
+	/**
+	 * Move the given player's buttons to the left part of the map.
+	 * 
+	 * @param player - The player.
+	 */
+	public void moveButtonsToLeftPartOfMap(final Player player){
+		final float goalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.RADIUS;
+		final float goalKeeperY = Table.HEIGHT / 2;
+		final float buttonDistanceX = Table.WIDTH / 2 / 4;
+		final float buttonDistanceY = Table.HEIGHT / 5;
+		final float halfTableHeight = Table.HEIGHT / 2;
+
+		final List<Button> buttons = player.equals(Player.PLAYER) ? playerButtons : opponentButtons;
+
+		// Add left goalkeeper
+		buttons.get(0).setBox2DPosition(goalKeeperX, goalKeeperY);
+		
+		// Add left defenders
+		for(int i=1; i <= 4; ++i){
+			buttons.get(i).setBox2DPosition(buttonDistanceX, i*buttonDistanceY);
+		}
+		
+		// Add left midfielders
+		for(int i=1; i <= 4; ++i){
+			buttons.get(i+4).setBox2DPosition(2*buttonDistanceX, i*buttonDistanceY);
+		}
+		
+		// Add left forwards
+		buttons.get(9).setBox2DPosition(3*buttonDistanceX, halfTableHeight - buttonDistanceY);
+		buttons.get(10).setBox2DPosition(3*buttonDistanceX, halfTableHeight + buttonDistanceY);
+	}
+	
+	/**
+	 * Move the given player's buttons to the right part of the map.
+	 * 
+	 * @param player - The player.
+	 */
+	public void moveButtonsToRightPartOfMap(final Player player){
+		final float goalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.RADIUS;
+		final float goalKeeperY = Table.HEIGHT / 2;
+		final float buttonDistanceX = Table.WIDTH / 2 / 4;
+		final float buttonDistanceY = Table.HEIGHT / 5;
+		final float halfTableHeight = Table.HEIGHT / 2;
+		
+		final List<Button> buttons = player.equals(Player.PLAYER) ? playerButtons : opponentButtons;
+		
+		// Add right goalkeeper
+		buttons.get(0).setBox2DPosition(goalKeeperX, goalKeeperY);
+				
+		// Add right defenders
+		for(int i=1; i <= 4; ++i){
+			buttons.get(i).setBox2DPosition(Table.WIDTH - buttonDistanceX, i*buttonDistanceY);
+		}
+		
+		// Add right midfielders
+		for(int i=1; i <= 4; ++i){
+			buttons.get(i+4).setBox2DPosition(Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY);
+		}
+		
+		// Add right forwards
+		buttons.get(9).setBox2DPosition(Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY);
+		buttons.get(10).setBox2DPosition(Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY);
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -155,9 +213,6 @@ final public class Table extends RectangleShape{
 	 */
 	@Override
 	public void draw() {
-		// Step the box2d world
-		box2DWorld.step(1/60f, 6, 2);
-		
 		// Draw the shapes.
 		super.draw();
 		map.draw();
@@ -202,64 +257,30 @@ final public class Table extends RectangleShape{
 	// --------------------------------------------------
 	
 	/**
-	 * Add buttons to the table.
+	 * Add buttons to the map.
 	 * 
 	 * @param shader - The shader.
 	 * @param eventListener - The event listener.
+	 * @param box2DWorld - The box2D world.
 	 */
-	private void addButtons(final ShaderProgram shader, final EventListener eventListener){
-		final float playerGoalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.RADIUS;
-		final float opponentGoalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.RADIUS;
-		final float goalKeeperY = Table.HEIGHT / 2;
-		final float buttonDistanceX = Table.WIDTH / 2 / 4;
-		final float buttonDistanceY = Table.HEIGHT / 5;
-		final float halfTableHeight = Table.HEIGHT / 2;
-		
-		// Add player buttons
-		// ------------------
-		
-		// Add player goalkeeper
-		playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, playerGoalKeeperX, goalKeeperY));
-		
-		// Add player defenders
-		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, buttonDistanceX, i*buttonDistanceY));
+	private void addButtons(final ShaderProgram shader, final EventListener eventListener, final World box2DWorld){
+		// The player's buttons.
+		for(int i = 0; i < 11; ++i){
+			playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR));
 		}
 		
-		// Add player midfielders
-		for(int i=1; i <= 4; ++i){
-			playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, 2*buttonDistanceX, i*buttonDistanceY));
+		// The opponent's buttons.
+		for(int i = 0; i < 11; ++i){
+			opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR));
 		}
-		
-		// Add player forwards
-		playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
-		playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR, 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
-		
-		// Add opponent buttons
-		// --------------------
-		
-		// Add opponent goalkeeper
-		opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, opponentGoalKeeperX, goalKeeperY));
-		
-		// Add opponent defenders
-		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - buttonDistanceX, i*buttonDistanceY));
-		}
-		
-		// Add opponent midfielders
-		for(int i=1; i <= 4; ++i){
-			opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY));
-		}
-		
-		// Add opponent forwards
-		opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY));
-		opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR, Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY));
 	}
 	
 	/**
 	 * Add the box2D walls of table.
+	 * 
+	 * @param box2DWorld - The box2D world.
 	 */
-	private void addBox2DWalls(){
+	private void addBox2DWalls(final World box2DWorld){
 		// Add top wall
 		Box2DUtil.addWall(box2DWorld, 0, 0 - BOX2D_WALL_SIZE, Table.WIDTH, BOX2D_WALL_SIZE);
 		

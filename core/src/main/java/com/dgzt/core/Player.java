@@ -12,14 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core.setting;
+package com.dgzt.core;
 
 /**
- * The player who will step first in the first half.
+ * The player's enum.
  * 
  * @author Dgzt
  */
-public enum FirstStep {
+public enum Player {
 	
 	/** The player. */
 	PLAYER("player"),
@@ -32,22 +32,25 @@ public enum FirstStep {
 	// --------------------------------------------------
 	
 	/** The value. */
-	private String firstStep;
+	private String player;
 	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
 	
-	private FirstStep(final String firstStep){
-		this.firstStep = firstStep;
+	private Player(final String player){
+		this.player = player;
 	}
 	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
-		return firstStep;
+		return player;
 	}
 }

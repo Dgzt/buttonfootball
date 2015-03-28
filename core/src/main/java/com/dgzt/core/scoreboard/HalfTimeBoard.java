@@ -57,7 +57,26 @@ final public class HalfTimeBoard extends RectangleBorderShape{
 		super(shader, color);
 		
 		digit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
-		digit.setNumber(1);
+	}
+	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
+	
+	/**
+	 * Set number of half time.
+	 * 
+	 * @param number - The number of half time.
+	 */
+	public void setHalfTime(final int number){
+		digit.setNumber(number);
+	}
+	
+	/**
+	 * Return with the number of half time.
+	 */
+	public final int getHalfTime(){
+		return digit.getNumber();
 	}
 	
 	// --------------------------------------------------

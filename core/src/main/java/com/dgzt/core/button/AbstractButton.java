@@ -88,8 +88,6 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param eventListener - The event listener.
 	 * @param box2DWorld - The box2D world.
 	 * @param color - The color of button.
-	 * @param box2DX - The x coordinate value of button in Box2D.
-	 * @param box2DY - The y coordinate value of button in Box2D.
 	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
 	public AbstractButton(
@@ -98,17 +96,16 @@ public abstract class AbstractButton extends FilledCircleShape{
 			final EventListener eventListener, 
 			final World box2DWorld, 
 			final Color color, 
-			final float box2DX, 
-			final float box2DY, 
 			final float box2DRadius
 	) {
 		super(shader, color);
 		this.parent = parent;
 		this.eventListener = eventListener;
-		this.box2DX = box2DX;
-		this.box2DY = box2DY;
 		this.box2DRadius = box2DRadius;
 		this.mooving = false;
+		
+		box2DX = 0;
+		box2DY = 0;
 		
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
@@ -130,6 +127,16 @@ public abstract class AbstractButton extends FilledCircleShape{
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
+	
+	/**
+	 * Set the position in the Box2D world.
+	 * 
+	 * @param box2DX - The x coordinate value in box2D.
+	 * @param box2DY - The y coordinate value in box2D.
+	 */
+	public void setBox2DPosition(final float box2DX, final float box2DY){
+		box2DBody.setTransform(box2DX, box2DY, box2DBody.getAngle());
+	}
 	
 	/**
 	 * Contains the button the given coordinate.
@@ -160,6 +167,17 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	public void move(final float x, final float y){
 		box2DBody.setLinearVelocity(x, y);
+	}
+	
+	/**
+	 * Dispose the button.
+	 * 
+	 * @param box2DWorld - The box2D world.
+	 */
+	public void dispose(final World box2DWorld){
+		box2DWorld.destroyBody(box2DBody);
+		box2DBody.setUserData(null);
+		super.dispose();
 	}
 	
 	// --------------------------------------------------

@@ -146,4 +146,11 @@ final public class ScoreBoard{
 		return timeBoard;
 	}
 	
+	/**
+	 * Return with the half time board.
+	 */
+	public HalfTimeBoard getHalfTimeBoard(){
+		return halfTimeBoard;
+	}
+	
 }

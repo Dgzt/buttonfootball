@@ -18,6 +18,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
@@ -42,6 +44,9 @@ final public class MainWindow{
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
+	
+	/** The box2D world. */
+	private final World box2DWorld;
 	
 	/** The game control. */
 	private final GameControl gameControl;
@@ -76,16 +81,21 @@ final public class MainWindow{
 	 * @param settings - The settings.
 	 */
 	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings){
+		// The box2D world
+		box2DWorld = new World(new Vector2(0,0), true);
+		// The event listener
+		final EventListener eventListener = new EventListener(this);
+		box2DWorld.setContactListener(eventListener);
+		
 		scoreBoard = new ScoreBoard(shader);
-		
-		gameControl = new GameControl(this, settings);
-		
-		table = new Table(shader, gameControl);
+		table = new Table(shader, box2DWorld, eventListener);
 		fps = new FPS(shader, spriteBatch);
 		
 		arrow = new Arrow(table, shader);
 		
 		ballArea = new BallArea(shader, table.getBall());
+		
+		gameControl = new GameControl(this, scoreBoard, table, settings);
 		
 		Gdx.input.setInputProcessor(new InputListener(this, gameControl));
 	}
@@ -130,6 +140,10 @@ final public class MainWindow{
 	 * Draw the child objects.
 	 */
 	public void draw() {
+		// Step the box2d world
+		box2DWorld.step(1/60f, 6, 2);
+		
+		// Draw the shapes
 		scoreBoard.draw();
 		table.draw();
 		fps.draw();
@@ -149,6 +163,7 @@ final public class MainWindow{
 		table.dispose();
 		arrow.dispose();
 		ballArea.dispose();
+		box2DWorld.dispose();
 	}
 	
 	/**
@@ -209,13 +224,6 @@ final public class MainWindow{
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
-	
-	/**
-	 * Return with the score board.
-	 */
-	public ScoreBoard getScoreBoard() {
-		return scoreBoard;
-	}
 
 	/** 
 	 * Return with the FPS. 
@@ -229,6 +237,13 @@ final public class MainWindow{
 	 */
 	public Table getTable() {
 		return table;
+	}
+
+	/**
+	 * Return with the game control.
+	 */
+	public GameControl getGameControl() {
+		return gameControl;
 	}
 
 }

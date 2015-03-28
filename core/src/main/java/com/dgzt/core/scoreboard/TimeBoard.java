@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.dgzt.core.GameControl;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 
@@ -67,6 +68,9 @@ final public class TimeBoard extends RectangleBorderShape{
 	/** The second moment digit. */
 	private final Digit secondSecDigit;
 	
+	/** The timer for the time board. */
+	private final Timer timer;
+	
 	/** The current time. */
 	private int currentTime;
 	
@@ -97,6 +101,8 @@ final public class TimeBoard extends RectangleBorderShape{
 		
 		firstSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
 		secondSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
+		
+		timer = new Timer();
 	}
 
 	// --------------------------------------------------
@@ -106,11 +112,11 @@ final public class TimeBoard extends RectangleBorderShape{
 	/**
 	 * Start the time board.
 	 */
-	public void start(){
+	public void start(final GameControl gameControl){
 		currentTime = halfTime;
 		setCurrentTime();
 		visibleSecondCircles = isVisibleSecondCircles();
-		Timer.schedule(new Task() {
+		timer.scheduleTask(new Task() {
 			
 			@Override
 			public void run() {
@@ -118,8 +124,19 @@ final public class TimeBoard extends RectangleBorderShape{
 				setCurrentTime();
 				
 				visibleSecondCircles = isVisibleSecondCircles();
+				
+				if(currentTime == 0){
+					gameControl.endHalfTime();
+					//
+					cancel();
+				}
 			}
 		}, TIMER_DELAY_SECOND, TIMER_INTERVAL_SECOND);
+		timer.start();
+	}
+	
+	public void stop(){
+		timer.stop();
 	}
 	
 	// --------------------------------------------------

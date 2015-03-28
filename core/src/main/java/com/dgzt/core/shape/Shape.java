@@ -152,7 +152,7 @@ public abstract class Shape {
 	public void dispose(){
 		mesh.dispose();
 	}
-
+	
 	// --------------------------------------------------
 	// ~ Getter / Setter methods
 	// --------------------------------------------------

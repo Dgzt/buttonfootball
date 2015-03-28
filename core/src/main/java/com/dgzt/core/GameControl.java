@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.GoalBoard;
-import com.dgzt.core.setting.FirstStep;
+import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
 import com.dgzt.core.setting.StepMode;
 import com.dgzt.core.util.MathUtil;
@@ -39,8 +39,9 @@ public final class GameControl {
 	// --------------------------------------------------
 	
 	/** The status of the game. */
-	private enum GameStatus{ 
-		PLAYER_IN_GAME, 
+	private enum GameStatus{
+		NOT_IN_GAME,
+		PLAYER_IN_GAME,
 		WAITING_AFTER_PLAYER, 
 		OPPONENT_IN_GAME, 
 		WAITING_AFTER_OPPONENT 
@@ -52,6 +53,15 @@ public final class GameControl {
 	
 	/** The main window. */
 	private final MainWindow mainWindow;
+	
+	/** The scoreboard. */
+	private final ScoreBoard scoreBoard;
+	
+	/** The table. */
+	private final Table table;
+	
+	/** The timer of the ball area. */
+	private final Timer ballAreaTimer;
 	
 	/** The settings. */
 	private final Settings settings;
@@ -70,34 +80,31 @@ public final class GameControl {
 	 * The constructor.
 	 * 
 	 * @param mainWindow - The main window.
+	 * @param scoreBoard - The score board.
+	 * @param table - The table.
 	 * @param settings - The settings.
 	 */
-	public GameControl(final MainWindow mainWindow, final Settings settings){
+	public GameControl(final MainWindow mainWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings){
 		Gdx.app.log(GameControl.class.getName() + ".init", "settings: " + settings);
 		
 		this.mainWindow = mainWindow;
+		this.scoreBoard = scoreBoard;
+		this.table = table;
 		this.settings = settings;
-		this.bot = new Bot(this);
+		this.bot = new Bot(table.getOpponentButtons(), table.getBall());
 		
-		mainWindow.getScoreBoard().getTimeBoard().setHalfTime(settings.getHalfTime());
-		mainWindow.getScoreBoard().getTimeBoard().start();
+		// Add the buttons to table.
+		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
+		table.moveButtonsToRightPartOfMap(Player.BOT);
+		
+		scoreBoard.getHalfTimeBoard().setHalfTime(1);
+		
+		scoreBoard.getTimeBoard().setHalfTime(settings.getHalfTime());
+		scoreBoard.getTimeBoard().start(this);
 
-		if(settings.getFirstStep().equals(FirstStep.PLAYER)){
-			// The player step first.
-			this.gameStatus = GameStatus.PLAYER_IN_GAME;
-		}else{ 
-			// The bot step first.
-			this.gameStatus = GameStatus.OPPONENT_IN_GAME;
-			Timer.schedule(new Task(){
-
-				@Override
-				public void run() {
-					bot.step();
-					opponentStepepd();
-				}
-				
-			}, 1);			
-		}
+		setFirstStep();
+		
+		ballAreaTimer = new Timer();
 	}
 	
 	// --------------------------------------------------
@@ -108,7 +115,7 @@ public final class GameControl {
 	 * New opponent goal.
 	 */
 	public void opponentGoal(){
-		final GoalBoard playerGoalBoard = mainWindow.getScoreBoard().getPlayerGoalBoard();
+		final GoalBoard playerGoalBoard = scoreBoard.getPlayerGoalBoard();
 		playerGoalBoard.setNumber(playerGoalBoard.getNumber() + 1);
 	}
 	
@@ -116,7 +123,7 @@ public final class GameControl {
 	 * New player goal.
 	 */
 	public void playerGoal(){
-		final GoalBoard opponentGoalBoard = mainWindow.getScoreBoard().getOpponentGoalBoard();
+		final GoalBoard opponentGoalBoard = scoreBoard.getOpponentGoalBoard();
 		opponentGoalBoard.setNumber(opponentGoalBoard.getNumber() + 1);
 	}
 	
@@ -126,26 +133,28 @@ public final class GameControl {
 	public void allButtonIsStopped(){
 		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
 
-		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
-			mainWindow.showBallArea(Button.PLAYER_COLOR);
-		}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-			mainWindow.showBallArea(Button.OPPONENT_COLOR);
-		}
-		
-		Timer.schedule(new Task(){
-
-			@Override
-			public void run() {
-				mainWindow.hideBallArea();
-				
-				if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
-					afterPlayerBallArea();
-				}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-					afterOpponentBallArea();
-				}
+		if(gameStatus != GameStatus.NOT_IN_GAME){
+			if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
+				mainWindow.showBallArea(Button.PLAYER_COLOR);
+			}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+				mainWindow.showBallArea(Button.OPPONENT_COLOR);
 			}
 			
-		}, settings.getBallAreaSec());
+			ballAreaTimer.scheduleTask(new Task(){
+	
+				@Override
+				public void run() {
+					mainWindow.hideBallArea();
+					
+					if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
+						afterPlayerBallArea();
+					}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+						afterOpponentBallArea();
+					}
+				}
+				
+			}, settings.getBallAreaSec());
+		}
 	}
 	
 	/** 
@@ -165,10 +174,56 @@ public final class GameControl {
 	public boolean isPlayerStep(){
 		return gameStatus == GameStatus.PLAYER_IN_GAME;
 	}
+	
+	/**
+	 * End the half time.
+	 */
+	public void endHalfTime(){
+		scoreBoard.getTimeBoard().stop();
+		ballAreaTimer.stop();
+		gameStatus = GameStatus.NOT_IN_GAME;
+		
+		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "End half time");
+			scoreBoard.getHalfTimeBoard().setHalfTime(2);
+			
+			table.moveButtonsToLeftPartOfMap(Player.BOT);
+			table.moveButtonsToRightPartOfMap(Player.PLAYER);
+			
+			settings.setFirstStep( settings.getFirstStep() == Player.PLAYER ? Player.BOT : Player.PLAYER );
+			setFirstStep();
+			
+			scoreBoard.getTimeBoard().start(this);
+		}else{
+			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "Game end.");
+		}
+	}
 
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
+	
+	/**
+	 * Set the first step.
+	 */
+	private void setFirstStep(){
+		if(settings.getFirstStep().equals(Player.PLAYER)){
+			// The player step first.
+			this.gameStatus = GameStatus.PLAYER_IN_GAME;
+		}else{ 
+			// The bot step first.
+			this.gameStatus = GameStatus.OPPONENT_IN_GAME;
+			Timer.schedule(new Task(){
+
+				@Override
+				public void run() {
+					bot.step();
+					opponentStepepd();
+				}
+				
+			}, 1);			
+		}
+	}
 	
 	/**
 	 * After when end of the player's ball area.
@@ -176,7 +231,7 @@ public final class GameControl {
 	private void afterPlayerBallArea(){
 		Gdx.app.log(GameControl.class.getName() + ".afterPlayerBallArea()", "");
 		
-		final List<Button> playerButtons = mainWindow.getTable().getPlayerButtons();
+		final List<Button> playerButtons = table.getPlayerButtons();
 		
 		if(settings.getStepMode().equals(StepMode.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
 			gameStatus = GameStatus.PLAYER_IN_GAME;
@@ -193,7 +248,7 @@ public final class GameControl {
 	private void afterOpponentBallArea(){
 		Gdx.app.log(GameControl.class.getName() + ".afterOpponentBallArea()", "");
 		
-		final List<Button> opponentButtons = mainWindow.getTable().getOpponentButtons();
+		final List<Button> opponentButtons = table.getOpponentButtons();
 		
 		if(settings.getStepMode().equals(StepMode.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
 			gameStatus = GameStatus.OPPONENT_IN_GAME;
@@ -210,7 +265,7 @@ public final class GameControl {
 	 * @param buttons - The actual player's buttons.
 	 */
 	private boolean isActualPlayerStepAgain(final List<Button> buttons){
-		final Ball ball = mainWindow.getTable().getBall();
+		final Ball ball = table.getBall();
 		
 		double lowestDistance = Double.MAX_VALUE;
 		for(final Button playerButton : buttons){
@@ -229,17 +284,6 @@ public final class GameControl {
 			Gdx.app.log(GameControl.class.getName() + ".isActualPlayerStepAgain()", "Next player step");
 			return false;
 		}
-	}
-
-	// --------------------------------------------------
-	// ~ Getter methods
-	// --------------------------------------------------
-	
-	/**
-	 * Return with the main window.
-	 */
-	public MainWindow getMainWindow() {
-		return mainWindow;
 	}
 	
 }
