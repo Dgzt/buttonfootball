@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.GoalBoard;
+import com.dgzt.core.setting.FirstStep;
 import com.dgzt.core.setting.Settings;
 import com.dgzt.core.setting.StepMode;
 import com.dgzt.core.util.MathUtil;
@@ -80,10 +81,12 @@ public final class GameControl {
 		
 		mainWindow.getScoreBoard().getTimeBoard().setHalfTime(settings.getHalfTime());
 		mainWindow.getScoreBoard().getTimeBoard().start();
-		
-		if(settings.getStepMode().equals(StepMode.NORMAL) || settings.getStepMode().equals(StepMode.ALWAYS_PLAYER)){
+
+		if(settings.getFirstStep().equals(FirstStep.PLAYER)){
+			// The player step first.
 			this.gameStatus = GameStatus.PLAYER_IN_GAME;
-		}else{
+		}else{ 
+			// The bot step first.
 			this.gameStatus = GameStatus.OPPONENT_IN_GAME;
 			Timer.schedule(new Task(){
 
@@ -93,7 +96,7 @@ public final class GameControl {
 					opponentStepepd();
 				}
 				
-			}, 1);
+			}, 1);			
 		}
 	}
 	

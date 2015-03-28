@@ -26,6 +26,9 @@ public class Settings {
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
+	
+	/** The player who will first step in the first half. */
+	private FirstStep firstStep;
 
 	/** The step mode. */
 	private StepMode stepMode;
@@ -44,6 +47,7 @@ public class Settings {
 	 * Constructor.
 	 */
 	public Settings(){
+		firstStep = GameConstans.DEFAULT_FIRST_STEP;
 		stepMode = GameConstans.DEFAULT_STEP_MODE;
 		ballAreaSec = GameConstans.DEFAULT_BALL_AREA_SEC;
 		halfTime = GameConstans.DEFAULT_HALF_TIME;
@@ -52,6 +56,14 @@ public class Settings {
 	// --------------------------------------------------
 	// ~ Getter / Setter methods
 	// --------------------------------------------------
+	
+	public FirstStep getFirstStep(){
+		return firstStep;
+	}
+	
+	public void setFirstStep(final FirstStep firstStep){
+		this.firstStep = firstStep;
+	}
 
 	public StepMode getStepMode() {
 		return stepMode;
@@ -86,7 +98,7 @@ public class Settings {
 	 */
 	@Override
 	public String toString() {
-		return "Settings { stepMode = " + stepMode + ", ballAreaSec = " + ballAreaSec + ", halfTime = " + halfTime + " }";
+		return "Settings { firstStep = " + firstStep + ", stepMode = " + stepMode + ", ballAreaSec = " + ballAreaSec + ", halfTime = " + halfTime + " }";
 	}
 	
 }

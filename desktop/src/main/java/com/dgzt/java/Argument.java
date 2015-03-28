@@ -17,6 +17,7 @@ package com.dgzt.java;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.dgzt.core.GameConstans;
+import com.dgzt.core.setting.FirstStep;
 import com.dgzt.core.setting.Settings;
 import com.dgzt.core.setting.StepMode;
 
@@ -32,6 +33,10 @@ public class Argument {
 	// ~ Private members
 	// --------------------------------------------------
 
+	/** The player who will step first in the first half. */
+	@Parameter(names = "--firststep", description = "The player who will first step in the first half.")
+	private FirstStep firstStep = GameConstans.DEFAULT_FIRST_STEP;
+	
 	/** The mode of step process. */
 	@Parameter(names = "--stepmode", description = "The mode of step process.")
 	private StepMode stepMode = GameConstans.DEFAULT_STEP_MODE;
@@ -52,6 +57,7 @@ public class Argument {
 	public Settings toSettings(){
 		final Settings settings = new Settings();
 		
+		settings.setFirstStep(firstStep);
 		settings.setStepMode(stepMode);
 		settings.setBallAreaSec(ballAreaSec);
 		settings.setHalfTime(halfTime);
@@ -63,12 +69,20 @@ public class Argument {
 	// ~ Getter / Setter methods
 	// --------------------------------------------------
 
-	public StepMode getStepMode() {
-		return stepMode;
+	public void setFirstStep(FirstStep firstStep) {
+		this.firstStep = firstStep;
 	}
 
 	public void setStepMode(final StepMode stepMode) {
 		this.stepMode = stepMode;
+	}
+	
+	public StepMode getStepMode() {
+		return stepMode;
+	}
+
+	public FirstStep getFirstStep() {
+		return firstStep;
 	}
 
 	public int getBallAreaSec() {
