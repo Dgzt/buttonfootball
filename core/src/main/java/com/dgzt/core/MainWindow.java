@@ -141,6 +141,13 @@ final public class MainWindow{
 		}
 	}
 	
+	public void dispose(){
+		scoreBoard.dispose();
+		table.dispose();
+		arrow.dispose();
+		ballArea.dispose();
+	}
+	
 	/**
 	 * Setup the arrow if contains the given position a player button.
 	 * 

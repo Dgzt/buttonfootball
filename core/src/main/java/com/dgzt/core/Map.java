@@ -266,6 +266,28 @@ final public class Map extends RectangleShape{
 		centerLine.draw();
 	}
 	
+	@Override
+	public void dispose(){
+		mapBorder.dispose();
+		leftSector16.dispose();
+		rightSector16.dispose();
+		leftSector5.dispose();
+		rightSector5.dispose();
+		centerBigCircle.dispose();
+		centerLine.dispose();
+		centerSmallCircle.dispose();
+		leftSmallCircle.dispose();
+		rightSmallCircle.dispose();
+		topLeftSmallArc.dispose();
+		topRightSmallArc.dispose();
+		bottomRightSmallArc.dispose();
+		bottomLeftSmallArc.dispose();
+		leftBigArc.dispose();
+		rightBigArc.dispose();
+		
+		super.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------

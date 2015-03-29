@@ -192,6 +192,15 @@ public abstract class AbstractButton extends FilledCircleShape{
 		super.draw();
 	}
 	
+	@Override
+	public void dispose(){
+		final World box2DWorld = box2DBody.getWorld();
+		box2DWorld.destroyBody(box2DBody);
+		box2DBody.setUserData(null);
+		
+		super.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------

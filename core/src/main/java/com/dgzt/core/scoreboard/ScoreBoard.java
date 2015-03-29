@@ -111,6 +111,13 @@ final public class ScoreBoard{
 		opponentGoalBoard.draw();
 	}
 	
+	public void dispose(){
+		halfTimeBoard.dispose();
+		playerGoalBoard.dispose();
+		timeBoard.dispose();
+		opponentGoalBoard.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------

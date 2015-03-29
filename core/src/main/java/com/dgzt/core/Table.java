@@ -176,6 +176,24 @@ final public class Table extends RectangleShape{
 		rightGate.draw();
 	}
 	
+	@Override
+	public void dispose(){
+		map.dispose();
+		leftGate.dispose();
+		rightGate.dispose();
+		
+		for(final Button playerButton : playerButtons){
+			playerButton.dispose();
+		}
+		for(final Button opponentButton : opponentButtons){
+			opponentButton.dispose();
+		}
+		
+		ball.dispose();
+		
+		super.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------

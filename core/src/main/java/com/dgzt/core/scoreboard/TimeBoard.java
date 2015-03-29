@@ -193,6 +193,19 @@ final public class TimeBoard extends RectangleBorderShape{
 		firstSecDigit.draw();
 		secondSecDigit.draw();
 	}
+	
+	@Override
+	public void dispose(){
+		firstMinDigit.dispose();
+		secondMinDigit.dispose();
+		
+		secondCircles.dispose();
+		
+		firstSecDigit.dispose();
+		secondSecDigit.dispose();
+		
+		super.dispose();
+	}
 
 	// --------------------------------------------------
 	// ~ Getter / Setter methods

@@ -92,6 +92,13 @@ public class RectangleBorderShape{
 		leftLine.draw();
 	}
 	
+	public void dispose(){
+		topLine.dispose();
+		rightLine.dispose();
+		bottomLine.dispose();
+		leftLine.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------

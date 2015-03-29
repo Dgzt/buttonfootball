@@ -88,4 +88,14 @@ final public class HalfTimeBoard extends RectangleBorderShape{
 		digit.draw();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		digit.dispose();
+		
+		super.dispose();
+	}
+
 }

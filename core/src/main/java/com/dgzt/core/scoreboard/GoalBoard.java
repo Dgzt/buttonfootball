@@ -93,10 +93,21 @@ final public class GoalBoard extends RectangleBorderShape{
 		secondDigit.draw();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		firstDigit.dispose();
+		secondDigit.dispose();
+		
+		super.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter / Setter methods
 	// --------------------------------------------------
-	
+
 	/**
 	 * Set the number of digits.
 	 * 

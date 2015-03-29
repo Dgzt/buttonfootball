@@ -148,6 +148,14 @@ final public class ButtonFootballGame implements ApplicationListener {
 		mainWindow.draw();
 		shader.end();
 	}
+	
+	/**
+	 * Dispose the game.
+	 */
+	@Override
+	public void dispose () {
+		mainWindow.dispose();
+	}
 
 	/**
 	 * Pause the game.
@@ -161,13 +169,6 @@ final public class ButtonFootballGame implements ApplicationListener {
 	 */
 	@Override
 	public void resume () {
-	}
-
-	/**
-	 * Dispose the game.
-	 */
-	@Override
-	public void dispose () {
 	}
 
 }

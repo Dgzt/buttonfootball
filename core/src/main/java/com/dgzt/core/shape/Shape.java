@@ -145,6 +145,13 @@ public abstract class Shape {
 	public void draw(){
 		mesh.render(shader, type);
 	}
+	
+	/**
+	 * Dispose shape.
+	 */
+	public void dispose(){
+		mesh.dispose();
+	}
 
 	// --------------------------------------------------
 	// ~ Getter / Setter methods
