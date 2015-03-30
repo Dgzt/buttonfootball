@@ -295,6 +295,9 @@ final public class Digit{
 		}
 	}
 	
+	/**
+	 * Dispose the digit.
+	 */
 	public void dispose(){
 		topLine.dispose();
 		topRightLine.dispose();

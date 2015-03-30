@@ -194,6 +194,9 @@ final public class TimeBoard extends RectangleBorderShape{
 		secondSecDigit.draw();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void dispose(){
 		firstMinDigit.dispose();

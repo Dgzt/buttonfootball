@@ -111,6 +111,9 @@ final public class ScoreBoard{
 		opponentGoalBoard.draw();
 	}
 	
+	/**
+	 * Dispose the score board.
+	 */
 	public void dispose(){
 		halfTimeBoard.dispose();
 		playerGoalBoard.dispose();

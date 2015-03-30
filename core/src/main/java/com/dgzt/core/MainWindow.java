@@ -141,6 +141,9 @@ final public class MainWindow{
 		}
 	}
 	
+	/**
+	 * Dispose the main window.
+	 */
 	public void dispose(){
 		scoreBoard.dispose();
 		table.dispose();

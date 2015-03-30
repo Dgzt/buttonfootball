@@ -176,6 +176,9 @@ final public class Table extends RectangleShape{
 		rightGate.draw();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void dispose(){
 		map.dispose();

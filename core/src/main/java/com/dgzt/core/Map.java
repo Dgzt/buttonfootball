@@ -266,6 +266,9 @@ final public class Map extends RectangleShape{
 		centerLine.draw();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void dispose(){
 		mapBorder.dispose();

@@ -192,6 +192,9 @@ public abstract class AbstractButton extends FilledCircleShape{
 		super.draw();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void dispose(){
 		final World box2DWorld = box2DBody.getWorld();

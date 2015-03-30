@@ -169,6 +169,9 @@ public abstract class AbstractGate extends RectangleBorderShape{
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void dispose(){
 		for(final LineShape line : columnLines){
