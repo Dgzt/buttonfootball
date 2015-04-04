@@ -96,6 +96,5 @@ public class RectangleShape extends Shape{
 		final float[] vertices = getVertices();
 		
 		return vertices[2] - vertices[0];
-		
 	}
 }

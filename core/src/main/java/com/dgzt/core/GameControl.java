@@ -17,6 +17,7 @@ package com.dgzt.core;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.button.Ball;
@@ -44,7 +45,9 @@ public final class GameControl {
 		PLAYER_IN_GAME,
 		WAITING_AFTER_PLAYER, 
 		OPPONENT_IN_GAME, 
-		WAITING_AFTER_OPPONENT 
+		WAITING_AFTER_OPPONENT,
+		BALL_LEAVED_MAP_BY_PLAYER,
+		BALL_LEAVED_MAP_BY_OPPONENT
 	};
 	
 	// --------------------------------------------------
@@ -71,6 +74,10 @@ public final class GameControl {
 	
 	/** The actual status of the game. */
 	private GameStatus gameStatus;
+	
+	/** The last ball coordinate when leaved the map.
+	 * If the ball is on the map this variable is null.*/
+	private Vector2 ballLeavedMapCoordinate;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -134,26 +141,18 @@ public final class GameControl {
 		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
 
 		if(gameStatus != GameStatus.NOT_IN_GAME){
-			if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
-				mainWindow.showBallArea(Button.PLAYER_COLOR);
-			}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-				mainWindow.showBallArea(Button.OPPONENT_COLOR);
-			}
 			
-			ballAreaTimer.scheduleTask(new Task(){
-	
-				@Override
-				public void run() {
-					mainWindow.hideBallArea();
-					
-					if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
-						afterPlayerBallArea();
-					}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-						afterOpponentBallArea();
-					}
+			if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_PLAYER || gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT){
+				Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "The ball leaved map.");
+			}else{
+				if(ballLeavedMapCoordinate != null){
+					moveBallToBorderOfMap();
+					ballLeavedMapCoordinate = null;
+					gameStatus = (gameStatus == GameStatus.WAITING_AFTER_PLAYER) ? GameStatus.BALL_LEAVED_MAP_BY_PLAYER : GameStatus.BALL_LEAVED_MAP_BY_OPPONENT;
+				}else{
+					showBallArea();
 				}
-				
-			}, settings.getBallAreaSec());
+			}
 		}
 	}
 	
@@ -196,6 +195,15 @@ public final class GameControl {
 			scoreBoard.getTimeBoard().start(this);
 		}else{
 			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "Game end.");
+		}
+	}
+	
+	/**
+	 * The ball leaved map.
+	 */
+	public void ballLeavedMap(){
+		if(ballLeavedMapCoordinate == null){
+			ballLeavedMapCoordinate = table.getBall().getBox2DPosition().cpy();
 		}
 	}
 
@@ -284,6 +292,48 @@ public final class GameControl {
 			Gdx.app.log(GameControl.class.getName() + ".isActualPlayerStepAgain()", "Next player step");
 			return false;
 		}
+	}
+	
+	/**
+	 * Show the area of ball.
+	 */
+	private void showBallArea(){
+		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
+			mainWindow.showBallArea(Button.PLAYER_COLOR);
+		}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+			mainWindow.showBallArea(Button.OPPONENT_COLOR);
+		}
+		
+		ballAreaTimer.scheduleTask(new Task(){
+
+			@Override
+			public void run() {
+				mainWindow.hideBallArea();
+				
+				if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
+					afterPlayerBallArea();
+				}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+					afterOpponentBallArea();
+				}
+			}
+			
+		}, settings.getBallAreaSec());
+	}
+	
+	/**
+	 * Move the ball to the border of map.
+	 */
+	private void moveBallToBorderOfMap(){
+		final Map map = table.getMap();
+		Vector2 newBallPos = ballLeavedMapCoordinate.cpy();
+		
+		if(ballLeavedMapCoordinate.y < map.getBox2DY()){
+			newBallPos.y = map.getBox2DY();
+		}else if(ballLeavedMapCoordinate.y > map.getBox2DY() + Map.HEIGHT){
+			newBallPos.y = map.getBox2DY() + Map.HEIGHT;
+		}
+		
+		table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 	}
 	
 }

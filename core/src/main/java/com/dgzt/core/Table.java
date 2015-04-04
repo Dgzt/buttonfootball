@@ -334,6 +334,13 @@ final public class Table extends RectangleShape{
 	}
 	
 	/**
+	 * Return with the map.
+	 */
+	public final Map getMap(){
+		return map;
+	}
+	
+	/**
 	 * Return with the actual scale value.
 	 */
 	public final double getScale(){

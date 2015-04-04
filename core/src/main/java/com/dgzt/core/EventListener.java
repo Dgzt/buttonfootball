@@ -119,7 +119,8 @@ public final class EventListener implements ContactListener{
 				|| 
 				(ball.getBox2DY() < rightGate.getBox2DY() || ball.getBox2DY() > rightGate.getBox2DY() + AbstractGate.HEIGHT) // Right gate
 			){
-				Gdx.app.log(EventListener.class.getName() + ".endContact", "Ball out the map.");
+				Gdx.app.log(EventListener.class.getName() + ".endContact", "The ball leaved map.");
+				mainWindow.getGameControl().ballLeavedMap();
 			}
 		}
 	}

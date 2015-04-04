@@ -17,6 +17,7 @@ package com.dgzt.core.button;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -136,6 +137,13 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	public void setBox2DPosition(final float box2DX, final float box2DY){
 		box2DBody.setTransform(box2DX, box2DY, box2DBody.getAngle());
+	}
+	
+	/**
+	 * Return with the position in Box2D.
+	 */
+	public Vector2 getBox2DPosition(){
+		return box2DBody.getPosition();
 	}
 	
 	/**
