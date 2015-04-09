@@ -66,8 +66,12 @@ final public class InputListener extends InputAdapter{
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		this.button = button;
 		
-		if(button == Buttons.LEFT && gameControl.isPlayerStep()){
-			mainWindow.mouseButtonPressed(screenX, screenY);
+		if(button == Buttons.LEFT){
+			if(gameControl.isPlayerStep()){
+				mainWindow.mouseButtonPressed(screenX, screenY);
+			}else if(gameControl.isPlayerMoveButton()){
+				gameControl.selectMoovingButton(screenX, screenY);
+			}
 		}
 		
 		return super.touchDown(screenX, screenY, pointer, button);
@@ -78,8 +82,12 @@ final public class InputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if(button == Buttons.LEFT && gameControl.isPlayerStep()){
-			mainWindow.mouseButtonMoved(screenX, screenY);
+		if(button == Buttons.LEFT){
+			if(gameControl.isPlayerStep()){
+				mainWindow.mouseButtonMoved(screenX, screenY);
+			}else if(gameControl.isPlayerMoveButton()){
+				gameControl.moveSelectedButton(screenX, screenY);
+			}
 		}
 		return super.touchDragged(screenX, screenY, pointer);
 	}
@@ -89,8 +97,12 @@ final public class InputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(button == Buttons.LEFT && gameControl.isPlayerStep()){
-			mainWindow.mouseButtonReleased();
+		if(button == Buttons.LEFT){
+			if(gameControl.isPlayerStep()){
+				mainWindow.mouseButtonReleased();
+			}else if(gameControl.isPlayerMoveButton()){
+				gameControl.endMoveSelectedButton();
+			}
 		}
 		
 		return super.touchUp(screenX, screenY, pointer, button);

@@ -47,7 +47,9 @@ public final class GameControl {
 		OPPONENT_IN_GAME, 
 		WAITING_AFTER_OPPONENT,
 		BALL_LEAVED_MAP_BY_PLAYER,
-		BALL_LEAVED_MAP_BY_OPPONENT
+		BALL_LEAVED_MAP_BY_OPPONENT,
+		PLAYER_MOVE_ONE_BUTTON,
+		OPPONENT_MOVE_ONE_BUTTON
 	};
 	
 	// --------------------------------------------------
@@ -78,6 +80,9 @@ public final class GameControl {
 	/** The last ball coordinate when leaved the map.
 	 * If the ball is on the map this variable is null.*/
 	private Vector2 ballLeavedMapCoordinate;
+	
+	/** The mooving button. If the player isn't move button then this variable is null. */
+	private Button moovingButton;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -142,9 +147,7 @@ public final class GameControl {
 
 		if(gameStatus != GameStatus.NOT_IN_GAME){
 			
-			if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_PLAYER || gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT){
-				Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "The ball leaved map.");
-			}else{
+			if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
 				if(ballLeavedMapCoordinate != null){
 					moveBallToBorderOfMap();
 					ballLeavedMapCoordinate = null;
@@ -152,17 +155,28 @@ public final class GameControl {
 				}else{
 					showBallArea();
 				}
+			}else if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_PLAYER || gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT){
+				Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "The ball leaved map.");
+				if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
+					gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
+				}else{
+					gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+					throw new RuntimeException("The opponent move button to the ball.");
+				}
 			}
 		}
 	}
 	
 	/** 
-	 * The player stepped 
+	 * The player stepped.
 	 */
 	public void playerStepped(){
 		gameStatus = GameStatus.WAITING_AFTER_PLAYER;
 	}
 	
+	/**
+	 * The opponent stepped.
+	 */
 	public void opponentStepepd(){
 		gameStatus = GameStatus.WAITING_AFTER_OPPONENT;
 	}
@@ -172,6 +186,13 @@ public final class GameControl {
 	 */
 	public boolean isPlayerStep(){
 		return gameStatus == GameStatus.PLAYER_IN_GAME;
+	}
+	
+	/**
+	 * Return true when the player can move button.
+	 */
+	public boolean isPlayerMoveButton(){
+		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON;	
 	}
 	
 	/**
@@ -206,6 +227,85 @@ public final class GameControl {
 			ballLeavedMapCoordinate = table.getBall().getBox2DPosition().cpy();
 		}
 	}
+	
+	/**
+	 * Select a button to move to the ball.
+	 * 
+	 * @param x - The x coordinate value to select button.
+	 * @param y - The y coordinate value to select button.
+	 */
+	public void selectMoovingButton(final float x, final float y){
+		for(final Button button : table.getPlayerButtons()){
+			if(button.contains(x, y)){
+				moovingButton = button;
+				Gdx.app.log(GameControl.class.getName() + ".selectMoovingButton()", "Selected button.");
+				break;
+			}
+		}
+		
+		if(moovingButton == null){
+			Gdx.app.log(GameControl.class.getName() + ".selectMoovingButton()", "Not selected button.");
+			if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
+				gameStatus = GameStatus.PLAYER_IN_GAME;
+			}else{
+				throw new RuntimeException("Not implemented when bot start after the ball leaved the map.");
+			}
+		}
+	}
+	
+	/**
+	 * Move the selected button to the given position.
+	 * 
+	 * @param x - The new x coordinate value.
+	 * @param y - The new y coordinate value.
+	 */
+	public void moveSelectedButton(final float x, final float y){
+		// The new position is ok
+		boolean ok = true;
+		
+		// Check the player's button positions
+		for(final Button playerButton : table.getPlayerButtons()){
+			if(moovingButton != playerButton && MathUtil.distance(playerButton.getX(), playerButton.getY(), x, y) < table.getScale() * (Button.RADIUS * 2)){
+				ok = false;
+			}
+		}
+		
+		// Check the opponent's button positions
+		if(ok){
+			for(final Button opponentButton : table.getOpponentButtons()){
+				if(MathUtil.distance(opponentButton.getX(), opponentButton.getY(), x, y) < table.getScale() * (Button.RADIUS * 2)){
+					ok = false;
+				}
+			}
+		}
+		
+		// Check the ball position
+		if(ok && MathUtil.distance(table.getBall().getX(), table.getBall().getY(), x, y) < table.getScale() * (Button.RADIUS + Ball.RADIUS)){
+			ok = false;
+		}
+		
+		// If the button will not on other button or ball then move to the new position
+		if(ok){
+			moovingButton.setPosition(x, y);
+		}
+	}
+	
+	/**
+	 * End move the selected button.
+	 */
+	public void endMoveSelectedButton(){
+		moovingButton = null;
+		
+		if(gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON){
+			Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Player in game.");
+			gameStatus = GameStatus.PLAYER_IN_GAME;
+		}else if(gameStatus == GameStatus.OPPONENT_MOVE_ONE_BUTTON){
+			Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Bot in game.");
+			gameStatus = GameStatus.OPPONENT_IN_GAME;
+			bot.step();
+			opponentStepepd();
+		}
+	}
 
 	// --------------------------------------------------
 	// ~ Private methods
@@ -229,7 +329,7 @@ public final class GameControl {
 					opponentStepepd();
 				}
 				
-			}, 1);			
+			}, 1);
 		}
 	}
 	

@@ -147,6 +147,20 @@ public abstract class AbstractButton extends FilledCircleShape{
 	}
 	
 	/**
+	 * Set the position in the application.
+	 * 
+	 * @param x - The new x coordinate value.
+	 * @param y - The new y coordinate value.
+	 */
+	public void setPosition(final float x, final float y){
+		final Vector2 newBox2DPos = new Vector2();
+		newBox2DPos.x = (x - parent.getX()) / (float) parent.getScale();
+		newBox2DPos.y = (y - parent.getY()) / (float) parent.getScale();
+		
+		setBox2DPosition(newBox2DPos.x, newBox2DPos.y);
+	}
+	
+	/**
 	 * Contains the button the given coordinate.
 	 * 
 	 * @param x - The x coordinate value.
@@ -204,12 +218,12 @@ public abstract class AbstractButton extends FilledCircleShape{
 
 			resize();
 			
-			if(mooving == false){
+			if(!mooving){
 				mooving = true;
 				Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Start mooving.");
 				eventListener.buttonStartMooving();
 			}
-		}else if(mooving == true){
+		}else if(mooving){
 			mooving = false;
 			Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Stop mooving.");
 			eventListener.buttonEndMooving();
