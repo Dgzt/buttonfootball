@@ -427,12 +427,31 @@ public final class GameControl {
 		final Map map = table.getMap();
 		Vector2 newBallPos = ballLeavedMapCoordinate.cpy();
 		
-		if(ballLeavedMapCoordinate.y < map.getBox2DY()){
+		// Move to the top left corner
+		if(ballLeavedMapCoordinate.x < map.getBox2DX() && ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+			newBallPos.set(map.getBox2DX(), map.getBox2DY());
+		}else
+		// Move to the top line
+		if(ballLeavedMapCoordinate.x >= map.getBox2DX() && ballLeavedMapCoordinate.x <= (map.getBox2DX() + Map.WIDTH) && ballLeavedMapCoordinate.y < map.getBox2DY()){
 			newBallPos.y = map.getBox2DY();
-		}else if(ballLeavedMapCoordinate.y > map.getBox2DY() + Map.HEIGHT){
+		}else
+		// Move to the top right corner
+		if(ballLeavedMapCoordinate.x > (map.getBox2DX() + Map.WIDTH) && ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+			newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+		}else
+		// Move to the bottom right corner
+		if(ballLeavedMapCoordinate.x > (map.getBox2DX() + Map.WIDTH) && ballLeavedMapCoordinate.y > (map.getBox2DY() + Map.HEIGHT / 2)){
+			newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+		}else
+		// Move to the bottom line
+		if(ballLeavedMapCoordinate.x >= map.getBox2DX() && ballLeavedMapCoordinate.x <= map.getBox2DX() + Map.WIDTH && ballLeavedMapCoordinate.y > map.getBox2DY() + Map.HEIGHT){
 			newBallPos.y = map.getBox2DY() + Map.HEIGHT;
+		}else
+		// Move to the bottom left corner
+		if(ballLeavedMapCoordinate.x < map.getBox2DX() && ballLeavedMapCoordinate.y > (map.getBox2DY() + Map.HEIGHT / 2)){
+			newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
 		}
-		
+			
 		table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 	}
 	
