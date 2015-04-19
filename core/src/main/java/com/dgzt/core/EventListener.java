@@ -72,7 +72,7 @@ public final class EventListener implements ContactListener{
 	public void buttonEndMooving(){
 		--moovingButtonNum;
 		if(moovingButtonNum == 0){
-			mainWindow.getGameControl().allButtonIsStopped();
+			mainWindow.getGameControl().allButtonIsStoppedEvent();
 		}
 	}
 	
@@ -84,19 +84,19 @@ public final class EventListener implements ContactListener{
 	 * The Box2D begin contact listener method.
 	 */
 	@Override
-	public void beginContact(Contact contact) {
+	public void beginContact(final Contact contact) {
 		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
 		
 		final Object userDataA = contact.getFixtureA().getUserData();
 			
 		if(userDataA instanceof LeftGate){
 			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Opponent goal!!");
-			mainWindow.getGameControl().opponentGoal();
+			mainWindow.getGameControl().opponentGoalEvent();
 		}
 			
 		if(userDataA instanceof RightGate){
 			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Player goal!!");
-			mainWindow.getGameControl().playerGoal();
+			mainWindow.getGameControl().playerGoalEvent();
 		}
 	}
 
@@ -104,7 +104,7 @@ public final class EventListener implements ContactListener{
 	 * The Box2D end contact listener method.
 	 */
 	@Override
-	public void endContact(Contact contact) {
+	public void endContact(final Contact contact) {
 		Gdx.app.log(EventListener.class.getName() + ".endContact", "");
 		
 		final Object userDataA = contact.getFixtureA().getUserData();

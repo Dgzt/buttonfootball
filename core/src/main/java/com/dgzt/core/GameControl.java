@@ -49,7 +49,9 @@ public final class GameControl {
 		BALL_LEAVED_MAP_BY_PLAYER,
 		BALL_LEAVED_MAP_BY_OPPONENT,
 		PLAYER_MOVE_ONE_BUTTON,
-		OPPONENT_MOVE_ONE_BUTTON
+		OPPONENT_MOVE_ONE_BUTTON,
+		PLAYER_GOAL,
+		OPPONENT_GOAL
 	};
 	
 	// --------------------------------------------------
@@ -126,23 +128,21 @@ public final class GameControl {
 	/**
 	 * New opponent goal.
 	 */
-	public void opponentGoal(){
-		final GoalBoard playerGoalBoard = scoreBoard.getPlayerGoalBoard();
-		playerGoalBoard.setNumber(playerGoalBoard.getNumber() + 1);
+	public void opponentGoalEvent(){
+		gameStatus = GameStatus.OPPONENT_GOAL;
 	}
 	
 	/**
 	 * New player goal.
 	 */
-	public void playerGoal(){
-		final GoalBoard opponentGoalBoard = scoreBoard.getOpponentGoalBoard();
-		opponentGoalBoard.setNumber(opponentGoalBoard.getNumber() + 1);
+	public void playerGoalEvent(){
+		gameStatus = GameStatus.PLAYER_GOAL;
 	}
 	
 	/**
-	 * The all button is stopped event.
+	 * The all button stopped event.
 	 */
-	public void allButtonIsStopped(){
+	public void allButtonIsStoppedEvent(){
 		Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "");
 
 		if(gameStatus != GameStatus.NOT_IN_GAME){
@@ -163,6 +163,8 @@ public final class GameControl {
 					gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
 					throw new RuntimeException("The opponent move button to the ball.");
 				}
+			}else if(gameStatus == GameStatus.OPPONENT_GOAL || gameStatus == GameStatus.PLAYER_GOAL){
+				goal();
 			}
 		}
 	}
@@ -312,21 +314,43 @@ public final class GameControl {
 	// --------------------------------------------------
 	
 	/**
+	 * The player in game.
+	 */
+	private void playerInGame(){
+		Gdx.app.log(GameControl.class.getName() + ".playerInGame", "init");
+		
+		gameStatus = GameStatus.PLAYER_IN_GAME;
+	}
+	
+	/**
+	 * The opponent in game.
+	 */
+	private void opponentInGame(){
+		Gdx.app.log(GameControl.class.getName() + ".opponentInGame", "init");
+		
+		gameStatus = GameStatus.OPPONENT_IN_GAME;
+		bot.step();
+		opponentStepepd();
+	}
+	
+	/**
 	 * Set the first step.
 	 */
 	private void setFirstStep(){
+		// The player step first.
 		if(settings.getFirstStep().equals(Player.PLAYER)){
-			// The player step first.
-			this.gameStatus = GameStatus.PLAYER_IN_GAME;
-		}else{ 
-			// The bot step first.
-			this.gameStatus = GameStatus.OPPONENT_IN_GAME;
+			
+			playerInGame();
+		}
+		// The bot step first.
+		else{
+			gameStatus = GameStatus.OPPONENT_IN_GAME;
+			
 			Timer.schedule(new Task(){
-
+				
 				@Override
 				public void run() {
-					bot.step();
-					opponentStepepd();
+					opponentInGame();
 				}
 				
 			}, 1);
@@ -342,11 +366,9 @@ public final class GameControl {
 		final List<Button> playerButtons = table.getPlayerButtons();
 		
 		if(settings.getStepMode().equals(StepMode.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
-			gameStatus = GameStatus.PLAYER_IN_GAME;
+			playerInGame();
 		}else{
-			gameStatus = GameStatus.OPPONENT_IN_GAME;
-			bot.step();
-			opponentStepepd();
+			opponentInGame();
 		}
 	}
 	
@@ -359,11 +381,9 @@ public final class GameControl {
 		final List<Button> opponentButtons = table.getOpponentButtons();
 		
 		if(settings.getStepMode().equals(StepMode.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
-			gameStatus = GameStatus.OPPONENT_IN_GAME;
-			bot.step();
-			opponentStepepd();
+			opponentInGame();
 		}else{
-			gameStatus = GameStatus.PLAYER_IN_GAME;
+			playerInGame();
 		}
 	}
 	
@@ -453,6 +473,64 @@ public final class GameControl {
 		}
 			
 		table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
+	}
+	
+	/**
+	 * The player or opponent goal. Set the goalboard, buttons and ball.
+	 */
+	private void goal(){
+		// Move the buttons to the original position
+		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+			table.moveButtonsToLeftPartOfMap(Player.PLAYER);
+			table.moveButtonsToRightPartOfMap(Player.BOT);
+		}else{
+			table.moveButtonsToLeftPartOfMap(Player.BOT);
+			table.moveButtonsToRightPartOfMap(Player.PLAYER);
+		}
+		
+		// Move ball to the original position
+		table.moveBallToCenter();
+		
+		// Opponent goal
+		if(gameStatus == GameStatus.OPPONENT_GOAL){
+			opponentGoal();
+		}
+		// Player goal
+		else if(gameStatus == GameStatus.PLAYER_GOAL){
+			playerGoal();
+		}
+	}
+	
+	/**
+	 * Opponent goal. Set the opponent's goal board and the game status.
+	 */
+	private void opponentGoal(){
+		// Set the opponent's goal board
+		final GoalBoard goalBoard = scoreBoard.getOpponentGoalBoard();
+		goalBoard.setNumber(goalBoard.getNumber() + 1);
+		
+		// Set who will step
+		if(settings.getStepMode() != StepMode.ALWAYS_BOT){
+			playerInGame();
+		}else{
+			opponentInGame();
+		}
+	}
+	
+	/**
+	 * Player goal. Set the player's goal board and the game status.
+	 */
+	private void playerGoal(){
+		// Set the player's goal board
+		final GoalBoard goalBoard = scoreBoard.getPlayerGoalBoard();
+		goalBoard.setNumber(goalBoard.getNumber() + 1);
+		
+		// Set who wll step
+		if(settings.getStepMode() != StepMode.ALWAYS_PLAYER){
+			opponentInGame();
+		}else{
+			playerInGame();
+		}
 	}
 	
 }

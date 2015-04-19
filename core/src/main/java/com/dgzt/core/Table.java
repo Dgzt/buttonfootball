@@ -204,6 +204,13 @@ final public class Table extends RectangleShape{
 		buttons.get(10).setBox2DPosition(Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY);
 	}
 	
+	/**
+	 * Move ball to the center of the map.
+	 */
+	public void moveBallToCenter(){
+		ball.setBox2DPosition(Table.WIDTH / 2, Table.HEIGHT / 2);
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
