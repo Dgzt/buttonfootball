@@ -126,17 +126,25 @@ public final class GameControl {
 	// --------------------------------------------------
 	
 	/**
-	 * New opponent goal.
+	 * Goal in left gate event.
 	 */
-	public void opponentGoalEvent(){
-		gameStatus = GameStatus.OPPONENT_GOAL;
+	public void leftGateGoalEvent(){
+		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+			playerGoalEvent();
+		}else{
+			opponentGoalEvent();
+		}
 	}
-	
+
 	/**
-	 * New player goal.
+	 * Goal in right gate event.
 	 */
-	public void playerGoalEvent(){
-		gameStatus = GameStatus.PLAYER_GOAL;
+	public void rightGateGoalEvent(){
+		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+			opponentGoalEvent();
+		}else{
+			playerGoalEvent();
+		}
 	}
 	
 	/**
@@ -312,6 +320,21 @@ public final class GameControl {
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
+	
+	/**
+	 * Player goal event.
+	 */
+	private void playerGoalEvent(){
+		Gdx.app.log(GameControl.class.getName() + ".playerGoalEvent", "init");
+		
+		gameStatus = GameStatus.PLAYER_GOAL;
+	}
+	
+	private void opponentGoalEvent(){
+		Gdx.app.log(GameControl.class.getName() + ".opponentGoalEvent", "init");
+		
+		gameStatus = GameStatus.OPPONENT_GOAL;		
+	}
 	
 	/**
 	 * The player in game.

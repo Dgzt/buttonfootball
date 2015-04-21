@@ -86,18 +86,6 @@ public final class EventListener implements ContactListener{
 	@Override
 	public void beginContact(final Contact contact) {
 		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
-		
-		final Object userDataA = contact.getFixtureA().getUserData();
-			
-		if(userDataA instanceof LeftGate){
-			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Opponent goal!!");
-			mainWindow.getGameControl().opponentGoalEvent();
-		}
-			
-		if(userDataA instanceof RightGate){
-			Gdx.app.log(EventListener.class.getName() + ".beginContact", "Player goal!!");
-			mainWindow.getGameControl().playerGoalEvent();
-		}
 	}
 
 	/**
@@ -121,6 +109,18 @@ public final class EventListener implements ContactListener{
 			){
 				Gdx.app.log(EventListener.class.getName() + ".endContact", "The ball leaved map.");
 				mainWindow.getGameControl().ballLeavedMap();
+			}else{
+				final Map map = mainWindow.getTable().getMap();
+				
+				if(ball.getBox2DX() < map.getBox2DX()){
+					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in left gate!");
+					
+					mainWindow.getGameControl().leftGateGoalEvent();
+				}else if(ball.getBox2DX() > map.getBox2DX() + Map.WIDTH){
+					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in right gate!");
+					
+					mainWindow.getGameControl().rightGateGoalEvent();
+				}
 			}
 		}
 	}
