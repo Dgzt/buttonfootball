@@ -111,7 +111,7 @@ public final class GameControl {
 		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
 		table.moveButtonsToRightPartOfMap(Player.BOT);
 		
-		scoreBoard.getHalfTimeBoard().setHalfTime(1);
+		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.FIRST_HALF);
 		
 		scoreBoard.getTimeBoard().setHalfTime(settings.getHalfTime());
 		scoreBoard.getTimeBoard().start(this);
@@ -129,7 +129,7 @@ public final class GameControl {
 	 * Goal in left gate event.
 	 */
 	public void leftGateGoalEvent(){
-		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
 			playerGoalEvent();
 		}else{
 			opponentGoalEvent();
@@ -140,7 +140,7 @@ public final class GameControl {
 	 * Goal in right gate event.
 	 */
 	public void rightGateGoalEvent(){
-		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
 			opponentGoalEvent();
 		}else{
 			playerGoalEvent();
@@ -213,9 +213,9 @@ public final class GameControl {
 		ballAreaTimer.stop();
 		gameStatus = GameStatus.NOT_IN_GAME;
 		
-		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
 			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "End half time");
-			scoreBoard.getHalfTimeBoard().setHalfTime(2);
+			scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.SECOND_HALF);
 			
 			table.moveButtonsToLeftPartOfMap(Player.BOT);
 			table.moveButtonsToRightPartOfMap(Player.PLAYER);
@@ -503,7 +503,7 @@ public final class GameControl {
 	 */
 	private void goal(){
 		// Move the buttons to the original position
-		if(scoreBoard.getHalfTimeBoard().getHalfTime() == 1){
+		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
 			table.moveButtonsToLeftPartOfMap(Player.PLAYER);
 			table.moveButtonsToRightPartOfMap(Player.BOT);
 		}else{
