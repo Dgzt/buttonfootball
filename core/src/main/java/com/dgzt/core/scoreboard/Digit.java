@@ -295,6 +295,19 @@ final public class Digit{
 		}
 	}
 	
+	/**
+	 * Dispose the digit.
+	 */
+	public void dispose(){
+		topLine.dispose();
+		topRightLine.dispose();
+		bottomRightLine.dispose();
+		bottomLine.dispose();
+		bottomLeftLine.dispose();
+		centerLine.dispose();
+		topLeftLine.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter / Setter methods
 	// --------------------------------------------------

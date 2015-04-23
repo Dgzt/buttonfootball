@@ -17,6 +17,7 @@ package com.dgzt.core.button;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -88,8 +89,6 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param eventListener - The event listener.
 	 * @param box2DWorld - The box2D world.
 	 * @param color - The color of button.
-	 * @param box2DX - The x coordinate value of button in Box2D.
-	 * @param box2DY - The y coordinate value of button in Box2D.
 	 * @param box2DRadius - The radius value of button in Box2D.
 	 */
 	public AbstractButton(
@@ -98,17 +97,16 @@ public abstract class AbstractButton extends FilledCircleShape{
 			final EventListener eventListener, 
 			final World box2DWorld, 
 			final Color color, 
-			final float box2DX, 
-			final float box2DY, 
 			final float box2DRadius
 	) {
 		super(shader, color);
 		this.parent = parent;
 		this.eventListener = eventListener;
-		this.box2DX = box2DX;
-		this.box2DY = box2DY;
 		this.box2DRadius = box2DRadius;
 		this.mooving = false;
+		
+		box2DX = 0;
+		box2DY = 0;
 		
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
@@ -130,6 +128,37 @@ public abstract class AbstractButton extends FilledCircleShape{
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
+	
+	/**
+	 * Set the position in the Box2D world.
+	 * 
+	 * @param box2DX - The x coordinate value in box2D.
+	 * @param box2DY - The y coordinate value in box2D.
+	 */
+	public void setBox2DPosition(final float box2DX, final float box2DY){
+		box2DBody.setTransform(box2DX, box2DY, box2DBody.getAngle());
+	}
+	
+	/**
+	 * Return with the position in Box2D.
+	 */
+	public Vector2 getBox2DPosition(){
+		return box2DBody.getPosition();
+	}
+	
+	/**
+	 * Set the position in the application.
+	 * 
+	 * @param x - The new x coordinate value.
+	 * @param y - The new y coordinate value.
+	 */
+	public void setPosition(final float x, final float y){
+		final Vector2 newBox2DPos = new Vector2();
+		newBox2DPos.x = (x - parent.getX()) / (float) parent.getScale();
+		newBox2DPos.y = (y - parent.getY()) / (float) parent.getScale();
+		
+		setBox2DPosition(newBox2DPos.x, newBox2DPos.y);
+	}
 	
 	/**
 	 * Contains the button the given coordinate.
@@ -162,6 +191,17 @@ public abstract class AbstractButton extends FilledCircleShape{
 		box2DBody.setLinearVelocity(x, y);
 	}
 	
+	/**
+	 * Dispose the button.
+	 * 
+	 * @param box2DWorld - The box2D world.
+	 */
+	public void dispose(final World box2DWorld){
+		box2DWorld.destroyBody(box2DBody);
+		box2DBody.setUserData(null);
+		super.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -178,18 +218,30 @@ public abstract class AbstractButton extends FilledCircleShape{
 
 			resize();
 			
-			if(mooving == false){
+			if(!mooving){
 				mooving = true;
 				Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Start mooving.");
 				eventListener.buttonStartMooving();
 			}
-		}else if(mooving == true){
+		}else if(mooving){
 			mooving = false;
 			Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Stop mooving.");
 			eventListener.buttonEndMooving();
 		}
 		
 		super.draw();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose(){
+		final World box2DWorld = box2DBody.getWorld();
+		box2DWorld.destroyBody(box2DBody);
+		box2DBody.setUserData(null);
+		
+		super.dispose();
 	}
 	
 	// --------------------------------------------------
@@ -231,11 +283,11 @@ public abstract class AbstractButton extends FilledCircleShape{
 		
 		return body;
 	}
-
+	
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
-	
+
 	/**
 	 * Return with the x coordinate value in Box2D.
 	 */
@@ -244,10 +296,10 @@ public abstract class AbstractButton extends FilledCircleShape{
 	}
 
 	/**
-	 * Return with the y coordiante value in Box2D.
+	 * Return with the y coordinate value in Box2D.
 	 */
 	public float getBox2DY() {
 		return box2DY;
 	}
-	
+
 }

@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.dgzt.core.GameControl;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 
@@ -41,9 +42,6 @@ final public class TimeBoard extends RectangleBorderShape{
 	// --------------------------------------------------
 	// ~ Private static members
 	// --------------------------------------------------
-	
-	/** 13 minute. */
-	private static final int HALF_TIME = 13 * 60;
 	
 	/** The delay second of the timer. */
 	private static final int TIMER_DELAY_SECOND = 1;
@@ -70,11 +68,17 @@ final public class TimeBoard extends RectangleBorderShape{
 	/** The second moment digit. */
 	private final Digit secondSecDigit;
 	
+	/** The timer for the time board. */
+	private final Timer timer;
+	
 	/** The current time. */
 	private int currentTime;
 	
 	/** Visible the second circles. */
 	private boolean visibleSecondCircles;
+	
+	/** The half time. */
+	private int halfTime;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -88,6 +92,7 @@ final public class TimeBoard extends RectangleBorderShape{
 	 */
 	public TimeBoard(final ShaderProgram shader, final Color color) {
 		super(shader, color);
+		this.halfTime = 0;
 		
 		firstMinDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
 		secondMinDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
@@ -97,10 +102,21 @@ final public class TimeBoard extends RectangleBorderShape{
 		firstSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
 		secondSecDigit = new Digit(shader, Digit.TIME_DIGIT_WIDTH, Digit.TIME_DIGIT_HEIGHT, color);
 		
-		currentTime = HALF_TIME;
+		timer = new Timer();
+	}
+
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Start the time board.
+	 */
+	public void start(final GameControl gameControl){
+		currentTime = halfTime;
 		setCurrentTime();
 		visibleSecondCircles = isVisibleSecondCircles();
-		Timer.schedule(new Task() {
+		timer.scheduleTask(new Task() {
 			
 			@Override
 			public void run() {
@@ -108,10 +124,21 @@ final public class TimeBoard extends RectangleBorderShape{
 				setCurrentTime();
 				
 				visibleSecondCircles = isVisibleSecondCircles();
+				
+				if(currentTime == 0){
+					gameControl.endHalfTime();
+					//
+					cancel();
+				}
 			}
 		}, TIMER_DELAY_SECOND, TIMER_INTERVAL_SECOND);
+		timer.start();
 	}
-
+	
+	public void stop(){
+		timer.stop();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
@@ -182,6 +209,35 @@ final public class TimeBoard extends RectangleBorderShape{
 		
 		firstSecDigit.draw();
 		secondSecDigit.draw();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose(){
+		firstMinDigit.dispose();
+		secondMinDigit.dispose();
+		
+		secondCircles.dispose();
+		
+		firstSecDigit.dispose();
+		secondSecDigit.dispose();
+		
+		super.dispose();
+	}
+
+	// --------------------------------------------------
+	// ~ Getter / Setter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Set the half time.
+	 * 
+	 * @param halfTime - The new half time.
+	 */
+	public void setHalfTime(int halfTime) {
+		this.halfTime = halfTime;
 	}
 
 }

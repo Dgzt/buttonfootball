@@ -266,6 +266,31 @@ final public class Map extends RectangleShape{
 		centerLine.draw();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose(){
+		mapBorder.dispose();
+		leftSector16.dispose();
+		rightSector16.dispose();
+		leftSector5.dispose();
+		rightSector5.dispose();
+		centerBigCircle.dispose();
+		centerLine.dispose();
+		centerSmallCircle.dispose();
+		leftSmallCircle.dispose();
+		rightSmallCircle.dispose();
+		topLeftSmallArc.dispose();
+		topRightSmallArc.dispose();
+		bottomRightSmallArc.dispose();
+		bottomLeftSmallArc.dispose();
+		leftBigArc.dispose();
+		rightBigArc.dispose();
+		
+		super.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
@@ -508,4 +533,21 @@ final public class Map extends RectangleShape{
 		centerLine.resize(x1, y1, x2, y2, scale);
 	}
 
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the x coordinate value in Box2D.
+	 */
+	public float getBox2DX() {
+		return box2DX;
+	}
+	
+	/**
+	 * Return with the y coordinate value in Box2D.
+	 */
+	public float getBox2DY() {
+		return box2DY;
+	}
 }

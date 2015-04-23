@@ -53,18 +53,14 @@ public class Button extends AbstractButton{
 	 * @param eventListener - The event listener.
 	 * @param box2dWorld - The Box2D world.
 	 * @param color - The color.
-	 * @param box2dx - The x coordinate value in the Box2D.
-	 * @param box2dy - The y coordinate value in the Box2D.
 	 */
 	public Button(final Table parent, 
 				final ShaderProgram shader,
 				final EventListener eventListener,
 				final World box2dWorld,
-				final Color color, 
-				final float box2dx, 
-				final float box2dy) 
+				final Color color) 
 	{
-		super(parent, shader, eventListener, box2dWorld, color, box2dx, box2dy, RADIUS);
+		super(parent, shader, eventListener, box2dWorld, color, RADIUS);
 	}
 	
 	// --------------------------------------------------

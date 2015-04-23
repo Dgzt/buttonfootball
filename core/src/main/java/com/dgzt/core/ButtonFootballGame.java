@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.setting.Settings;
 
 /**
  * The game listener.
@@ -54,8 +55,24 @@ final public class ButtonFootballGame implements ApplicationListener {
 	/** The camera. */
 	private OrthographicCamera camera;
 	
+	/** The settings. */
+	private final Settings settings;
+	
 	/** The main window. */
 	private MainWindow mainWindow;
+	
+	// --------------------------------------------------
+	// ~ Constructors
+	// --------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param settings - The settings.
+	 */
+	public ButtonFootballGame(final Settings settings) {
+		this.settings = settings;
+	}
 	
 	// --------------------------------------------------
 	// ~ Override methods
@@ -66,6 +83,10 @@ final public class ButtonFootballGame implements ApplicationListener {
 	 */
 	@Override
 	public void create () {
+		// For the alpha channel
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		
         camera = new OrthographicCamera();
 		
 		shader = new ShaderProgram(Gdx.files.internal(VERTEX_SHADER).readString(), Gdx.files.internal(FRAGMENT_SHADER).readString());
@@ -77,7 +98,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
 		}
 		
-		mainWindow = new MainWindow(shader, spriteBatch);
+		mainWindow = new MainWindow(shader, spriteBatch, settings);
 	}
 
 	/**
@@ -121,11 +142,19 @@ final public class ButtonFootballGame implements ApplicationListener {
 	public void render () {
 		camera.update();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);;	
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		shader.begin();
 		mainWindow.draw();
 		shader.end();
+	}
+	
+	/**
+	 * Dispose the game.
+	 */
+	@Override
+	public void dispose () {
+		mainWindow.dispose();
 	}
 
 	/**
@@ -140,13 +169,6 @@ final public class ButtonFootballGame implements ApplicationListener {
 	 */
 	@Override
 	public void resume () {
-	}
-
-	/**
-	 * Dispose the game.
-	 */
-	@Override
-	public void dispose () {
 	}
 
 }

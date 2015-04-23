@@ -16,6 +16,7 @@ package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.HalfTimeType;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 
@@ -57,9 +58,28 @@ final public class HalfTimeBoard extends RectangleBorderShape{
 		super(shader, color);
 		
 		digit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
-		digit.setNumber(1);
 	}
 	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the type of the half time.
+	 */
+	public HalfTimeType getHalfTimeType() {
+		return HalfTimeType.getByValue(digit.getNumber());
+	}
+
+	/**
+	 * Set the type of the half time.
+	 * 
+	 * @param halfTimeType - The new type of half time.
+	 */
+	public void setHalfTimeType(HalfTimeType halfTimeType) {
+		digit.setNumber(halfTimeType.getValue());
+	}
+
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -86,6 +106,16 @@ final public class HalfTimeBoard extends RectangleBorderShape{
 		super.draw();
 		
 		digit.draw();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		digit.dispose();
+		
+		super.dispose();
 	}
 
 }

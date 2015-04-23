@@ -18,6 +18,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.util.MathUtil;
 
 /**
  * Line shape.
@@ -94,7 +95,7 @@ public class LineShape extends Shape{
 		final float vectorX = x2 - x1;
 		final float vectorY = (Gdx.graphics.getHeight() - y2) - (Gdx.graphics.getHeight() - y1);
 		
-		final float vectorLength = (float)Math.sqrt(Math.pow(vectorX, 2) + Math.pow(vectorY, 2));
+		final float vectorLength = (float) MathUtil.distance(vectorX, vectorY);
 		
 		final float vectorXUnit = vectorX / vectorLength;
 		final float vectorYUnit = vectorY / vectorLength;
@@ -115,7 +116,7 @@ public class LineShape extends Shape{
 	 * Return with the length of line.
 	 */
 	public float getLength(){
-		return (float)Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+		return (float) MathUtil.distance(x1, y1, x2, y2);
 	}
 	
 	// --------------------------------------------------

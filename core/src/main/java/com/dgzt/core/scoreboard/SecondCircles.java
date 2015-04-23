@@ -102,6 +102,14 @@ final public class SecondCircles{
 		bottomCircle.draw();
 	}
 	
+	/**
+	 * Dispose the second circles.
+	 */
+	public void dispose(){
+		topCircle.dispose();
+		bottomCircle.dispose();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
