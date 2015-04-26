@@ -35,8 +35,8 @@ public final class EventListener implements ContactListener{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The main window. */
-	private final MainWindow mainWindow;
+	/** The game window. */
+	private final GameWindow gameWindow;
 	
 	/** The number of the mooving buttons. */
 	private short moovingButtonNum;
@@ -48,10 +48,10 @@ public final class EventListener implements ContactListener{
 	/**
 	 * The constructor.
 	 * 
-	 * @param mainWindow - The main window.
+	 * @param gameWindow - The game window.
 	 */
-	public EventListener(final MainWindow mainWindow){
-		this.mainWindow = mainWindow;
+	public EventListener(final GameWindow gameWindow){
+		this.gameWindow = gameWindow;
 		this.moovingButtonNum = 0;
 	}
 	
@@ -72,7 +72,7 @@ public final class EventListener implements ContactListener{
 	public void buttonEndMooving(){
 		--moovingButtonNum;
 		if(moovingButtonNum == 0){
-			mainWindow.getGameControl().allButtonIsStoppedEvent();
+			gameWindow.getGameControl().allButtonIsStoppedEvent();
 		}
 	}
 	
@@ -99,8 +99,8 @@ public final class EventListener implements ContactListener{
 		
 		if(userDataA instanceof Map){
 			final Ball ball = (Ball) contact.getFixtureB().getUserData();
-			final LeftGate leftGate = mainWindow.getTable().getLeftGate();
-			final RightGate rightGate = mainWindow.getTable().getRightGate();
+			final LeftGate leftGate = gameWindow.getTable().getLeftGate();
+			final RightGate rightGate = gameWindow.getTable().getRightGate();
 			
 			if(
 				(ball.getBox2DY() < leftGate.getBox2DY() || ball.getBox2DY() > leftGate.getBox2DY() + AbstractGate.HEIGHT) // Left gate
@@ -108,18 +108,18 @@ public final class EventListener implements ContactListener{
 				(ball.getBox2DY() < rightGate.getBox2DY() || ball.getBox2DY() > rightGate.getBox2DY() + AbstractGate.HEIGHT) // Right gate
 			){
 				Gdx.app.log(EventListener.class.getName() + ".endContact", "The ball leaved map.");
-				mainWindow.getGameControl().ballLeavedMap();
+				gameWindow.getGameControl().ballLeavedMap();
 			}else{
-				final Map map = mainWindow.getTable().getMap();
+				final Map map = gameWindow.getTable().getMap();
 				
 				if(ball.getBox2DX() < map.getBox2DX()){
 					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in left gate!");
 					
-					mainWindow.getGameControl().leftGateGoalEvent();
+					gameWindow.getGameControl().leftGateGoalEvent();
 				}else if(ball.getBox2DX() > map.getBox2DX() + Map.WIDTH){
 					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in right gate!");
 					
-					mainWindow.getGameControl().rightGateGoalEvent();
+					gameWindow.getGameControl().rightGateGoalEvent();
 				}
 			}
 		}

@@ -31,8 +31,8 @@ final public class InputListener extends InputAdapter{
 	// ~ Private members
 	// --------------------------------------------------
 
-	/** The table. */
-	private final MainWindow mainWindow;
+	/** The game window. */
+	private final GameWindow gameWindow;
 	
 	/** The game control. */
 	private final GameControl gameControl;
@@ -47,11 +47,11 @@ final public class InputListener extends InputAdapter{
 	/**
 	 * The constructor.
 	 * 
-	 * @param mainWindow - The main window.
+	 * @param gameWindow - The game window.
 	 * @param gameControl - The game control.
 	 */
-	public InputListener(final MainWindow mainWindow, final GameControl gameControl){
-		this.mainWindow = mainWindow;
+	public InputListener(final GameWindow gameWindow, final GameControl gameControl){
+		this.gameWindow = gameWindow;
 		this.gameControl = gameControl;
 	}
 	
@@ -68,7 +68,7 @@ final public class InputListener extends InputAdapter{
 		
 		if(button == Buttons.LEFT){
 			if(gameControl.isPlayerStep()){
-				mainWindow.mouseButtonPressed(screenX, screenY);
+				gameWindow.mouseButtonPressed(screenX, screenY);
 			}else if(gameControl.isPlayerMoveButton()){
 				gameControl.selectMoovingButton(screenX, screenY);
 			}
@@ -84,7 +84,7 @@ final public class InputListener extends InputAdapter{
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		if(button == Buttons.LEFT){
 			if(gameControl.isPlayerStep()){
-				mainWindow.mouseButtonMoved(screenX, screenY);
+				gameWindow.mouseButtonMoved(screenX, screenY);
 			}else if(gameControl.isPlayerMoveButton()){
 				gameControl.moveSelectedButton(screenX, screenY);
 			}
@@ -99,7 +99,7 @@ final public class InputListener extends InputAdapter{
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if(button == Buttons.LEFT){
 			if(gameControl.isPlayerStep()){
-				mainWindow.mouseButtonReleased();
+				gameWindow.mouseButtonReleased();
 			}else if(gameControl.isPlayerMoveButton()){
 				gameControl.endMoveSelectedButton();
 			}
@@ -115,7 +115,7 @@ final public class InputListener extends InputAdapter{
 	public boolean keyDown(int keycode) {
 		if(Keys.F == keycode){
 			Gdx.app.log(InputListener.class.getName()+".keyDown", "'f' pressed.");
-			final FPS fps = mainWindow.getFPS();
+			final FPS fps = gameWindow.getFPS();
 			fps.setVisible(!fps.isVisible());
 		}else if(Keys.ESCAPE == keycode && Gdx.app.getType().equals(ApplicationType.Desktop)){
 			Gdx.app.exit();
