@@ -14,6 +14,8 @@
  */
 package com.dgzt.core;
 
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.setting.Settings;
@@ -32,6 +34,8 @@ public class MainWindow {
 	/** The game window. */
 	private final GameWindow gameWindow;
 	
+	private MenuWindow menuWindow;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -43,8 +47,17 @@ public class MainWindow {
 	 * @param spriteBatch - The sprite batch.
 	 * @param settings - The settings.
 	 */
-	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings){
-		gameWindow = new GameWindow(shader, spriteBatch, settings);
+	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings, final Camera camera, final InputMultiplexer inputMultiplexer){
+		gameWindow = new GameWindow(shader, spriteBatch, settings, inputMultiplexer);
+		menuWindow = new MenuWindow(shader, spriteBatch, camera, inputMultiplexer){
+
+			@Override
+			protected void startGame() {
+				menuWindow.dispose();
+				menuWindow = null;
+			}
+			
+		};
 	}
 	
 	// --------------------------------------------------
@@ -76,6 +89,11 @@ public class MainWindow {
 		final double scale = (double)gameWindowWidth / GameWindow.WIDTH;
 		
 		gameWindow.resize(gameWindowX, gameWindowY, gameWindowWidth, scale);
+		
+		//
+		if(menuWindow != null){
+			menuWindow.resize(width, height);
+		}
 	}
 	
 	/**
@@ -83,6 +101,10 @@ public class MainWindow {
 	 */
 	public void draw(){
 		gameWindow.draw();
+		
+		if(menuWindow != null){
+			menuWindow.draw();
+		}
 	}
 	
 	/**

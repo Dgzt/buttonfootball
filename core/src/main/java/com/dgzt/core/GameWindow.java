@@ -15,6 +15,7 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -80,7 +81,7 @@ final public class GameWindow{
 	 * @param spriteBatch - The sprite batch.s
 	 * @param settings - The settings.
 	 */
-	public GameWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings){
+	public GameWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings, final InputMultiplexer inputMultiplexer){
 		// The box2D world
 		box2DWorld = new World(new Vector2(0,0), true);
 		// The event listener
@@ -97,7 +98,7 @@ final public class GameWindow{
 		
 		gameControl = new GameControl(this, scoreBoard, table, settings);
 		
-		Gdx.input.setInputProcessor(new InputListener(this, gameControl));
+		inputMultiplexer.addProcessor(new InputListener(this, gameControl));
 	}
 	
 	// --------------------------------------------------
