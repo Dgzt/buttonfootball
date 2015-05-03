@@ -14,10 +14,8 @@
  */
 package com.dgzt.core;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -78,10 +76,11 @@ final public class GameWindow{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param spriteBatch - The sprite batch.s
+	 * @param batch - The batch.
 	 * @param settings - The settings.
+	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public GameWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings, final InputMultiplexer inputMultiplexer){
+	public GameWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final MultiInputProcessor multiInputProcessor){
 		// The box2D world
 		box2DWorld = new World(new Vector2(0,0), true);
 		// The event listener
@@ -90,7 +89,7 @@ final public class GameWindow{
 		
 		scoreBoard = new ScoreBoard(shader);
 		table = new Table(shader, box2DWorld, eventListener);
-		fps = new FPS(shader, spriteBatch);
+		fps = new FPS(shader, batch);
 		
 		arrow = new Arrow(table, shader);
 		
@@ -98,7 +97,7 @@ final public class GameWindow{
 		
 		gameControl = new GameControl(this, scoreBoard, table, settings);
 		
-		inputMultiplexer.addProcessor(new InputListener(this, gameControl));
+		multiInputProcessor.add(new InputListener(this, gameControl));
 	}
 	
 	// --------------------------------------------------

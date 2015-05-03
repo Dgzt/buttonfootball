@@ -25,5 +25,6 @@ Desktop
 Commands
 --------
  
+ * `ESC` : Show the menu.
  * `f`   : Show the FPS.
- * `ESC` : Quit the program (only in Desktop mode).
+ * `Q`   : Quit the program (only in Desktop mode).

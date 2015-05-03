@@ -17,8 +17,8 @@ package com.dgzt.core.shape;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
@@ -35,8 +35,8 @@ public class Text {
 	/** The shader. */
 	private final ShaderProgram shader;
 	
-	/** The sprite batch to draw text. */
-	private final SpriteBatch spriteBatch;
+	/** The batch to draw text. */
+	private final Batch batch;
 	
 	/** The font for text. */
 	private final BitmapFont font;
@@ -58,12 +58,12 @@ public class Text {
 	 * Constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param spriteBatch - The sprite batch.
+	 * @param batch - The batch.
 	 * @param color - The color.
 	 */
-	public Text(final ShaderProgram shader, final SpriteBatch spriteBatch, final Color color){
+	public Text(final ShaderProgram shader, final Batch batch, final Color color){
 		this.shader = shader;
-		this.spriteBatch = spriteBatch;
+		this.batch = batch;
 		font = new BitmapFont();
 		font.setColor(color);
 		text = "";
@@ -98,11 +98,11 @@ public class Text {
 	 */
 	public void draw(){
 		shader.end();
-		spriteBatch.begin();
+		batch.begin();
 		
-		font.draw(spriteBatch, text, x, y);
+		font.draw(batch, text, x, y);
 		
-		spriteBatch.end();
+		batch.end();
 		shader.begin();
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

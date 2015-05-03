@@ -16,7 +16,6 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -99,11 +98,11 @@ final public class ButtonFootballGame implements ApplicationListener {
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
 		}
 		
-		final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		final MultiInputProcessor multiInputProcessor = new MultiInputProcessor();
 		
-		mainWindow = new MainWindow(shader, spriteBatch, settings, camera, inputMultiplexer);
+		mainWindow = new MainWindow(shader, spriteBatch, settings, camera, multiInputProcessor);
 		
-		Gdx.input.setInputProcessor(inputMultiplexer);
+		Gdx.input.setInputProcessor(multiInputProcessor);
 	}
 
 	/**

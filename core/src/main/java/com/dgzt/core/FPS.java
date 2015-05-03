@@ -17,7 +17,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.dgzt.core.shape.Text;
@@ -67,10 +67,10 @@ final public class FPS extends Text{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param spriteBatch - The sprite batch;
+	 * @param batch - The batch;
 	 */
-	public FPS(final ShaderProgram shader, final SpriteBatch spriteBatch){
-		super(shader, spriteBatch, COLOR);
+	public FPS(final ShaderProgram shader, final Batch batch){
+		super(shader, batch, COLOR);
 		visible = false;
 		
 		startTime = TimeUtils.nanoTime();

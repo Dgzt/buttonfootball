@@ -14,9 +14,9 @@
  */
 package com.dgzt.core;
 
-import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.setting.Settings;
 
@@ -31,9 +31,22 @@ public class MainWindow {
 	// ~ Private members
 	// --------------------------------------------------
 	
+	/** The shader. */
+	private final ShaderProgram shader;
+	
+	/** The batch. */
+	private final Batch batch;
+	
+	/** The camera. */
+	private final Camera camera;
+	
+	/** The multi input processor. */
+	private final MultiInputProcessor multiInputProcessor;
+	
 	/** The game window. */
 	private final GameWindow gameWindow;
 	
+	/** The menu window. This can be null if the menu isn't visible. */
 	private MenuWindow menuWindow;
 	
 	// --------------------------------------------------
@@ -44,20 +57,20 @@ public class MainWindow {
 	 * Constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param spriteBatch - The sprite batch.
+	 * @param batch - The sprite batch.
 	 * @param settings - The settings.
+	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings, final Camera camera, final InputMultiplexer inputMultiplexer){
-		gameWindow = new GameWindow(shader, spriteBatch, settings, inputMultiplexer);
-		menuWindow = new MenuWindow(shader, spriteBatch, camera, inputMultiplexer){
-
-			@Override
-			protected void startGame() {
-				menuWindow.dispose();
-				menuWindow = null;
-			}
-			
-		};
+	public MainWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final Camera camera, final MultiInputProcessor multiInputProcessor){
+		this.shader = shader;
+		this.batch = batch;
+		this.camera = camera;
+		this.multiInputProcessor = multiInputProcessor;
+		
+		gameWindow = new GameWindow(shader, batch, settings, multiInputProcessor);
+		menuWindow = getMenuWindow();
+		
+		multiInputProcessor.add(getInputListener());
 	}
 	
 	// --------------------------------------------------
@@ -112,5 +125,43 @@ public class MainWindow {
 	 */
 	public void dispose(){
 		gameWindow.dispose();
+	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the input listener of main window.
+	 */
+	private MainWindowInputListener getInputListener(){
+		return new MainWindowInputListener() {
+			
+			@Override
+			protected void showOrHideMenuWindow() {
+				if(menuWindow == null){
+					menuWindow = getMenuWindow();
+					menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				}else{
+					menuWindow.dispose();
+					menuWindow = null;
+				}
+			}
+		};
+	}
+	
+	/**
+	 * Return with the menu window.
+	 */
+	private MenuWindow getMenuWindow(){
+		return new MenuWindow(shader, batch, camera, multiInputProcessor){
+
+			@Override
+			protected void startGame() {
+				menuWindow.dispose();
+				menuWindow = null;
+			}
+			
+		};
 	}
 }

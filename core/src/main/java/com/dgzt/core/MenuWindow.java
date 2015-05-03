@@ -15,15 +15,14 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -49,8 +48,8 @@ public abstract class MenuWindow extends RectangleShape{
 	/** The background color. */
 	private static final Color BACKGROUND_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 	
-	/** The input multiplexer. */
-	private final InputMultiplexer inputMultiplexer;
+	/** The multi input processor. */
+	private final MultiInputProcessor multiInputProcessor;
 	
 	/** The stage. */
 	private final Stage stage;
@@ -62,7 +61,7 @@ public abstract class MenuWindow extends RectangleShape{
 	private final ShaderProgram shader;
 	
 	/** The batch. */
-	private final SpriteBatch batch;
+	private final Batch batch;
 	
 	/** The start game button. */
 	private final Button startGameButton;
@@ -73,13 +72,13 @@ public abstract class MenuWindow extends RectangleShape{
 	 * @param shader - The shader.
 	 * @param batch - The sprite batch.
 	 * @param camera - The camera.
-	 * @param inputMultiplexer - The input multiplexer.
+	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public MenuWindow(final ShaderProgram shader, final SpriteBatch batch, final Camera camera, final InputMultiplexer inputMultiplexer) {
+	public MenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
 		super(shader, BACKGROUND_COLOR);
 		this.shader = shader;
 		this.batch = batch;
-		this.inputMultiplexer = inputMultiplexer;
+		this.multiInputProcessor = multiInputProcessor;
 		
 		viewport = new ScreenViewport(camera);
 		stage = new Stage(viewport);
@@ -97,7 +96,7 @@ public abstract class MenuWindow extends RectangleShape{
 		
 		stage.addActor(startGameButton);
 		
-		inputMultiplexer.addProcessor(stage);
+		multiInputProcessor.add(stage);
 	}
 	
 	// --------------------------------------------------
@@ -148,7 +147,7 @@ public abstract class MenuWindow extends RectangleShape{
 	 */
 	@Override
 	public void dispose() {
-		inputMultiplexer.removeProcessor(stage);
+		multiInputProcessor.remove(stage);
 		stage.dispose();
 		
 		super.dispose();
