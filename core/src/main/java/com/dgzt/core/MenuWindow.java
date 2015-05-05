@@ -14,6 +14,7 @@
  */
 package com.dgzt.core;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -26,10 +27,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dgzt.core.shape.RectangleShape;
@@ -48,11 +49,23 @@ public abstract class MenuWindow extends RectangleShape{
 	/** The background color. */
 	private static final Color BACKGROUND_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 	
+	/** Text for start game. */
+	private static final String START_GAME = " Start game ";
+	
+	/** Text for quit. */
+	private static final String QUIT = " Quit ";
+	
+	/** The space in the menu. */
+	private static final int MENU_SPACE = 15;
+	
 	/** The multi input processor. */
 	private final MultiInputProcessor multiInputProcessor;
 	
 	/** The stage. */
 	private final Stage stage;
+	
+	/** The menu vertical group. */
+	private final VerticalGroup menuGroup;
 	
 	/** The viewport. */
 	private final ScreenViewport viewport;
@@ -62,10 +75,7 @@ public abstract class MenuWindow extends RectangleShape{
 	
 	/** The batch. */
 	private final Batch batch;
-	
-	/** The start game button. */
-	private final Button startGameButton;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -83,18 +93,18 @@ public abstract class MenuWindow extends RectangleShape{
 		viewport = new ScreenViewport(camera);
 		stage = new Stage(viewport);
 		
-		startGameButton = new TextButton(" Start game ", getStyle());
-		startGameButton.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.log(getClass().getName() + ".init", "click");
-				startGame();
-			}
-			
-		});
+		menuGroup = new VerticalGroup();
+		menuGroup.setFillParent(true);
+		menuGroup.space(MENU_SPACE);
 		
-		stage.addActor(startGameButton);
+		menuGroup.addActor(getStartGameButton());
+		
+		// Add quit button only in desktop mode.
+		if(Gdx.app.getType().equals(ApplicationType.Desktop)){
+			menuGroup.addActor(getQuitButton());
+		}
+		
+		stage.addActor(menuGroup);
 		
 		multiInputProcessor.add(stage);
 	}
@@ -122,7 +132,7 @@ public abstract class MenuWindow extends RectangleShape{
 		super.resize(0, 0, width, height);
 		viewport.update((int)width, (int)height, true);
 		
-		startGameButton.setPosition((width - startGameButton.getWidth()) / 2, ( height - startGameButton.getHeight()) / 2);
+		menuGroup.setPosition(0, -(height - menuGroup.getPrefHeight()) / 2);
 	}
 
 	/**
@@ -134,7 +144,7 @@ public abstract class MenuWindow extends RectangleShape{
 		
 		shader.end();
 		batch.begin();
-		startGameButton.draw(batch, 1.0f);
+		stage.draw();
 		batch.end();
 		shader.begin();
 		
@@ -156,6 +166,42 @@ public abstract class MenuWindow extends RectangleShape{
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
+	
+	/**
+	 * Start game button.
+	 */
+	private TextButton getStartGameButton(){
+		final TextButton button = new TextButton(START_GAME, getStyle());
+		button.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log(getClass().getName() + ".init", "click");
+				startGame();
+			}
+			
+		});
+		
+		return button;
+	}
+	
+	/**
+	 * Quit button.
+	 */
+	private TextButton getQuitButton(){
+		final TextButton button = new TextButton(QUIT, getStyle());
+		
+		button.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.exit();
+			}
+			
+		});
+		
+		return button;
+	}
 
 	/**
 	 * Return with the style of button.
@@ -163,7 +209,7 @@ public abstract class MenuWindow extends RectangleShape{
 	private TextButtonStyle getStyle(){
 		final Skin skin = new Skin();
 		
-		Pixmap pixmap = new Pixmap(20, 20, Format.RGBA8888);
+		Pixmap pixmap = new Pixmap(40, 30, Format.RGBA8888);
 		pixmap.setColor(Color.BLACK);
 		pixmap.fill();
 		
