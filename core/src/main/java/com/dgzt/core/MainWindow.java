@@ -18,6 +18,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.menu.MainMenuWindow;
 import com.dgzt.core.setting.Settings;
 
 /**
@@ -47,7 +48,7 @@ public class MainWindow {
 	private final GameWindow gameWindow;
 	
 	/** The menu window. This can be null if the menu isn't visible. */
-	private MenuWindow menuWindow;
+	private MainMenuWindow menuWindow;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -153,8 +154,8 @@ public class MainWindow {
 	/**
 	 * Return with the menu window.
 	 */
-	private MenuWindow getMenuWindow(){
-		return new MenuWindow(shader, batch, camera, multiInputProcessor){
+	private MainMenuWindow getMenuWindow(){
+		return new MainMenuWindow(shader, batch, camera, multiInputProcessor){
 
 			@Override
 			protected void startGame() {
