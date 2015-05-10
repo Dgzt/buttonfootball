@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.dgzt.core.button.AbstractButton;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.gate.LeftGate;
@@ -86,6 +87,15 @@ public final class EventListener implements ContactListener{
 	@Override
 	public void beginContact(final Contact contact) {
 		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
+		
+		final Object userDataB = contact.getFixtureB().getUserData();
+		
+		if(userDataB instanceof AbstractButton){
+			final AbstractButton button = (AbstractButton) userDataB;
+			if(!button.isMooving()){
+				button.startMooving();
+			}
+		}
 	}
 
 	/**

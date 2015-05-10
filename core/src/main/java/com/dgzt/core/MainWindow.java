@@ -141,9 +141,11 @@ public class MainWindow {
 			@Override
 			protected void showOrHideMenuWindow() {
 				if(menuWindow == null){
+					gameWindow.getGameControl().pauseGame();
 					menuWindow = getMenuWindow();
 					menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}else{
+					gameWindow.getGameControl().resumeGame();
 					menuWindow.dispose();
 					menuWindow = null;
 				}
@@ -161,6 +163,8 @@ public class MainWindow {
 			protected void startGame() {
 				menuWindow.dispose();
 				menuWindow = null;
+				
+				gameWindow.getGameControl().startGame();
 			}
 			
 		};

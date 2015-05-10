@@ -52,6 +52,9 @@ public abstract class AbstractButton extends FilledCircleShape{
 	/** The linear damping for body of box2D. */
 	private static final float BOX2D_BODY_LINEAR_DAMPING = 3.0f;
 	
+	/** The length of linear velocity when the button is stopped. */
+	private static final float STOPPEP_LINEAR_VELOCITY_LENGTH = 0.01f;
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
@@ -62,12 +65,6 @@ public abstract class AbstractButton extends FilledCircleShape{
 	/** The event listener. */
 	private final EventListener eventListener;
 	
-	/** The x coordinate value in Box2D. */
-	private float box2DX;
-	
-	/** The y coordinate value in Box2D. */
-	private float box2DY;
-
 	/** The radius value in Box2D. */
 	private final float box2DRadius;
 	
@@ -105,9 +102,6 @@ public abstract class AbstractButton extends FilledCircleShape{
 		this.box2DRadius = box2DRadius;
 		this.mooving = false;
 		
-		box2DX = 0;
-		box2DY = 0;
-		
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
 	
@@ -137,6 +131,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	public void setBox2DPosition(final float box2DX, final float box2DY){
 		box2DBody.setTransform(box2DX, box2DY, box2DBody.getAngle());
+		
+		resize();
 	}
 	
 	/**
@@ -174,8 +170,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Resize the object.
 	 */
 	public void resize(){
-		final float x = parent.getX() + (float)(box2DX * parent.getScale());
-		final float y = parent.getY() + (float)(box2DY * parent.getScale());
+		final float x = parent.getX() + (float)(box2DBody.getPosition().x * parent.getScale());
+		final float y = parent.getY() + (float)(box2DBody.getPosition().y * parent.getScale());
 		final float radius = (float)(box2DRadius * parent.getScale());
 		
 		super.resize(x, y, radius);
@@ -188,7 +184,18 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param y - The y coordinate value.
 	 */
 	public void move(final float x, final float y){
+		startMooving();
 		box2DBody.setLinearVelocity(x, y);
+	}
+	
+	/**
+	 * Start mooving.
+	 */
+	public void startMooving(){
+		Gdx.app.log(getClass().getName() + ".startMooving()", "init");
+		
+		mooving = true;
+		eventListener.buttonStartMooving();
 	}
 	
 	/**
@@ -212,21 +219,14 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	@Override
 	public void draw() {
-		if( box2DX != box2DBody.getPosition().x || box2DY != box2DBody.getPosition().y ){
-			box2DX = box2DBody.getPosition().x;
-			box2DY = box2DBody.getPosition().y;
-
+		if(mooving){
 			resize();
 			
-			if(!mooving){
-				mooving = true;
-				Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Start mooving.");
-				eventListener.buttonStartMooving();
+			if(isStopped()){
+				Gdx.app.log(getClass().getName() + ".draw()", "Stop mooving.");
+				mooving = false;
+				eventListener.buttonEndMooving();
 			}
-		}else if(mooving){
-			mooving = false;
-			Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Stop mooving.");
-			eventListener.buttonEndMooving();
 		}
 		
 		super.draw();
@@ -257,7 +257,6 @@ public abstract class AbstractButton extends FilledCircleShape{
 	private Body createBox2DBody(final World box2DWorld){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(box2DX, box2DY);
 		
 		Body body = box2DWorld.createBody(bodyDef);
 		
@@ -284,6 +283,13 @@ public abstract class AbstractButton extends FilledCircleShape{
 		return body;
 	}
 	
+	/**
+	 * Return true when the button is stopped.
+	 */
+	private boolean isStopped(){
+		return box2DBody.getLinearVelocity().len() < STOPPEP_LINEAR_VELOCITY_LENGTH;
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
@@ -292,14 +298,21 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Return with the x coordinate value in Box2D.
 	 */
 	public float getBox2DX() {
-		return box2DX;
+		return box2DBody.getPosition().x;
 	}
 
 	/**
 	 * Return with the y coordinate value in Box2D.
 	 */
 	public float getBox2DY() {
-		return box2DY;
+		return box2DBody.getPosition().y;
+	}
+	
+	/**
+	 * Return true when the button is mooving.
+	 */
+	public boolean isMooving(){
+		return mooving;
 	}
 
 }

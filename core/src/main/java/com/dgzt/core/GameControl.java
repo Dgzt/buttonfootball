@@ -86,6 +86,9 @@ public final class GameControl {
 	/** The mooving button. If the player isn't move button then this variable is null. */
 	private Button moovingButton;
 	
+	/** True when the game paused. */
+	private boolean gamePaused;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -106,17 +109,7 @@ public final class GameControl {
 		this.table = table;
 		this.settings = settings;
 		this.bot = new Bot(table.getOpponentButtons(), table.getBall());
-		
-		// Add the buttons to table.
-		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
-		table.moveButtonsToRightPartOfMap(Player.BOT);
-		
-		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.FIRST_HALF);
-		
-		scoreBoard.getTimeBoard().setHalfTime(settings.getHalfTime());
-		scoreBoard.getTimeBoard().start(this);
-
-		setFirstStep();
+		this.gamePaused = true;
 		
 		ballAreaTimer = new Timer();
 	}
@@ -124,6 +117,26 @@ public final class GameControl {
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
+	
+	/**
+	 * Start the game.
+	 */
+	public void startGame(){
+		// Add the buttons to table.
+		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
+		table.moveButtonsToRightPartOfMap(Player.BOT);
+		
+		// Add the ball to the table.
+		table.moveBallToCenter();
+		
+		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.FIRST_HALF);
+		
+		scoreBoard.getTimeBoard().setHalfTime(settings.getHalfTime());
+		scoreBoard.getTimeBoard().start(this);
+
+		gamePaused = false;
+		setFirstStep();
+	}
 	
 	/**
 	 * Goal in left gate event.
@@ -316,7 +329,31 @@ public final class GameControl {
 			opponentStepepd();
 		}
 	}
-
+	
+	/**
+	 * Pause the game.
+	 */
+	public void pauseGame(){
+		Gdx.app.log(getClass().getName() + ".pauseGame", "init");
+		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+			ballAreaTimer.stop();
+		}
+		scoreBoard.getTimeBoard().stop();
+		gamePaused = true;
+	}
+	
+	/**
+	 * Resume the game.
+	 */
+	public void resumeGame(){
+		Gdx.app.log(getClass().getName() + ".resumeGame", "init");
+		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+			ballAreaTimer.start();
+		}
+		scoreBoard.getTimeBoard().resume();
+		gamePaused = false;
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
@@ -554,6 +591,17 @@ public final class GameControl {
 		}else{
 			playerInGame();
 		}
+	}
+	
+	// --------------------------------------------------
+	// ~ Setter / Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return true when the game is paused.
+	 */
+	public boolean isGamePaused(){
+		return gamePaused;
 	}
 	
 }

@@ -127,7 +127,7 @@ final public class TimeBoard extends RectangleBorderShape{
 				
 				if(currentTime == 0){
 					gameControl.endHalfTime();
-					//
+					
 					cancel();
 				}
 			}
@@ -135,6 +135,16 @@ final public class TimeBoard extends RectangleBorderShape{
 		timer.start();
 	}
 	
+	/**
+	 * Resume the time board.
+	 */
+	public void resume(){
+		timer.start();
+	}
+	
+	/**
+	 * Stop the time board.
+	 */
 	public void stop(){
 		timer.stop();
 	}

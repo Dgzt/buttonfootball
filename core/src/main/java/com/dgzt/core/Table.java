@@ -103,7 +103,7 @@ final public class Table extends RectangleShape{
 		
 		addButtons(shader, eventListener, box2DWorld);
 		
-		ball = new Ball(this, shader, eventListener, box2DWorld, Table.WIDTH / 2, Table.HEIGHT / 2);
+		ball = new Ball(this, shader, eventListener, box2DWorld);
 	}
 	
 	// --------------------------------------------------

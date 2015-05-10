@@ -53,18 +53,13 @@ public class Ball extends AbstractButton{
 	 * @param shader - The shader.
 	 * @param eventListener - The event listener.
 	 * @param box2DWorld - The box2D world.
-	 * @param box2DX - The x coordinate value in the Box2D.
-	 * @param box2DY - The y coordinate value in the box2D.
 	 */
 	public Ball(final Table parent, 
 				final ShaderProgram shader,
 				final EventListener eventListener,
-				final World box2DWorld,
-				final float box2DX, 
-				final float box2DY) 
+				final World box2DWorld) 
 	{
 		super(parent, shader, eventListener, box2DWorld, COLOR, RADIUS);
-		setBox2DPosition(box2DX, box2DY);
 	}
 	
 	// --------------------------------------------------

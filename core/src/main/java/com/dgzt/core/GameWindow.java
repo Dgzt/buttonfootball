@@ -140,8 +140,10 @@ final public class GameWindow{
 	 * Draw the child objects.
 	 */
 	public void draw() {
-		// Step the box2d world
-		box2DWorld.step(1/60f, 6, 2);
+		if(!gameControl.isGamePaused()){
+			// Step the box2d world
+			box2DWorld.step(1/60f, 6, 2);
+		}
 		
 		// Draw the shapes
 		scoreBoard.draw();
