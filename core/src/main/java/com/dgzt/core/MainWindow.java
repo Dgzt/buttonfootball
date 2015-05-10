@@ -18,6 +18,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.menu.BaseMenuWindow;
+import com.dgzt.core.menu.InGameMenuWindow;
 import com.dgzt.core.menu.MainMenuWindow;
 import com.dgzt.core.setting.Settings;
 
@@ -48,7 +50,7 @@ public class MainWindow {
 	private final GameWindow gameWindow;
 	
 	/** The menu window. This can be null if the menu isn't visible. */
-	private MainMenuWindow menuWindow;
+	private BaseMenuWindow menuWindow;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -69,9 +71,9 @@ public class MainWindow {
 		this.multiInputProcessor = multiInputProcessor;
 		
 		gameWindow = new GameWindow(shader, batch, settings, multiInputProcessor);
-		menuWindow = getMenuWindow();
+		menuWindow = getMainMenuWindow();
 		
-		multiInputProcessor.add(getInputListener());
+		multiInputProcessor.add(getInputListener(gameWindow.getGameControl()));
 	}
 	
 	// --------------------------------------------------
@@ -104,7 +106,6 @@ public class MainWindow {
 		
 		gameWindow.resize(gameWindowX, gameWindowY, gameWindowWidth, scale);
 		
-		//
 		if(menuWindow != null){
 			menuWindow.resize(width, height);
 		}
@@ -134,15 +135,17 @@ public class MainWindow {
 	
 	/**
 	 * Return with the input listener of main window.
+	 * 
+	 * @param gameControl - The game control
 	 */
-	private MainWindowInputListener getInputListener(){
-		return new MainWindowInputListener() {
+	private MainWindowInputListener getInputListener(final GameControl gameControl){
+		return new MainWindowInputListener(gameControl) {
 			
 			@Override
 			protected void showOrHideMenuWindow() {
 				if(menuWindow == null){
 					gameWindow.getGameControl().pauseGame();
-					menuWindow = getMenuWindow();
+					menuWindow = getInGameMenuWindow();
 					menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}else{
 					gameWindow.getGameControl().resumeGame();
@@ -154,9 +157,9 @@ public class MainWindow {
 	}
 	
 	/**
-	 * Return with the menu window.
+	 * Return with the main menu window.
 	 */
-	private MainMenuWindow getMenuWindow(){
+	private MainMenuWindow getMainMenuWindow(){
 		return new MainMenuWindow(shader, batch, camera, multiInputProcessor){
 
 			@Override
@@ -167,6 +170,27 @@ public class MainWindow {
 				gameWindow.getGameControl().startGame();
 			}
 			
+		};
+	}
+	
+	/**
+	 * Return with the in game menu window.
+	 */
+	private InGameMenuWindow getInGameMenuWindow(){
+		return new InGameMenuWindow(shader, batch, camera, multiInputProcessor) {
+			
+			@Override
+			protected void resumeGame() {
+				menuWindow.dispose();
+				menuWindow = null;
+				
+				gameWindow.getGameControl().resumeGame();
+			}
+			
+			@Override
+			protected void quitToMainMenu() {
+				gameWindow.getGameControl().quitGame();
+			}
 		};
 	}
 }

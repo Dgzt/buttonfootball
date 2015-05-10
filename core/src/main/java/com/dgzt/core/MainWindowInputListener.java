@@ -27,6 +27,26 @@ import com.badlogic.gdx.InputAdapter;
 public abstract class MainWindowInputListener extends InputAdapter{
 	
 	// --------------------------------------------------
+	// ~ Private members
+	// --------------------------------------------------
+	
+	/** The game control. */
+	private final GameControl gameControl;
+	
+	// --------------------------------------------------
+	// ~ Constructors
+	// --------------------------------------------------
+	
+	/**
+	 * The constructor.
+	 * 
+	 * @param gameControl - The game control.
+	 */
+	public MainWindowInputListener(final GameControl gameControl){
+		this.gameControl = gameControl;
+	}
+	
+	// --------------------------------------------------
 	// ~ Abstract methods
 	// --------------------------------------------------
 
@@ -44,7 +64,7 @@ public abstract class MainWindowInputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean keyDown(final int keycode) {
-		if(Keys.ESCAPE == keycode){
+		if(Keys.ESCAPE == keycode && gameControl.isInGame()){
 			Gdx.app.log(MainWindowInputListener.class.getName() + ".keyDown", "Escape pressed.");
 			
 			showOrHideMenuWindow();

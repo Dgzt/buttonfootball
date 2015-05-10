@@ -14,8 +14,6 @@
  */
 package com.dgzt.core.menu;
 
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -26,44 +24,40 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.dgzt.core.MultiInputProcessor;
 
 /**
- * The main menu window.
+ * The in game menu window.
  * 
  * @author Dgzt
  */
-public abstract class MainMenuWindow extends BaseMenuWindow{
-
+public abstract class InGameMenuWindow extends BaseMenuWindow{
+	
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
-	
-	/** Text for start game. */
-	private static final String START_GAME = " Start game ";
-	
-	/** Text for quit. */
-	private static final String QUIT = " Quit ";
 
-
+	/** The text of resume game button. */
+	private static final String RESUME_GAME = " Resume game ";
+	
+	/** The text of quit to main menu button. */
+	private static final String QUIT_TO_MAIN_MENU = " Quit to main menu ";
+	
+	// --------------------------------------------------
+	// ~ Constructors
+	// --------------------------------------------------
+	
 	/**
-	 * Constructor.
+	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param batch - The sprite batch.
+	 * @param batch - The batch.
 	 * @param camera - The camera.
 	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public MainMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
+	public InGameMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
 		super(shader, batch, camera, multiInputProcessor);
 		
 		final WidgetGroup menuGroup = getMenuGroup();
-		
-		menuGroup.addActor(getStartGameButton());
-		
-		// Add quit button only in desktop mode.
-		if(Gdx.app.getType().equals(ApplicationType.Desktop)){
-			menuGroup.addActor(getQuitButton());
-		}
-		
-		
+		menuGroup.addActor(getResumeGameButton());
+		menuGroup.addActor(getQuitToMainMenuButton());
 	}
 	
 	// --------------------------------------------------
@@ -71,49 +65,49 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	// --------------------------------------------------
 	
 	/**
-	 * Start the game.
+	 * Call this function when clicked to the resume game button.
 	 */
-	protected abstract void startGame();
+	protected abstract void resumeGame();
+	
+	/**
+	 * Call this function when clicked to the quit to main menu button.
+	 */
+	protected abstract void quitToMainMenu();
 	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
 	
 	/**
-	 * Start game button.
+	 * Return with the resume game button.
 	 */
-	private TextButton getStartGameButton(){
-		final TextButton button = new TextButton(START_GAME, getStyle());
+	private TextButton getResumeGameButton(){
+		final TextButton button = new TextButton(RESUME_GAME, getStyle());
 		button.addListener(new ClickListener(){
 
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.log(getClass().getName() + ".init", "click");
-				startGame();
+			public void clicked(final InputEvent event, final float x, final float y) {
+				resumeGame();
 			}
 			
 		});
-		
 		return button;
 	}
 	
 	/**
-	 * Quit button.
+	 * Return with the quit to main menu button.
 	 */
-	private TextButton getQuitButton(){
-		final TextButton button = new TextButton(QUIT, getStyle());
-		
+	private TextButton getQuitToMainMenuButton(){
+		final TextButton button = new TextButton(QUIT_TO_MAIN_MENU, getStyle());
 		button.addListener(new ClickListener(){
 
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.exit();
+			public void clicked(final InputEvent event, final float x, final float y) {
+				quitToMainMenu();
 			}
 			
 		});
-		
 		return button;
 	}
-	
 
 }

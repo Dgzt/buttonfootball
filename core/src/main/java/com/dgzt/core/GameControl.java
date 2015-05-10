@@ -109,6 +109,7 @@ public final class GameControl {
 		this.table = table;
 		this.settings = settings;
 		this.bot = new Bot(table.getOpponentButtons(), table.getBall());
+		gameStatus = GameStatus.NOT_IN_GAME;
 		this.gamePaused = true;
 		
 		ballAreaTimer = new Timer();
@@ -216,6 +217,13 @@ public final class GameControl {
 	 */
 	public boolean isPlayerMoveButton(){
 		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON;	
+	}
+	
+	/**
+	 * Return true when the player is in the game.
+	 */
+	public boolean isInGame(){
+		return gameStatus != GameStatus.NOT_IN_GAME;
 	}
 	
 	/**
@@ -352,6 +360,15 @@ public final class GameControl {
 		}
 		scoreBoard.getTimeBoard().resume();
 		gamePaused = false;
+	}
+	
+	/**
+	 * Quit the current game.
+	 */
+	public void quitGame(){
+		Gdx.app.log(getClass().getName() + ".quitGame", "init");
+		
+		// TODO implement
 	}
 	
 	// --------------------------------------------------
