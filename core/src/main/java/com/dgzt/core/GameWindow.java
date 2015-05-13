@@ -97,7 +97,7 @@ final public class GameWindow{
 		
 		gameControl = new GameControl(this, scoreBoard, table, settings);
 		
-		multiInputProcessor.add(new InputListener(this, gameControl));
+		multiInputProcessor.add(new GameWindowInputListener(this, gameControl));
 	}
 	
 	// --------------------------------------------------
