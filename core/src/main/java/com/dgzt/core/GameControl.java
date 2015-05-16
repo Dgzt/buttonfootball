@@ -127,6 +127,9 @@ public final class GameControl {
 		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
 		table.moveButtonsToRightPartOfMap(Player.BOT);
 		
+		// Show the buttons
+		table.setVisibleButtons(true);
+		
 		// Add the ball to the table.
 		table.moveBallToCenter();
 		

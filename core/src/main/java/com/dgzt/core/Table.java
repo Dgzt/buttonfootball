@@ -77,6 +77,9 @@ final public class Table extends RectangleShape{
 	/** The actual scale value. */
 	private double scale;
 	
+	/** The Player's and Opponent's button visibility. */
+	private boolean visibleButtons;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -104,6 +107,8 @@ final public class Table extends RectangleShape{
 		addButtons(shader, eventListener, box2DWorld);
 		
 		ball = new Ball(this, shader, eventListener, box2DWorld);
+		
+		visibleButtons = false;
 	}
 	
 	// --------------------------------------------------
@@ -224,12 +229,14 @@ final public class Table extends RectangleShape{
 		super.draw();
 		map.draw();
 		
-		for(final Button playerButton : playerButtons){
-			playerButton.draw();
-		}
-		
-		for(final Button opponentButton : opponentButtons){
-			opponentButton.draw();
+		if(visibleButtons){
+			for(final Button playerButton : playerButtons){
+				playerButton.draw();
+			}
+			
+			for(final Button opponentButton : opponentButtons){
+				opponentButton.draw();
+			}
 		}
 		
 		ball.draw();
@@ -352,6 +359,15 @@ final public class Table extends RectangleShape{
 	 */
 	public final double getScale(){
 		return scale;
+	}
+
+	/**
+	 * Set the visibility of Player's and Opponent's buttons.
+	 * 
+	 * @param visibleButtons
+	 */
+	public void setVisibleButtons(final boolean visibleButtons) {
+		this.visibleButtons = visibleButtons;
 	}
 
 }
