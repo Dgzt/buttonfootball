@@ -149,6 +149,17 @@ final public class TimeBoard extends RectangleBorderShape{
 		timer.stop();
 	}
 	
+	/**
+	 * Clear the time board.
+	 */
+	public void clear(){
+		timer.clear();
+		
+		currentTime = 0;
+		setCurrentTime();
+		visibleSecondCircles = isVisibleSecondCircles();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------

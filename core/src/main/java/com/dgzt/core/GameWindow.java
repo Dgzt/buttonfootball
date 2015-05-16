@@ -140,7 +140,7 @@ final public class GameWindow{
 	 * Draw the child objects.
 	 */
 	public void draw() {
-		if(!gameControl.isGamePaused()){
+		if( gameControl.isInGame() && !gameControl.isGamePaused()){
 			// Step the box2d world
 			box2DWorld.step(1/60f, 6, 2);
 		}

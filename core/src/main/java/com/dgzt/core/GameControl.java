@@ -371,7 +371,25 @@ public final class GameControl {
 	public void quitGame(){
 		Gdx.app.log(getClass().getName() + ".quitGame", "init");
 		
-		// TODO implement
+		//Set the status
+		gameStatus = GameStatus.NOT_IN_GAME;
+		
+		ballAreaTimer.clear();
+		// If visible the ball area then hide it
+		gameWindow.hideBallArea();
+		
+		// Clear the half time board
+		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.NOT_IN_GAME);
+		
+		// Clear the time board
+		scoreBoard.getTimeBoard().clear();
+		
+		// Clear the player's and opponent's goal board
+		scoreBoard.getPlayerGoalBoard().setNumber(0);
+		scoreBoard.getOpponentGoalBoard().setNumber(0);
+		
+		// Hide the buttons
+		table.setVisibleButtons(false);
 	}
 	
 	// --------------------------------------------------

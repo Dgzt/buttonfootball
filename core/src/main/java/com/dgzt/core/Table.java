@@ -77,7 +77,7 @@ final public class Table extends RectangleShape{
 	/** The actual scale value. */
 	private double scale;
 	
-	/** The Player's and Opponent's button visibility. */
+	/** The Player's and Opponent's button and ball visibility. */
 	private boolean visibleButtons;
 	
 	// --------------------------------------------------
@@ -237,9 +237,9 @@ final public class Table extends RectangleShape{
 			for(final Button opponentButton : opponentButtons){
 				opponentButton.draw();
 			}
+			
+			ball.draw();
 		}
-		
-		ball.draw();
 		
 		leftGate.draw();
 		rightGate.draw();
@@ -362,7 +362,7 @@ final public class Table extends RectangleShape{
 	}
 
 	/**
-	 * Set the visibility of Player's and Opponent's buttons.
+	 * Set the visibility of Player's and Opponent's buttons and ball.
 	 * 
 	 * @param visibleButtons
 	 */

@@ -190,6 +190,9 @@ public class MainWindow {
 			@Override
 			protected void quitToMainMenu() {
 				gameWindow.getGameControl().quitGame();
+				menuWindow.dispose();
+				menuWindow = getMainMenuWindow();
+				menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			}
 		};
 	}
