@@ -73,6 +73,9 @@ public final class GameControl {
 	/** The settings. */
 	private final Settings settings;
 	
+	/** The event listener of box2D */
+	private final EventListener eventListener;
+	
 	/** The bot. */
 	private final Bot bot;
 	
@@ -100,14 +103,16 @@ public final class GameControl {
 	 * @param scoreBoard - The score board.
 	 * @param table - The table.
 	 * @param settings - The settings.
+	 * @param eventListener - The box2D event listener.
 	 */
-	public GameControl(final GameWindow gameWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings){
+	public GameControl(final GameWindow gameWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings, final EventListener eventListener){
 		Gdx.app.log(GameControl.class.getName() + ".init", "settings: " + settings);
 		
 		this.gameWindow = gameWindow;
 		this.scoreBoard = scoreBoard;
 		this.table = table;
 		this.settings = settings;
+		this.eventListener = eventListener;
 		this.bot = new Bot(table.getOpponentButtons(), table.getBall());
 		gameStatus = GameStatus.NOT_IN_GAME;
 		this.gamePaused = true;
@@ -390,6 +395,22 @@ public final class GameControl {
 		
 		// Hide the buttons
 		table.setVisibleButtons(false);
+		
+		// Clear player's buttons move
+		for(final Button button : table.getPlayerButtons()){
+			button.clearMove();
+		}
+		
+		// Clear opponent's buttons move
+		for(final Button button : table.getOpponentButtons()){
+			button.clearMove();
+		}
+		
+		// Clear ball move
+		table.getBall().clearMove();
+		
+		// Clear button move listener
+		eventListener.clearMovings();
 	}
 	
 	// --------------------------------------------------

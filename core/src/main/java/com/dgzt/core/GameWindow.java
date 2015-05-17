@@ -95,7 +95,7 @@ final public class GameWindow{
 		
 		ballArea = new BallArea(shader, table.getBall());
 		
-		gameControl = new GameControl(this, scoreBoard, table, settings);
+		gameControl = new GameControl(this, scoreBoard, table, settings, eventListener);
 		
 		multiInputProcessor.add(new GameWindowInputListener(this, gameControl));
 	}

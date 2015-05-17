@@ -39,8 +39,8 @@ public final class EventListener implements ContactListener{
 	/** The game window. */
 	private final GameWindow gameWindow;
 	
-	/** The number of the mooving buttons. */
-	private short moovingButtonNum;
+	/** The number of the moving buttons. */
+	private short movingButtonNum;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -53,7 +53,7 @@ public final class EventListener implements ContactListener{
 	 */
 	public EventListener(final GameWindow gameWindow){
 		this.gameWindow = gameWindow;
-		this.moovingButtonNum = 0;
+		this.movingButtonNum = 0;
 	}
 	
 	// --------------------------------------------------
@@ -61,20 +61,27 @@ public final class EventListener implements ContactListener{
 	// --------------------------------------------------
 
 	/**
-	 * The button is start mooving.
+	 * The button is start moving.
 	 */
-	public void buttonStartMooving(){
-		++moovingButtonNum;
+	public void buttonStartMoving(){
+		++movingButtonNum;
 	}
 	
 	/**
 	 * The button is stopped.
 	 */
-	public void buttonEndMooving(){
-		--moovingButtonNum;
-		if(moovingButtonNum == 0){
+	public void buttonEndMoving(){
+		--movingButtonNum;
+		if(movingButtonNum == 0){
 			gameWindow.getGameControl().allButtonIsStoppedEvent();
 		}
+	}
+	
+	/**
+	 * Clear the moving number.
+	 */
+	public void clearMovings(){
+		movingButtonNum = 0;
 	}
 	
 	// --------------------------------------------------
@@ -92,8 +99,8 @@ public final class EventListener implements ContactListener{
 		
 		if(userDataB instanceof AbstractButton){
 			final AbstractButton button = (AbstractButton) userDataB;
-			if(!button.isMooving()){
-				button.startMooving();
+			if(!button.isMoving()){
+				button.startMove();
 			}
 		}
 	}

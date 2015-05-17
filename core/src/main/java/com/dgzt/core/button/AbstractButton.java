@@ -71,8 +71,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 	/** The box2D body. */
 	private final Body box2DBody;
 	
-	/** Is the button mooving? */
-	private boolean mooving;
+	/** Is the button moving? */
+	private boolean moving;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -100,7 +100,7 @@ public abstract class AbstractButton extends FilledCircleShape{
 		this.parent = parent;
 		this.eventListener = eventListener;
 		this.box2DRadius = box2DRadius;
-		this.mooving = false;
+		this.moving = false;
 		
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
@@ -184,18 +184,26 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param y - The y coordinate value.
 	 */
 	public void move(final float x, final float y){
-		startMooving();
+		startMove();
 		box2DBody.setLinearVelocity(x, y);
 	}
 	
 	/**
-	 * Start mooving.
+	 * Clear the move.
 	 */
-	public void startMooving(){
-		Gdx.app.log(getClass().getName() + ".startMooving()", "init");
+	public void clearMove(){
+		moving = false;
+		box2DBody.setLinearVelocity(0, 0);
+	}
+	
+	/**
+	 * Start move
+	 */
+	public void startMove(){
+		Gdx.app.log(getClass().getName() + ".startMove()", "init");
 		
-		mooving = true;
-		eventListener.buttonStartMooving();
+		moving = true;
+		eventListener.buttonStartMoving();
 	}
 	
 	/**
@@ -219,13 +227,13 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	@Override
 	public void draw() {
-		if(mooving){
+		if(moving){
 			resize();
 			
 			if(isStopped()){
-				Gdx.app.log(getClass().getName() + ".draw()", "Stop mooving.");
-				mooving = false;
-				eventListener.buttonEndMooving();
+				Gdx.app.log(getClass().getName() + ".draw()", "Stop move.");
+				moving = false;
+				eventListener.buttonEndMoving();
 			}
 		}
 		
@@ -309,10 +317,10 @@ public abstract class AbstractButton extends FilledCircleShape{
 	}
 	
 	/**
-	 * Return true when the button is mooving.
+	 * Return true when the button is moving.
 	 */
-	public boolean isMooving(){
-		return mooving;
+	public boolean isMoving(){
+		return moving;
 	}
 
 }
