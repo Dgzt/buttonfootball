@@ -14,25 +14,24 @@
  */
 package com.dgzt.core;
 
-import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 
 /**
- * The input listener.
+ * The input listener for game window.
  * 
  * @author Dgzt
  */
-final public class InputListener extends InputAdapter{
+final public class GameWindowInputListener extends InputAdapter{
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 
-	/** The table. */
-	private final MainWindow mainWindow;
+	/** The game window. */
+	private final GameWindow gameWindow;
 	
 	/** The game control. */
 	private final GameControl gameControl;
@@ -47,11 +46,11 @@ final public class InputListener extends InputAdapter{
 	/**
 	 * The constructor.
 	 * 
-	 * @param mainWindow - The main window.
+	 * @param gameWindow - The game window.
 	 * @param gameControl - The game control.
 	 */
-	public InputListener(final MainWindow mainWindow, final GameControl gameControl){
-		this.mainWindow = mainWindow;
+	public GameWindowInputListener(final GameWindow gameWindow, final GameControl gameControl){
+		this.gameWindow = gameWindow;
 		this.gameControl = gameControl;
 	}
 	
@@ -66,9 +65,9 @@ final public class InputListener extends InputAdapter{
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		this.button = button;
 		
-		if(button == Buttons.LEFT){
+		if(button == Buttons.LEFT && !gameControl.isGamePaused()){
 			if(gameControl.isPlayerStep()){
-				mainWindow.mouseButtonPressed(screenX, screenY);
+				gameWindow.mouseButtonPressed(screenX, screenY);
 			}else if(gameControl.isPlayerMoveButton()){
 				gameControl.selectMoovingButton(screenX, screenY);
 			}
@@ -82,9 +81,9 @@ final public class InputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if(button == Buttons.LEFT){
+		if(button == Buttons.LEFT && !gameControl.isGamePaused()){
 			if(gameControl.isPlayerStep()){
-				mainWindow.mouseButtonMoved(screenX, screenY);
+				gameWindow.mouseButtonMoved(screenX, screenY);
 			}else if(gameControl.isPlayerMoveButton()){
 				gameControl.moveSelectedButton(screenX, screenY);
 			}
@@ -97,9 +96,9 @@ final public class InputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(button == Buttons.LEFT){
+		if(button == Buttons.LEFT && !gameControl.isGamePaused()){
 			if(gameControl.isPlayerStep()){
-				mainWindow.mouseButtonReleased();
+				gameWindow.mouseButtonReleased();
 			}else if(gameControl.isPlayerMoveButton()){
 				gameControl.endMoveSelectedButton();
 			}
@@ -114,11 +113,9 @@ final public class InputListener extends InputAdapter{
 	@Override
 	public boolean keyDown(int keycode) {
 		if(Keys.F == keycode){
-			Gdx.app.log(InputListener.class.getName()+".keyDown", "'f' pressed.");
-			final FPS fps = mainWindow.getFPS();
+			Gdx.app.log(getClass().getName()+".keyDown", "'f' pressed.");
+			final FPS fps = gameWindow.getFPS();
 			fps.setVisible(!fps.isVisible());
-		}else if(Keys.ESCAPE == keycode && Gdx.app.getType().equals(ApplicationType.Desktop)){
-			Gdx.app.exit();
 		}
 		return super.keyDown(keycode);
 	}

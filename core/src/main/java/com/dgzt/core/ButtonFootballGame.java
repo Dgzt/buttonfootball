@@ -98,7 +98,11 @@ final public class ButtonFootballGame implements ApplicationListener {
 			Gdx.app.log(ButtonFootballGame.class.getName()+".create", "Shader log: " + shader.getLog());
 		}
 		
-		mainWindow = new MainWindow(shader, spriteBatch, settings);
+		final MultiInputProcessor multiInputProcessor = new MultiInputProcessor();
+		
+		mainWindow = new MainWindow(shader, spriteBatch, settings, camera, multiInputProcessor);
+		
+		Gdx.input.setInputProcessor(multiInputProcessor);
 	}
 
 	/**
@@ -115,24 +119,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 		shader.setUniformMatrix(WORLD_VIEW, camera.combined);
 		shader.end();
 		
-		float mainWindowWidth;
-		float mainWindowHeight;
-		
-		final double rate = (double)width/height;
-		
-		if( MainWindow.WIDTH/MainWindow.HEIGHT > rate ){
-			mainWindowWidth = width;
-			mainWindowHeight = MainWindow.HEIGHT*(width/MainWindow.WIDTH);
-		}else{
-			mainWindowWidth = MainWindow.WIDTH*(height/MainWindow.HEIGHT);
-			mainWindowHeight = height;
-		}
-		
-		final float mainWindowX = (width-mainWindowWidth)/2;
-		final float mainWindowY = (height-mainWindowHeight)/2;
-		final double scale = (double)mainWindowWidth / MainWindow.WIDTH;
-		
-		mainWindow.resize(mainWindowX, mainWindowY, mainWindowWidth, scale);
+		mainWindow.resize(width, height);
 	}
 
 	/**
@@ -143,7 +130,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 		camera.update();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		shader.begin();
 		mainWindow.draw();
 		shader.end();

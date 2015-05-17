@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.dgzt.core.button.AbstractButton;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.gate.LeftGate;
@@ -35,11 +36,11 @@ public final class EventListener implements ContactListener{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The main window. */
-	private final MainWindow mainWindow;
+	/** The game window. */
+	private final GameWindow gameWindow;
 	
-	/** The number of the mooving buttons. */
-	private short moovingButtonNum;
+	/** The number of the moving buttons. */
+	private short movingButtonNum;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -48,11 +49,11 @@ public final class EventListener implements ContactListener{
 	/**
 	 * The constructor.
 	 * 
-	 * @param mainWindow - The main window.
+	 * @param gameWindow - The game window.
 	 */
-	public EventListener(final MainWindow mainWindow){
-		this.mainWindow = mainWindow;
-		this.moovingButtonNum = 0;
+	public EventListener(final GameWindow gameWindow){
+		this.gameWindow = gameWindow;
+		this.movingButtonNum = 0;
 	}
 	
 	// --------------------------------------------------
@@ -60,20 +61,27 @@ public final class EventListener implements ContactListener{
 	// --------------------------------------------------
 
 	/**
-	 * The button is start mooving.
+	 * The button is start moving.
 	 */
-	public void buttonStartMooving(){
-		++moovingButtonNum;
+	public void buttonStartMoving(){
+		++movingButtonNum;
 	}
 	
 	/**
 	 * The button is stopped.
 	 */
-	public void buttonEndMooving(){
-		--moovingButtonNum;
-		if(moovingButtonNum == 0){
-			mainWindow.getGameControl().allButtonIsStoppedEvent();
+	public void buttonEndMoving(){
+		--movingButtonNum;
+		if(movingButtonNum == 0){
+			gameWindow.getGameControl().allButtonIsStoppedEvent();
 		}
+	}
+	
+	/**
+	 * Clear the moving number.
+	 */
+	public void clearMovings(){
+		movingButtonNum = 0;
 	}
 	
 	// --------------------------------------------------
@@ -86,6 +94,15 @@ public final class EventListener implements ContactListener{
 	@Override
 	public void beginContact(final Contact contact) {
 		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
+		
+		final Object userDataB = contact.getFixtureB().getUserData();
+		
+		if(userDataB instanceof AbstractButton){
+			final AbstractButton button = (AbstractButton) userDataB;
+			if(!button.isMoving()){
+				button.startMove();
+			}
+		}
 	}
 
 	/**
@@ -99,8 +116,8 @@ public final class EventListener implements ContactListener{
 		
 		if(userDataA instanceof Map){
 			final Ball ball = (Ball) contact.getFixtureB().getUserData();
-			final LeftGate leftGate = mainWindow.getTable().getLeftGate();
-			final RightGate rightGate = mainWindow.getTable().getRightGate();
+			final LeftGate leftGate = gameWindow.getTable().getLeftGate();
+			final RightGate rightGate = gameWindow.getTable().getRightGate();
 			
 			if(
 				(ball.getBox2DY() < leftGate.getBox2DY() || ball.getBox2DY() > leftGate.getBox2DY() + AbstractGate.HEIGHT) // Left gate
@@ -108,18 +125,18 @@ public final class EventListener implements ContactListener{
 				(ball.getBox2DY() < rightGate.getBox2DY() || ball.getBox2DY() > rightGate.getBox2DY() + AbstractGate.HEIGHT) // Right gate
 			){
 				Gdx.app.log(EventListener.class.getName() + ".endContact", "The ball leaved map.");
-				mainWindow.getGameControl().ballLeavedMap();
+				gameWindow.getGameControl().ballLeavedMap();
 			}else{
-				final Map map = mainWindow.getTable().getMap();
+				final Map map = gameWindow.getTable().getMap();
 				
 				if(ball.getBox2DX() < map.getBox2DX()){
 					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in left gate!");
 					
-					mainWindow.getGameControl().leftGateGoalEvent();
+					gameWindow.getGameControl().leftGateGoalEvent();
 				}else if(ball.getBox2DX() > map.getBox2DX() + Map.WIDTH){
 					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in right gate!");
 					
-					mainWindow.getGameControl().rightGateGoalEvent();
+					gameWindow.getGameControl().rightGateGoalEvent();
 				}
 			}
 		}

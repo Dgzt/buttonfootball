@@ -58,8 +58,8 @@ public final class GameControl {
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The main window. */
-	private final MainWindow mainWindow;
+	/** The game window. */
+	private final GameWindow gameWindow;
 	
 	/** The scoreboard. */
 	private final ScoreBoard scoreBoard;
@@ -72,6 +72,9 @@ public final class GameControl {
 	
 	/** The settings. */
 	private final Settings settings;
+	
+	/** The event listener of box2D */
+	private final EventListener eventListener;
 	
 	/** The bot. */
 	private final Bot bot;
@@ -86,6 +89,9 @@ public final class GameControl {
 	/** The mooving button. If the player isn't move button then this variable is null. */
 	private Button moovingButton;
 	
+	/** True when the game paused. */
+	private boolean gamePaused;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -93,30 +99,23 @@ public final class GameControl {
 	/**
 	 * The constructor.
 	 * 
-	 * @param mainWindow - The main window.
+	 * @param gameWindow - The game window.
 	 * @param scoreBoard - The score board.
 	 * @param table - The table.
 	 * @param settings - The settings.
+	 * @param eventListener - The box2D event listener.
 	 */
-	public GameControl(final MainWindow mainWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings){
+	public GameControl(final GameWindow gameWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings, final EventListener eventListener){
 		Gdx.app.log(GameControl.class.getName() + ".init", "settings: " + settings);
 		
-		this.mainWindow = mainWindow;
+		this.gameWindow = gameWindow;
 		this.scoreBoard = scoreBoard;
 		this.table = table;
 		this.settings = settings;
+		this.eventListener = eventListener;
 		this.bot = new Bot(table.getOpponentButtons(), table.getBall());
-		
-		// Add the buttons to table.
-		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
-		table.moveButtonsToRightPartOfMap(Player.BOT);
-		
-		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.FIRST_HALF);
-		
-		scoreBoard.getTimeBoard().setHalfTime(settings.getHalfTime());
-		scoreBoard.getTimeBoard().start(this);
-
-		setFirstStep();
+		gameStatus = GameStatus.NOT_IN_GAME;
+		this.gamePaused = true;
 		
 		ballAreaTimer = new Timer();
 	}
@@ -124,6 +123,29 @@ public final class GameControl {
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
+	
+	/**
+	 * Start the game.
+	 */
+	public void startGame(){
+		// Add the buttons to table.
+		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
+		table.moveButtonsToRightPartOfMap(Player.BOT);
+		
+		// Show the buttons
+		table.setVisibleButtons(true);
+		
+		// Add the ball to the table.
+		table.moveBallToCenter();
+		
+		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.FIRST_HALF);
+		
+		scoreBoard.getTimeBoard().setHalfTime(settings.getHalfTime());
+		scoreBoard.getTimeBoard().start(this);
+
+		gamePaused = false;
+		setFirstStep();
+	}
 	
 	/**
 	 * Goal in left gate event.
@@ -203,6 +225,13 @@ public final class GameControl {
 	 */
 	public boolean isPlayerMoveButton(){
 		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON;	
+	}
+	
+	/**
+	 * Return true when the player is in the game.
+	 */
+	public boolean isInGame(){
+		return gameStatus != GameStatus.NOT_IN_GAME;
 	}
 	
 	/**
@@ -316,7 +345,74 @@ public final class GameControl {
 			opponentStepepd();
 		}
 	}
-
+	
+	/**
+	 * Pause the game.
+	 */
+	public void pauseGame(){
+		Gdx.app.log(getClass().getName() + ".pauseGame", "init");
+		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+			ballAreaTimer.stop();
+		}
+		scoreBoard.getTimeBoard().stop();
+		gamePaused = true;
+	}
+	
+	/**
+	 * Resume the game.
+	 */
+	public void resumeGame(){
+		Gdx.app.log(getClass().getName() + ".resumeGame", "init");
+		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
+			ballAreaTimer.start();
+		}
+		scoreBoard.getTimeBoard().resume();
+		gamePaused = false;
+	}
+	
+	/**
+	 * Quit the current game.
+	 */
+	public void quitGame(){
+		Gdx.app.log(getClass().getName() + ".quitGame", "init");
+		
+		//Set the status
+		gameStatus = GameStatus.NOT_IN_GAME;
+		
+		ballAreaTimer.clear();
+		// If visible the ball area then hide it
+		gameWindow.hideBallArea();
+		
+		// Clear the half time board
+		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.NOT_IN_GAME);
+		
+		// Clear the time board
+		scoreBoard.getTimeBoard().clear();
+		
+		// Clear the player's and opponent's goal board
+		scoreBoard.getPlayerGoalBoard().setNumber(0);
+		scoreBoard.getOpponentGoalBoard().setNumber(0);
+		
+		// Hide the buttons
+		table.setVisibleButtons(false);
+		
+		// Clear player's buttons move
+		for(final Button button : table.getPlayerButtons()){
+			button.clearMove();
+		}
+		
+		// Clear opponent's buttons move
+		for(final Button button : table.getOpponentButtons()){
+			button.clearMove();
+		}
+		
+		// Clear ball move
+		table.getBall().clearMove();
+		
+		// Clear button move listener
+		eventListener.clearMovings();
+	}
+	
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
@@ -442,16 +538,16 @@ public final class GameControl {
 	 */
 	private void showBallArea(){
 		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
-			mainWindow.showBallArea(Button.PLAYER_COLOR);
+			gameWindow.showBallArea(Button.PLAYER_COLOR);
 		}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-			mainWindow.showBallArea(Button.OPPONENT_COLOR);
+			gameWindow.showBallArea(Button.OPPONENT_COLOR);
 		}
 		
 		ballAreaTimer.scheduleTask(new Task(){
 
 			@Override
 			public void run() {
-				mainWindow.hideBallArea();
+				gameWindow.hideBallArea();
 				
 				if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
 					afterPlayerBallArea();
@@ -461,6 +557,7 @@ public final class GameControl {
 			}
 			
 		}, settings.getBallAreaSec());
+		ballAreaTimer.start();
 	}
 	
 	/**
@@ -554,6 +651,17 @@ public final class GameControl {
 		}else{
 			playerInGame();
 		}
+	}
+	
+	// --------------------------------------------------
+	// ~ Setter / Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return true when the game is paused.
+	 */
+	public boolean isGamePaused(){
+		return gamePaused;
 	}
 	
 }

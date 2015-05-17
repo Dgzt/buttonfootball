@@ -21,6 +21,7 @@ package com.dgzt.core;
  */
 public enum HalfTimeType {
 
+	NOT_IN_GAME(0),
 	FIRST_HALF(1),
 	SECOND_HALF(2);
 	

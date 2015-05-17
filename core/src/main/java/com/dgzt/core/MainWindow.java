@@ -15,13 +15,12 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.dgzt.core.button.Button;
-import com.dgzt.core.scoreboard.ScoreBoard;
+import com.dgzt.core.menu.BaseMenuWindow;
+import com.dgzt.core.menu.InGameMenuWindow;
+import com.dgzt.core.menu.MainMenuWindow;
 import com.dgzt.core.setting.Settings;
 
 /**
@@ -29,221 +28,172 @@ import com.dgzt.core.setting.Settings;
  * 
  * @author Dgzt
  */
-final public class MainWindow{
-	
-	// --------------------------------------------------
-	// ~ Static members
-	// --------------------------------------------------
-	
-	/** The width of main window in cm. */
-	public static final float WIDTH = Table.WIDTH;
-
-	/** The height of main window in cm. */
-	public static final float HEIGHT = ScoreBoard.HEIGHT +Table.HEIGHT;
+public class MainWindow {
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The box2D world. */
-	private final World box2DWorld;
+	/** The shader. */
+	private final ShaderProgram shader;
 	
-	/** The game control. */
-	private final GameControl gameControl;
+	/** The batch. */
+	private final Batch batch;
 	
-	/** The score board. */
-	private final ScoreBoard scoreBoard;
+	/** The camera. */
+	private final Camera camera;
 	
-	/** The table. */
-	private final Table table;
+	/** The multi input processor. */
+	private final MultiInputProcessor multiInputProcessor;
 	
-	/** The frame per second rectangle. */
-	private final FPS fps;
+	/** The game window. */
+	private final GameWindow gameWindow;
 	
-	/** The arrow. */
-	private final Arrow arrow;
-	
-	/** The ball area. */
-	private final BallArea ballArea;
-	
-	/** The scale. */
-	private double scale;
+	/** The menu window. This can be null if the menu isn't visible. */
+	private BaseMenuWindow menuWindow;
 	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
 	
 	/**
-	 * The constructor.
+	 * Constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param spriteBatch - The sprite batch.s
+	 * @param batch - The sprite batch.
 	 * @param settings - The settings.
+	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public MainWindow(final ShaderProgram shader, final SpriteBatch spriteBatch, final Settings settings){
-		// The box2D world
-		box2DWorld = new World(new Vector2(0,0), true);
-		// The event listener
-		final EventListener eventListener = new EventListener(this);
-		box2DWorld.setContactListener(eventListener);
+	public MainWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final Camera camera, final MultiInputProcessor multiInputProcessor){
+		this.shader = shader;
+		this.batch = batch;
+		this.camera = camera;
+		this.multiInputProcessor = multiInputProcessor;
 		
-		scoreBoard = new ScoreBoard(shader);
-		table = new Table(shader, box2DWorld, eventListener);
-		fps = new FPS(shader, spriteBatch);
+		gameWindow = new GameWindow(shader, batch, settings, multiInputProcessor);
+		menuWindow = getMainMenuWindow();
 		
-		arrow = new Arrow(table, shader);
-		
-		ballArea = new BallArea(shader, table.getBall());
-		
-		gameControl = new GameControl(this, scoreBoard, table, settings);
-		
-		Gdx.input.setInputProcessor(new InputListener(this, gameControl));
+		multiInputProcessor.add(getInputListener(gameWindow.getGameControl()));
 	}
 	
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
-	
+
 	/**
-	 * Resize the child objects.
+	 * Resize the window.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param scale - The scale value.
+	 * @param width - The width.
+	 * @param height - The height.
 	 */
-	public void resize(final float x, final float y, final float width, final double scale){
-		this.scale = scale;
+	public void resize(final float width, final float height){
+		float gameWindowWidth;
+		float gameWindowHeight;
 		
-		final float scoreBoardWidth = (float)(ScoreBoard.WIDTH * scale);
-		final float scoreBoardHeight = (float)(ScoreBoard.HEIGHT * scale);
-		final float scoreBoardX = x + (width - scoreBoardWidth) / 2;
-		final float scoreBoardY = y;
+		final double rate = (double)width/height;
 		
-		final float tableWidth = (float)(Table.WIDTH * scale);
-		final float tableHeight = (float)(Table.HEIGHT * scale);
-		final float tableX = x  + (width - tableWidth) / 2;
-		final float tableY = scoreBoardY + scoreBoardHeight;
+		if( GameWindow.WIDTH/GameWindow.HEIGHT > rate ){
+			gameWindowWidth = width;
+			gameWindowHeight = GameWindow.HEIGHT*(width/GameWindow.WIDTH);
+		}else{
+			gameWindowWidth = GameWindow.WIDTH*(height/GameWindow.HEIGHT);
+			gameWindowHeight = height;
+		}
 		
-		final float fpsWidth = FPS.WIDTH;
-		final float fpsX = x + width - fpsWidth;
-		final float fpsY = y;
+		final float gameWindowX = (width-gameWindowWidth)/2;
+		final float gameWindowY = (height-gameWindowHeight)/2;
+		final double scale = (double)gameWindowWidth / GameWindow.WIDTH;
 		
-		scoreBoard.resize(scoreBoardX, scoreBoardY, scoreBoardWidth, scoreBoardHeight, scale);
-		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
-		fps.resize(fpsX, fpsY);
+		gameWindow.resize(gameWindowX, gameWindowY, gameWindowWidth, scale);
 		
-		ballArea.resize(scale);
-	}
-	
-	/**
-	 * Draw the child objects.
-	 */
-	public void draw() {
-		// Step the box2d world
-		box2DWorld.step(1/60f, 6, 2);
-		
-		// Draw the shapes
-		scoreBoard.draw();
-		table.draw();
-		fps.draw();
-		
-		arrow.draw();
-		
-		if(ballArea.isVisible()){
-			ballArea.draw();
+		if(menuWindow != null){
+			menuWindow.resize(width, height);
 		}
 	}
 	
 	/**
-	 * Dispose the main window.
+	 * Draw the window.
+	 */
+	public void draw(){
+		gameWindow.draw();
+		
+		if(menuWindow != null){
+			menuWindow.draw();
+		}
+	}
+	
+	/**
+	 * Dispose the window.
 	 */
 	public void dispose(){
-		scoreBoard.dispose();
-		table.dispose();
-		arrow.dispose();
-		ballArea.dispose();
-		box2DWorld.dispose();
+		gameWindow.dispose();
 	}
 	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
 	/**
-	 * Setup the arrow if contains the given position a player button.
+	 * Return with the input listener of main window.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
+	 * @param gameControl - The game control
 	 */
-	public void mouseButtonPressed(final float x, final float y){
-		for(final Button playerButton : table.getPlayerButtons()){
-			if(playerButton.contains(x, y)){
-				arrow.show(playerButton);
-			}
-		}
-	}
-	
-	/**
-	 * Set the new ends point of the arrow.
-	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 */
-	public void mouseButtonMoved(final float x, final float y){
-		arrow.setEndPoint(x, y);
-	}
-	
-	/**
-	 * Move the selected button and hide the arrow if the arrow is visible.
-	 */
-	public void mouseButtonReleased(){
-		if(arrow.isVisible()){
-			arrow.hide();
+	private MainWindowInputListener getInputListener(final GameControl gameControl){
+		return new MainWindowInputListener(gameControl) {
 			
-			final Button movingButton = arrow.getLastSelectedButton();
-			movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
-			gameControl.playerStepped();
-		}
+			@Override
+			protected void showOrHideMenuWindow() {
+				if(menuWindow == null){
+					gameWindow.getGameControl().pauseGame();
+					menuWindow = getInGameMenuWindow();
+					menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				}else{
+					gameWindow.getGameControl().resumeGame();
+					menuWindow.dispose();
+					menuWindow = null;
+				}
+			}
+		};
 	}
 	
 	/**
-	 * Show the ball area with the given color.
-	 * 
-	 * @param color - The new color.
+	 * Return with the main menu window.
 	 */
-	public void showBallArea(final Color color){
-		ballArea.resize(color, scale);
-		
-		ballArea.setVisible(true);
-	}
-	
-	/**
-	 * Hide the ball area.
-	 */
-	public void hideBallArea(){
-		ballArea.setVisible(false);
-	}
-	
-	// --------------------------------------------------
-	// ~ Getter methods
-	// --------------------------------------------------
+	private MainMenuWindow getMainMenuWindow(){
+		return new MainMenuWindow(shader, batch, camera, multiInputProcessor){
 
-	/** 
-	 * Return with the FPS. 
-	 */
-	public FPS getFPS() {
-		return fps;
+			@Override
+			protected void startGame() {
+				menuWindow.dispose();
+				menuWindow = null;
+				
+				gameWindow.getGameControl().startGame();
+			}
+			
+		};
 	}
 	
 	/**
-	 * Return with the table.
+	 * Return with the in game menu window.
 	 */
-	public Table getTable() {
-		return table;
+	private InGameMenuWindow getInGameMenuWindow(){
+		return new InGameMenuWindow(shader, batch, camera, multiInputProcessor) {
+			
+			@Override
+			protected void resumeGame() {
+				menuWindow.dispose();
+				menuWindow = null;
+				
+				gameWindow.getGameControl().resumeGame();
+			}
+			
+			@Override
+			protected void quitToMainMenu() {
+				gameWindow.getGameControl().quitGame();
+				menuWindow.dispose();
+				menuWindow = getMainMenuWindow();
+				menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
+		};
 	}
-
-	/**
-	 * Return with the game control.
-	 */
-	public GameControl getGameControl() {
-		return gameControl;
-	}
-
 }
