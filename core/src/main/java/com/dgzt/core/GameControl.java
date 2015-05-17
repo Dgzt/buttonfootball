@@ -557,6 +557,7 @@ public final class GameControl {
 			}
 			
 		}, settings.getBallAreaSec());
+		ballAreaTimer.start();
 	}
 	
 	/**
