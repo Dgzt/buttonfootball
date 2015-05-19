@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.menu.BaseMenuWindow;
+import com.dgzt.core.menu.EndGameMenuWindow;
 import com.dgzt.core.menu.InGameMenuWindow;
 import com.dgzt.core.menu.MainMenuWindow;
 import com.dgzt.core.setting.Settings;
@@ -28,7 +29,7 @@ import com.dgzt.core.setting.Settings;
  * 
  * @author Dgzt
  */
-public class MainWindow {
+public final class MainWindow {
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -70,7 +71,7 @@ public class MainWindow {
 		this.camera = camera;
 		this.multiInputProcessor = multiInputProcessor;
 		
-		gameWindow = new GameWindow(shader, batch, settings, multiInputProcessor);
+		gameWindow = new GameWindow(shader, batch, settings, multiInputProcessor, this);
 		menuWindow = getMainMenuWindow();
 		
 		multiInputProcessor.add(getInputListener(gameWindow.getGameControl()));
@@ -127,6 +128,16 @@ public class MainWindow {
 	 */
 	public void dispose(){
 		gameWindow.dispose();
+	}
+	
+	/**
+	 * Show the end game menu window.
+	 */
+	public void showEndGameMenuWindow(){
+		Gdx.app.log(getClass().getName() + ".showEndGameMenuWindow()", "init");
+		
+		menuWindow = getEndGameMenuWindow();
+		menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 	
 	// --------------------------------------------------
@@ -195,5 +206,23 @@ public class MainWindow {
 				menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			}
 		};
+	}
+	
+	/**
+	 * Return with the end game menu window.
+	 */
+	private EndGameMenuWindow getEndGameMenuWindow(){
+		return new EndGameMenuWindow(shader, batch, camera, multiInputProcessor);
+	}
+	
+	// --------------------------------------------------
+	// ~ Getter methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with the game window.
+	 */
+	public final GameWindow getGameWindow() {
+		return gameWindow;
 	}
 }

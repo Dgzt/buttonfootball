@@ -28,7 +28,7 @@ import com.dgzt.core.setting.Settings;
  * 
  * @author Dgzt
  */
-final public class GameWindow{
+public final class GameWindow{
 	
 	// --------------------------------------------------
 	// ~ Static members
@@ -79,8 +79,9 @@ final public class GameWindow{
 	 * @param batch - The batch.
 	 * @param settings - The settings.
 	 * @param multiInputProcessor - The multi input processor.
+	 * @param mainWindow - The main window.
 	 */
-	public GameWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final MultiInputProcessor multiInputProcessor){
+	public GameWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final MultiInputProcessor multiInputProcessor, final MainWindow mainWindow){
 		// The box2D world
 		box2DWorld = new World(new Vector2(0,0), true);
 		// The event listener
@@ -95,7 +96,7 @@ final public class GameWindow{
 		
 		ballArea = new BallArea(shader, table.getBall());
 		
-		gameControl = new GameControl(this, scoreBoard, table, settings, eventListener);
+		gameControl = new GameControl(mainWindow, scoreBoard, table, settings, eventListener);
 		
 		multiInputProcessor.add(new GameWindowInputListener(this, gameControl));
 	}
