@@ -256,7 +256,7 @@ public final class GameControl {
 		}else{
 			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "Game end.");
 			
-			mainWindow.showEndGameMenuWindow();
+			mainWindow.showEndGameMenuWindow(scoreBoard.getPlayerGoalBoard().getNumber(), scoreBoard.getOpponentGoalBoard().getNumber());
 		}
 	}
 	

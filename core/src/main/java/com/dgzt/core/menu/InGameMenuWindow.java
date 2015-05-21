@@ -109,5 +109,4 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 		});
 		return button;
 	}
-
 }

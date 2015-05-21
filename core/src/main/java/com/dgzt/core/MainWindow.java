@@ -132,11 +132,14 @@ public final class MainWindow {
 	
 	/**
 	 * Show the end game menu window.
+	 * 
+	 * @param playerGoals - The number of player's goals.
+	 * @param opponentGoals - The number of opponent's goals.
 	 */
-	public void showEndGameMenuWindow(){
+	public void showEndGameMenuWindow(final int playerGoals, final int opponentGoals){
 		Gdx.app.log(getClass().getName() + ".showEndGameMenuWindow()", "init");
 		
-		menuWindow = getEndGameMenuWindow();
+		menuWindow = getEndGameMenuWindow(playerGoals, opponentGoals);
 		menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 	
@@ -210,9 +213,25 @@ public final class MainWindow {
 	
 	/**
 	 * Return with the end game menu window.
+	 * 
+	 * @param playerGoals - The number of player's goals.
+	 * @param opponentGoals - The number opponent's goals.
 	 */
-	private EndGameMenuWindow getEndGameMenuWindow(){
-		return new EndGameMenuWindow(shader, batch, camera, multiInputProcessor);
+	private EndGameMenuWindow getEndGameMenuWindow(final int playerGoals, final int opponentGoals){
+		return new EndGameMenuWindow(shader, batch, camera, multiInputProcessor, playerGoals, opponentGoals){
+
+			@Override
+			protected void quitToMainMenu() {
+				// Clear the score board and status
+				gameWindow.getGameControl().quitGame();
+				
+				// Change the menu window to main menu
+				menuWindow.dispose();
+				menuWindow = getMainMenuWindow();
+				menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
+			
+		};
 	}
 	
 	// --------------------------------------------------
