@@ -15,27 +15,41 @@
 package com.dgzt.core.menu;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.dgzt.core.MultiInputProcessor;
 
 /**
- * The in game menu window.
+ * The end game menu window.
  * 
  * @author Dgzt
  */
-public abstract class InGameMenuWindow extends BaseMenuWindow{
-	
+public abstract class EndGameMenuWindow extends BaseMenuWindow{
+
 	// --------------------------------------------------
 	// ~ Static members
 	// --------------------------------------------------
-
-	/** The text of resume game button. */
-	private static final String RESUME_GAME = " Resume game ";
+	
+	/** The color of the text. */
+	private static final Color TEXT_COLOR = Color.WHITE;
+	
+	/** The player text. */
+	private static final String PLAYER = "Player";
+	
+	/** The opponent text. */
+	private static final String OPPONENT = "Opponent";
+	
+	/** The space between player and opponent scores. */
+	private static final int SCORE_GROUP_SPACE = 30;
 	
 	/** The text of quit to main menu button. */
 	private static final String QUIT_TO_MAIN_MENU = " Quit to main menu ";
@@ -51,23 +65,25 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	 * @param batch - The batch.
 	 * @param camera - The camera.
 	 * @param multiInputProcessor - The multi input processor.
+	 * @param playerGoals - The number of player's goals.
+	 * @param opponentGoals - The number of opponent's goals.
 	 */
-	public InGameMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
+	public EndGameMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor, final int playerGoals, final int opponentGoals) {
 		super(shader, batch, camera, multiInputProcessor);
 		
+		final HorizontalGroup hGroup = new HorizontalGroup();
+		hGroup.addActor(getScoreVerticalGroup(PLAYER, playerGoals));
+		hGroup.space(SCORE_GROUP_SPACE);
+		hGroup.addActor(getScoreVerticalGroup(OPPONENT, opponentGoals));
+
 		final WidgetGroup menuGroup = getMenuGroup();
-		menuGroup.addActor(getResumeGameButton());
+		menuGroup.addActor(hGroup);
 		menuGroup.addActor(getQuitToMainMenuButton());
 	}
 	
 	// --------------------------------------------------
 	// ~ Abstract methods
-	// --------------------------------------------------
-	
-	/**
-	 * Call this function when clicked to the resume game button.
-	 */
-	protected abstract void resumeGame();
+	// --------------------------------------------------	
 	
 	/**
 	 * Call this function when clicked to the quit to main menu button.
@@ -76,23 +92,32 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	
 	// --------------------------------------------------
 	// ~ Private methods
-	// --------------------------------------------------
+	// --------------------------------------------------	
 	
 	/**
-	 * Return with the resume game button.
+	 * Return with the score vertical group.
+	 * 
+	 * @param name - The name.
+	 * @param goals - The number of goals.
 	 */
-	private TextButton getResumeGameButton(){
-		final TextButton button = new TextButton(RESUME_GAME, getStyle());
-		button.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(final InputEvent event, final float x, final float y) {
-				resumeGame();
-			}
-			
-		});
-		return button;
+	private VerticalGroup getScoreVerticalGroup(final String name, final int goals){
+		final VerticalGroup group = new VerticalGroup();
+		
+		group.addActor(getLabel(name));
+		group.addActor(getLabel(String.valueOf(goals)));
+		
+		return group;
 	}
+	
+	/**
+	 * Get label with the given text.
+	 * 
+	 * @param text - The text.
+	 */
+	private Label getLabel(final String text){
+		return new Label(text, new Label.LabelStyle(new BitmapFont(), TEXT_COLOR));
+	}
+	
 	
 	/**
 	 * Return with the quit to main menu button.
@@ -109,4 +134,5 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 		});
 		return button;
 	}
+	
 }

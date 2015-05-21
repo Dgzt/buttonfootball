@@ -58,8 +58,8 @@ public final class GameControl {
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The game window. */
-	private final GameWindow gameWindow;
+	/** The main window. */
+	private final MainWindow mainWindow;
 	
 	/** The scoreboard. */
 	private final ScoreBoard scoreBoard;
@@ -99,16 +99,16 @@ public final class GameControl {
 	/**
 	 * The constructor.
 	 * 
-	 * @param gameWindow - The game window.
+	 * @param mainWindow - The main window.
 	 * @param scoreBoard - The score board.
 	 * @param table - The table.
 	 * @param settings - The settings.
 	 * @param eventListener - The box2D event listener.
 	 */
-	public GameControl(final GameWindow gameWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings, final EventListener eventListener){
+	public GameControl(final MainWindow mainWindow, final ScoreBoard scoreBoard, final Table table, final Settings settings, final EventListener eventListener){
 		Gdx.app.log(GameControl.class.getName() + ".init", "settings: " + settings);
 		
-		this.gameWindow = gameWindow;
+		this.mainWindow = mainWindow;
 		this.scoreBoard = scoreBoard;
 		this.table = table;
 		this.settings = settings;
@@ -255,6 +255,8 @@ public final class GameControl {
 			scoreBoard.getTimeBoard().start(this);
 		}else{
 			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "Game end.");
+			
+			mainWindow.showEndGameMenuWindow(scoreBoard.getPlayerGoalBoard().getNumber(), scoreBoard.getOpponentGoalBoard().getNumber());
 		}
 	}
 	
@@ -381,7 +383,7 @@ public final class GameControl {
 		
 		ballAreaTimer.clear();
 		// If visible the ball area then hide it
-		gameWindow.hideBallArea();
+		mainWindow.getGameWindow().hideBallArea();
 		
 		// Clear the half time board
 		scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.NOT_IN_GAME);
@@ -538,16 +540,16 @@ public final class GameControl {
 	 */
 	private void showBallArea(){
 		if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
-			gameWindow.showBallArea(Button.PLAYER_COLOR);
+			mainWindow.getGameWindow().showBallArea(Button.PLAYER_COLOR);
 		}else if(gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-			gameWindow.showBallArea(Button.OPPONENT_COLOR);
+			mainWindow.getGameWindow().showBallArea(Button.OPPONENT_COLOR);
 		}
 		
 		ballAreaTimer.scheduleTask(new Task(){
 
 			@Override
 			public void run() {
-				gameWindow.hideBallArea();
+				mainWindow.getGameWindow().hideBallArea();
 				
 				if(gameStatus == GameStatus.WAITING_AFTER_PLAYER){
 					afterPlayerBallArea();
