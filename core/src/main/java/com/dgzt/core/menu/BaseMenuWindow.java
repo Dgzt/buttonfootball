@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.dgzt.core.FontConstants;
 import com.dgzt.core.MultiInputProcessor;
 import com.dgzt.core.shape.RectangleShape;
 
@@ -167,8 +168,7 @@ public class BaseMenuWindow extends RectangleShape{
 		
 		skin.add("white", new Texture(pixmap));
 		
-		BitmapFont bfont=new BitmapFont();
-		bfont.scale(0.3f);
+		BitmapFont bfont=new BitmapFont(Gdx.files.internal(FontConstants.SMALL_FONT_FILE), Gdx.files.internal(FontConstants.SMALL_FONT_IMAGE), false);
 		skin.add("default",bfont);
 		
 		TextButtonStyle textButtonStyle = new TextButtonStyle();

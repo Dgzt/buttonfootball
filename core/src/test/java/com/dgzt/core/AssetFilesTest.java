@@ -33,11 +33,14 @@ public final class AssetFilesTest {
 	// ~ Private static members
 	// --------------------------------------------------
 	
+	/** The prefix for assets. */
+	private static final String ASSETS_PREFIX = "../assets/";
+	
 	/** The path of the vertex shader. */
-	private final static String VERTEX_SHADER_PATH = "../assets/shader.vsh";
+	private static final String VERTEX_SHADER_PATH = ASSETS_PREFIX + "shader.vsh";
 	
 	/** The path of the fragment shader. */
-	private final static String FRAGMENT_SHADER_PATH = "../assets/shader.fsh";
+	private static final String FRAGMENT_SHADER_PATH = ASSETS_PREFIX + "shader.fsh";
 
 	// --------------------------------------------------
 	// ~ Tests
@@ -59,4 +62,17 @@ public final class AssetFilesTest {
 		assertTrue(Gdx.files.internal(FRAGMENT_SHADER_PATH).exists());
 	}
 	
+	/**
+	 * Test for font files.
+	 */
+	@Test
+	public void test_fonts(){
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.SMALL_FONT_FILE).exists());
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.SMALL_FONT_IMAGE).exists());
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.MEDIUM_FONT_FILE).exists());
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.MEDIUN_FONT_IMAGE).exists());
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.LARGE_FONT_FILE).exists());
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.LARGE_FONT_IMAGE_1).exists());
+		assertTrue(Gdx.files.internal(ASSETS_PREFIX + FontConstants.LARGE_FONT_IMAGE_2).exists());
+	}
 }

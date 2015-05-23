@@ -14,10 +14,14 @@
  */
 package com.dgzt.core.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -26,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.dgzt.core.FontConstants;
 import com.dgzt.core.MultiInputProcessor;
 
 /**
@@ -103,19 +108,36 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	private VerticalGroup getScoreVerticalGroup(final String name, final int goals){
 		final VerticalGroup group = new VerticalGroup();
 		
-		group.addActor(getLabel(name));
-		group.addActor(getLabel(String.valueOf(goals)));
+		group.addActor(getNameLabel(name));
+		group.addActor(getScoreLabel(goals));
 		
 		return group;
 	}
 	
 	/**
-	 * Get label with the given text.
+	 * Return with the score label.
 	 * 
-	 * @param text - The text.
+	 * @param score - The score.
 	 */
-	private Label getLabel(final String text){
-		return new Label(text, new Label.LabelStyle(new BitmapFont(), TEXT_COLOR));
+	private Label getScoreLabel(final int score){
+		final BitmapFontData bitmapFontData = new BitmapFontData(Gdx.files.internal(FontConstants.LARGE_FONT_FILE), false);
+		final TextureRegion[] textureRegions = new TextureRegion[]{
+				new TextureRegion(new Texture(Gdx.files.internal(FontConstants.LARGE_FONT_IMAGE_1), false)), 
+				new TextureRegion(new Texture(Gdx.files.internal(FontConstants.LARGE_FONT_IMAGE_2), false))
+		};
+		
+		return new Label(Integer.toString(score), new Label.LabelStyle( new BitmapFont(bitmapFontData, textureRegions, true), TEXT_COLOR ));
+	}
+	
+	/**
+	 * Return with the name label.
+	 * 
+	 * @param name - The name.
+	 */
+	private Label getNameLabel(final String name){
+		final BitmapFont font = new BitmapFont(Gdx.files.internal(FontConstants.MEDIUM_FONT_FILE), Gdx.files.internal(FontConstants.MEDIUN_FONT_IMAGE), false);
+		
+		return new Label(name, new Label.LabelStyle(font, TEXT_COLOR));
 	}
 	
 	
