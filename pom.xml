@@ -13,6 +13,12 @@
 		<gwt.version>2.6.1</gwt.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
+		
+		<!-- sonarqube -->
+		<sonar.language>java</sonar.language>
+    	<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    	<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    	<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -134,6 +140,23 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+
+	        <plugin>
+	            <groupId>org.jacoco</groupId>
+	            <artifactId>jacoco-maven-plugin</artifactId>
+	            <version>0.7.0.201403182114</version>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>prepare-agent</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	            <configuration>
+	                <destFile>${project.basedir}/../target/jacoco.exec</destFile>
+	            </configuration>
+	        </plugin>
+
 		</plugins>
 	</build>
 
