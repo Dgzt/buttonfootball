@@ -242,8 +242,12 @@ public final class GameControl {
 		ballAreaTimer.stop();
 		gameStatus = GameStatus.NOT_IN_GAME;
 		
+		// Clear all movements
+		clearAllMovements();
+		
 		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
 			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "End half time");
+			
 			scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.SECOND_HALF);
 			
 			table.moveButtonsToLeftPartOfMap(Player.BOT);
@@ -378,8 +382,14 @@ public final class GameControl {
 	public void quitGame(){
 		Gdx.app.log(getClass().getName() + ".quitGame", "init");
 		
-		//Set the status
-		gameStatus = GameStatus.NOT_IN_GAME;
+		// If quit the game before end
+		if(gameStatus != GameStatus.NOT_IN_GAME){
+			// Set the status
+			gameStatus = GameStatus.NOT_IN_GAME;
+			
+			// Clear the movements
+			clearAllMovements();
+		}
 		
 		ballAreaTimer.clear();
 		// If visible the ball area then hide it
@@ -397,22 +407,6 @@ public final class GameControl {
 		
 		// Hide the buttons
 		table.setVisibleButtons(false);
-		
-		// Clear player's buttons move
-		for(final Button button : table.getPlayerButtons()){
-			button.clearMove();
-		}
-		
-		// Clear opponent's buttons move
-		for(final Button button : table.getOpponentButtons()){
-			button.clearMove();
-		}
-		
-		// Clear ball move
-		table.getBall().clearMove();
-		
-		// Clear button move listener
-		eventListener.clearMovings();
 	}
 	
 	// --------------------------------------------------
@@ -653,6 +647,27 @@ public final class GameControl {
 		}else{
 			playerInGame();
 		}
+	}
+	
+	/**
+	 * Clear all movements.
+	 */
+	private void clearAllMovements(){
+		// Clear player's buttons move
+		for(final Button button : table.getPlayerButtons()){
+			button.clearMove();
+		}
+		
+		// Clear opponent's buttons move
+		for(final Button button : table.getOpponentButtons()){
+			button.clearMove();
+		}
+		
+		// Clear ball move
+		table.getBall().clearMove();
+		
+		// Clear button move listener
+		eventListener.clearMovings();
 	}
 	
 	// --------------------------------------------------
