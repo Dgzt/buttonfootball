@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.dgzt.core.FontConstants;
 import com.dgzt.core.MultiInputProcessor;
 
@@ -121,10 +122,10 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	 */
 	private Label getScoreLabel(final int score){
 		final BitmapFontData bitmapFontData = new BitmapFontData(Gdx.files.internal(FontConstants.LARGE_FONT_FILE), false);
-		final TextureRegion[] textureRegions = new TextureRegion[]{
-				new TextureRegion(new Texture(Gdx.files.internal(FontConstants.LARGE_FONT_IMAGE_1), false)), 
-				new TextureRegion(new Texture(Gdx.files.internal(FontConstants.LARGE_FONT_IMAGE_2), false))
-		};
+
+		Array<TextureRegion> textureRegions = new Array<TextureRegion>(false, 2);
+		textureRegions.add(new TextureRegion(new Texture(Gdx.files.internal(FontConstants.LARGE_FONT_IMAGE_1), false)));
+		textureRegions.add(new TextureRegion(new Texture(Gdx.files.internal(FontConstants.LARGE_FONT_IMAGE_2), false)));
 		
 		return new Label(Integer.toString(score), new Label.LabelStyle( new BitmapFont(bitmapFontData, textureRegions, true), TEXT_COLOR ));
 	}

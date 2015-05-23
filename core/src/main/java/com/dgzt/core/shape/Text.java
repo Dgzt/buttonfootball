@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
@@ -118,15 +119,9 @@ public class Text {
 	 * @param text - The text.
 	 */
 	public static float getWidth(final String text){
-		return new BitmapFont().getBounds(text).width;
+		GlyphLayout layout = new GlyphLayout();
+		layout.setText(new BitmapFont(), text);
+		return layout.width;
 	}
-	
-	/**
-	 * Return with the height of the given text.
-	 * 
-	 * @param text - The text.
-	 */
-	public static float getHeight(final String text){
-		return new BitmapFont().getBounds(text).height;
-	}
+
 }
