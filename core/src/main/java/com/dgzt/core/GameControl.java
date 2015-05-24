@@ -250,8 +250,12 @@ public final class GameControl {
 			
 			scoreBoard.getHalfTimeBoard().setHalfTimeType(HalfTimeType.SECOND_HALF);
 			
+			// Move buttons to the new position
 			table.moveButtonsToLeftPartOfMap(Player.BOT);
 			table.moveButtonsToRightPartOfMap(Player.PLAYER);
+			
+			// Move ball to the center
+			table.moveBallToCenter();
 			
 			settings.setFirstStep( settings.getFirstStep() == Player.PLAYER ? Player.BOT : Player.PLAYER );
 			setFirstStep();
