@@ -15,13 +15,18 @@
 package com.dgzt.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.menu.BaseMenuWindow;
 import com.dgzt.core.menu.EndGameMenuWindow;
 import com.dgzt.core.menu.InGameMenuWindow;
 import com.dgzt.core.menu.MainMenuWindow;
+import com.dgzt.core.menu.MenuButton;
 import com.dgzt.core.setting.Settings;
 
 /**
@@ -30,6 +35,13 @@ import com.dgzt.core.setting.Settings;
  * @author Dgzt
  */
 public final class MainWindow {
+
+	// --------------------------------------------------
+	// ~ Static members
+	// --------------------------------------------------
+	
+	/** The text for menu button. */
+	private static final String MENU_BUTTON_TEXT = "Menu";
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -41,11 +53,14 @@ public final class MainWindow {
 	/** The batch. */
 	private final Batch batch;
 	
-	/** The camera. */
-	private final Camera camera;
+	/** The stage. */
+	private final Stage stage;
 	
 	/** The multi input processor. */
 	private final MultiInputProcessor multiInputProcessor;
+	
+	/** The menu button. */
+	private final MenuButton menuButton;
 	
 	/** The game window. */
 	private final GameWindow gameWindow;
@@ -65,11 +80,18 @@ public final class MainWindow {
 	 * @param settings - The settings.
 	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public MainWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final Camera camera, final MultiInputProcessor multiInputProcessor){
+	public MainWindow(final ShaderProgram shader, final Batch batch, final Settings settings, final Viewport viewport, final MultiInputProcessor multiInputProcessor){
 		this.shader = shader;
 		this.batch = batch;
-		this.camera = camera;
 		this.multiInputProcessor = multiInputProcessor;
+		
+		stage = new Stage(viewport);
+		multiInputProcessor.add(stage);
+		
+		menuButton = getMenuButton();
+		stage.addActor(menuButton);
+		
+		menuButton.setVisible(false);
 		
 		gameWindow = new GameWindow(shader, batch, settings, multiInputProcessor, this);
 		menuWindow = getMainMenuWindow();
@@ -110,6 +132,9 @@ public final class MainWindow {
 		if(menuWindow != null){
 			menuWindow.resize(width, height);
 		}
+		
+		// Resize menu button
+		menuButton.setPosition(0, height - menuButton.getHeight());
 	}
 	
 	/**
@@ -121,6 +146,14 @@ public final class MainWindow {
 		if(menuWindow != null){
 			menuWindow.draw();
 		}
+
+		shader.end();
+		batch.begin();
+		stage.draw();
+		batch.end();
+		shader.begin();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	/**
@@ -128,6 +161,7 @@ public final class MainWindow {
 	 */
 	public void dispose(){
 		gameWindow.dispose();
+		stage.dispose();
 	}
 	
 	/**
@@ -158,10 +192,14 @@ public final class MainWindow {
 			@Override
 			protected void showOrHideMenuWindow() {
 				if(menuWindow == null){
+					menuButton.setVisible(false);
+					
 					gameWindow.getGameControl().pauseGame();
 					menuWindow = getInGameMenuWindow();
 					menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}else{
+					menuButton.setVisible(true);
+					
 					gameWindow.getGameControl().resumeGame();
 					menuWindow.dispose();
 					menuWindow = null;
@@ -171,13 +209,35 @@ public final class MainWindow {
 	}
 	
 	/**
+	 * Return with the menu button.
+	 */
+	private MenuButton getMenuButton(){
+		final MenuButton button = new MenuButton(MENU_BUTTON_TEXT);
+		button.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(final InputEvent event, final float x, final float y) {
+				menuButton.setVisible(false);
+				
+				gameWindow.getGameControl().pauseGame();
+				menuWindow = getInGameMenuWindow();
+				menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
+		});
+		
+		return button;
+	}
+	
+	/**
 	 * Return with the main menu window.
 	 */
 	private MainMenuWindow getMainMenuWindow(){
-		return new MainMenuWindow(shader, batch, camera, multiInputProcessor){
+		return new MainMenuWindow(shader, batch, stage.getViewport(), multiInputProcessor){
 
 			@Override
 			protected void startGame() {
+				menuButton.setVisible(true);
+				
 				menuWindow.dispose();
 				menuWindow = null;
 				
@@ -191,10 +251,12 @@ public final class MainWindow {
 	 * Return with the in game menu window.
 	 */
 	private InGameMenuWindow getInGameMenuWindow(){
-		return new InGameMenuWindow(shader, batch, camera, multiInputProcessor) {
+		return new InGameMenuWindow(shader, batch, stage.getViewport(), multiInputProcessor) {
 			
 			@Override
 			protected void resumeGame() {
+				menuButton.setVisible(true);
+				
 				menuWindow.dispose();
 				menuWindow = null;
 				
@@ -218,7 +280,7 @@ public final class MainWindow {
 	 * @param opponentGoals - The number opponent's goals.
 	 */
 	private EndGameMenuWindow getEndGameMenuWindow(final int playerGoals, final int opponentGoals){
-		return new EndGameMenuWindow(shader, batch, camera, multiInputProcessor, playerGoals, opponentGoals){
+		return new EndGameMenuWindow(shader, batch, stage.getViewport(), multiInputProcessor, playerGoals, opponentGoals){
 
 			@Override
 			protected void quitToMainMenu() {

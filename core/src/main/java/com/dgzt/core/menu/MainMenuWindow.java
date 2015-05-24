@@ -16,13 +16,12 @@ package com.dgzt.core.menu;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.MultiInputProcessor;
 
 /**
@@ -48,11 +47,11 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	 * 
 	 * @param shader - The shader.
 	 * @param batch - The sprite batch.
-	 * @param camera - The camera.
+	 * @param viewport - The viewport.
 	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public MainMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
-		super(shader, batch, camera, multiInputProcessor);
+	public MainMenuWindow(final ShaderProgram shader, final Batch batch, final Viewport viewport, final MultiInputProcessor multiInputProcessor) {
+		super(shader, batch, viewport, multiInputProcessor);
 		
 		final WidgetGroup menuGroup = getMenuGroup();
 		
@@ -82,8 +81,8 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	/**
 	 * Start game button.
 	 */
-	private TextButton getStartGameButton(){
-		final TextButton button = new TextButton(START_GAME, getStyle());
+	private MenuButton getStartGameButton(){
+		final MenuButton button = new MenuButton(START_GAME);
 		button.addListener(new ClickListener(){
 
 			@Override
@@ -100,8 +99,8 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	/**
 	 * Quit button.
 	 */
-	private TextButton getQuitButton(){
-		final TextButton button = new TextButton(QUIT, getStyle());
+	private MenuButton getQuitButton(){
+		final MenuButton button = new MenuButton(QUIT);
 		
 		button.addListener(new ClickListener(){
 

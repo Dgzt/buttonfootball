@@ -20,6 +20,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.setting.Settings;
 
 /**
@@ -88,6 +90,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
         camera = new OrthographicCamera();
+        final Viewport viewport = new ScreenViewport(camera);
 		
 		shader = new ShaderProgram(Gdx.files.internal(VERTEX_SHADER).readString(), Gdx.files.internal(FRAGMENT_SHADER).readString());
 		spriteBatch = new SpriteBatch();
@@ -100,7 +103,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 		
 		final MultiInputProcessor multiInputProcessor = new MultiInputProcessor();
 		
-		mainWindow = new MainWindow(shader, spriteBatch, settings, camera, multiInputProcessor);
+		mainWindow = new MainWindow(shader, spriteBatch, settings, viewport, multiInputProcessor);
 		
 		Gdx.input.setInputProcessor(multiInputProcessor);
 	}

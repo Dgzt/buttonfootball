@@ -15,21 +15,13 @@
 package com.dgzt.core.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.dgzt.core.FontConstants;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.MultiInputProcessor;
 import com.dgzt.core.shape.RectangleShape;
 
@@ -63,9 +55,6 @@ public class BaseMenuWindow extends RectangleShape{
 	/** The multi input processor. */
 	private final MultiInputProcessor multiInputProcessor;
 	
-	/** The viewport. */
-	private final ScreenViewport viewport;
-	
 	/** The stage. */
 	private final Stage stage;
 	
@@ -81,15 +70,14 @@ public class BaseMenuWindow extends RectangleShape{
 	 * 
 	 * @param shader - The shader program.
 	 * @param batch - The batch.
-	 * @param camera - The camera.
+	 * @param viewport - The viewport.
 	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public BaseMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
+	public BaseMenuWindow(final ShaderProgram shader, final Batch batch, final Viewport viewport, final MultiInputProcessor multiInputProcessor) {
 		super(shader, BACKGROUND_COLOR);
 		this.shader = shader;
 		this.batch = batch;
 		
-		viewport = new ScreenViewport(camera);
 		stage = new Stage(viewport);
 		
 		menuGroup = new VerticalGroup();
@@ -115,7 +103,7 @@ public class BaseMenuWindow extends RectangleShape{
 	 */
 	public void resize(final float width, final float height){
 		super.resize(0, 0, width, height);
-		viewport.update((int)width, (int)height, true);
+		stage.getViewport().update((int)width, (int)height, true);
 		
 		menuGroup.setPosition(0, -(height - menuGroup.getPrefHeight()) / 2);
 	}
@@ -150,36 +138,6 @@ public class BaseMenuWindow extends RectangleShape{
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-	}
-	
-	// --------------------------------------------------
-	// ~ Protected methods
-	// --------------------------------------------------
-
-	/**
-	 * Return with the style of button.
-	 */
-	protected TextButtonStyle getStyle(){
-		final Skin skin = new Skin();
-		
-		Pixmap pixmap = new Pixmap(40, 30, Format.RGBA8888);
-		pixmap.setColor(Color.BLACK);
-		pixmap.fill();
-		
-		skin.add("white", new Texture(pixmap));
-		
-		BitmapFont bfont=new BitmapFont(Gdx.files.internal(FontConstants.SMALL_FONT_FILE), Gdx.files.internal(FontConstants.SMALL_FONT_IMAGE), false);
-		skin.add("default",bfont);
-		
-		TextButtonStyle textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
-		textButtonStyle.down = skin.newDrawable("white", Color.DARK_GRAY);
-		textButtonStyle.checked = skin.newDrawable("white", Color.BLUE);
-		textButtonStyle.over = skin.newDrawable("white", Color.GREEN);
- 
-		textButtonStyle.font = skin.getFont("default");
-		
-		return textButtonStyle;
 	}
 	
 	// --------------------------------------------------

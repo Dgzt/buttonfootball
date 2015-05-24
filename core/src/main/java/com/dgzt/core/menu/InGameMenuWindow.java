@@ -14,13 +14,12 @@
  */
 package com.dgzt.core.menu;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.MultiInputProcessor;
 
 /**
@@ -49,11 +48,11 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	 * 
 	 * @param shader - The shader.
 	 * @param batch - The batch.
-	 * @param camera - The camera.
+	 * @param viewport - The viewport.
 	 * @param multiInputProcessor - The multi input processor.
 	 */
-	public InGameMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor) {
-		super(shader, batch, camera, multiInputProcessor);
+	public InGameMenuWindow(final ShaderProgram shader, final Batch batch, final Viewport viewport, final MultiInputProcessor multiInputProcessor) {
+		super(shader, batch, viewport, multiInputProcessor);
 		
 		final WidgetGroup menuGroup = getMenuGroup();
 		menuGroup.addActor(getResumeGameButton());
@@ -81,8 +80,8 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	/**
 	 * Return with the resume game button.
 	 */
-	private TextButton getResumeGameButton(){
-		final TextButton button = new TextButton(RESUME_GAME, getStyle());
+	private MenuButton getResumeGameButton(){
+		final MenuButton button = new MenuButton(RESUME_GAME);
 		button.addListener(new ClickListener(){
 
 			@Override
@@ -97,8 +96,8 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	/**
 	 * Return with the quit to main menu button.
 	 */
-	private TextButton getQuitToMainMenuButton(){
-		final TextButton button = new TextButton(QUIT_TO_MAIN_MENU, getStyle());
+	private MenuButton getQuitToMainMenuButton(){
+		final MenuButton button = new MenuButton(QUIT_TO_MAIN_MENU);
 		button.addListener(new ClickListener(){
 
 			@Override
