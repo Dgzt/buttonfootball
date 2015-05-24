@@ -152,9 +152,9 @@ public final class GameControl {
 	 */
 	public void leftGateGoalEvent(){
 		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
-			playerGoalEvent();
-		}else{
 			opponentGoalEvent();
+		}else{
+			playerGoalEvent();
 		}
 	}
 
@@ -163,9 +163,9 @@ public final class GameControl {
 	 */
 	public void rightGateGoalEvent(){
 		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
-			opponentGoalEvent();
-		}else{
 			playerGoalEvent();
+		}else{
+			opponentGoalEvent();
 		}
 	}
 	
