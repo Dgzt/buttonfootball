@@ -54,13 +54,14 @@ final public class GoalBoard extends RectangleBorderShape{
 	 * The constructor.
 	 * 
 	 * @param shader - The shader.
-	 * @param color - The color.
+	 * @param borderColor - The color of the border.
+	 * @param digitColor - The color of the digit.
 	 */
-	public GoalBoard(final ShaderProgram shader, final Color color) {
-		super(shader, color);
+	public GoalBoard(final ShaderProgram shader, final Color borderColor, final Color digitColor) {
+		super(shader, borderColor);
 		
-		firstDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
-		secondDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, color);
+		firstDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, digitColor);
+		secondDigit = new Digit(shader, Digit.GOAL_DIGIT_WIDTH, Digit.GOAL_DIGIT_HEIGHT, digitColor);
 	}
 	
 	// --------------------------------------------------

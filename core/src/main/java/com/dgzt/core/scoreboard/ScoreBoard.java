@@ -16,6 +16,7 @@ package com.dgzt.core.scoreboard;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.dgzt.core.button.Button;
 
 /**
  * The scoreboard.
@@ -70,8 +71,8 @@ final public class ScoreBoard{
 		halfTimeBoard = new HalfTimeBoard(shader, COLOR);
 		
 		timeBoard = new TimeBoard(shader, COLOR);
-		playerGoalBoard = new GoalBoard(shader, COLOR);
-		opponentGoalBoard = new GoalBoard(shader, COLOR);
+		playerGoalBoard = new GoalBoard(shader, COLOR, Button.PLAYER_COLOR);
+		opponentGoalBoard = new GoalBoard(shader, COLOR, Button.OPPONENT_COLOR);
 	}
 	
 	// --------------------------------------------------
