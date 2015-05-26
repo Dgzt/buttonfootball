@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.MultiInputProcessor;
+import com.dgzt.core.menu.button.BaseButton;
+import com.dgzt.core.menu.button.MenuButton;
 
 /**
  * The in game menu window.
@@ -34,10 +36,10 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	// --------------------------------------------------
 
 	/** The text of resume game button. */
-	private static final String RESUME_GAME = " Resume game ";
+	private static final String RESUME_GAME = "Resume game";
 	
 	/** The text of quit to main menu button. */
-	private static final String QUIT_TO_MAIN_MENU = " Quit to main menu ";
+	private static final String QUIT_TO_MAIN_MENU = "Quit to main menu";
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -80,8 +82,8 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	/**
 	 * Return with the resume game button.
 	 */
-	private MenuButton getResumeGameButton(){
-		final MenuButton button = new MenuButton(RESUME_GAME);
+	private BaseButton getResumeGameButton(){
+		final BaseButton button = new MenuButton(RESUME_GAME);
 		button.addListener(new ClickListener(){
 
 			@Override
@@ -96,8 +98,8 @@ public abstract class InGameMenuWindow extends BaseMenuWindow{
 	/**
 	 * Return with the quit to main menu button.
 	 */
-	private MenuButton getQuitToMainMenuButton(){
-		final MenuButton button = new MenuButton(QUIT_TO_MAIN_MENU);
+	private BaseButton getQuitToMainMenuButton(){
+		final BaseButton button = new MenuButton(QUIT_TO_MAIN_MENU);
 		button.addListener(new ClickListener(){
 
 			@Override

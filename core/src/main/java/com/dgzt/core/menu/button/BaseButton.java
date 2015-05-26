@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.dgzt.core.menu;
+package com.dgzt.core.menu.button;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -29,8 +29,18 @@ import com.dgzt.core.FontConstants;
  * 
  * @author Dgzt
  */
-public final class MenuButton extends TextButton{
+public class BaseButton extends TextButton{
 
+	// --------------------------------------------------
+	// ~ Static members
+	// --------------------------------------------------
+	
+	/** The prefix and postfix for text. */
+	private static final String TEXT_PREFIX_POSTFIX = " ";
+	
+	/** The name for default drawable. */
+	private static final String DEFAULT_DRAWABLE = "default";
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------
@@ -39,10 +49,11 @@ public final class MenuButton extends TextButton{
 	 * Constructor.
 	 * 
 	 * @param text - The text.
+	 * @param backgroundColor - The background color.
+	 * @param textColor	- The text color.
 	 */
-	public MenuButton(final String text) {
-		super(text, getMenuButtonStyle());
-		
+	public BaseButton(final String text, final Color backgroundColor, final Color textColor) {
+		super(TEXT_PREFIX_POSTFIX + text + TEXT_PREFIX_POSTFIX, getSkin(backgroundColor, textColor));
 	}
 	
 	// --------------------------------------------------
@@ -50,29 +61,32 @@ public final class MenuButton extends TextButton{
 	// --------------------------------------------------
 
 	/**
-	 * Return with the style of button.
+	 * Return with the skin of button.
+	 * 
+	 * @param backgroundColor - The background color.
+	 * @param textColor - The text color.
 	 */
-	private static TextButtonStyle getMenuButtonStyle(){
+	private static Skin getSkin(final Color backgroundColor, final Color textColor){
 		final Skin skin = new Skin();
 		
-		final Pixmap pixmap = new Pixmap(40, 30, Format.RGBA8888);
-		pixmap.setColor(Color.BLACK);
+		Pixmap pixmap = new Pixmap(1, 1, Format.RGBA8888);
+		pixmap.setColor(backgroundColor);
 		pixmap.fill();
 		
-		skin.add("white", new Texture(pixmap));
+		skin.add(DEFAULT_DRAWABLE, new Texture(pixmap));
 		
 		final BitmapFont bfont = new BitmapFont(Gdx.files.internal(FontConstants.SMALL_FONT_FILE), Gdx.files.internal(FontConstants.SMALL_FONT_IMAGE), false);
-		skin.add("default",bfont);
+		skin.add(DEFAULT_DRAWABLE,bfont);
 		
 		final TextButtonStyle textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
-		textButtonStyle.down = skin.newDrawable("white", Color.DARK_GRAY);
-		textButtonStyle.checked = skin.newDrawable("white", Color.BLUE);
-		textButtonStyle.over = skin.newDrawable("white", Color.GREEN);
+		textButtonStyle.up = skin.newDrawable(DEFAULT_DRAWABLE, backgroundColor);
  
-		textButtonStyle.font = skin.getFont("default");
+		textButtonStyle.font = skin.getFont(DEFAULT_DRAWABLE);
+		textButtonStyle.fontColor = textColor;
 		
-		return textButtonStyle;
+		skin.add(DEFAULT_DRAWABLE, textButtonStyle);
+		
+		return skin;
 	}
 
 }

@@ -32,6 +32,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.FontConstants;
 import com.dgzt.core.MultiInputProcessor;
+import com.dgzt.core.menu.button.BaseButton;
+import com.dgzt.core.menu.button.MenuButton;
 
 /**
  * The end game menu window.
@@ -57,7 +59,7 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	private static final int SCORE_GROUP_SPACE = 30;
 	
 	/** The text of quit to main menu button. */
-	private static final String QUIT_TO_MAIN_MENU = " Quit to main menu ";
+	private static final String QUIT_TO_MAIN_MENU = "Quit to main menu";
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -144,8 +146,8 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	/**
 	 * Return with the quit to main menu button.
 	 */
-	private MenuButton getQuitToMainMenuButton(){
-		final MenuButton button = new MenuButton(QUIT_TO_MAIN_MENU);
+	private BaseButton getQuitToMainMenuButton(){
+		final BaseButton button = new MenuButton(QUIT_TO_MAIN_MENU);
 		button.addListener(new ClickListener(){
 
 			@Override

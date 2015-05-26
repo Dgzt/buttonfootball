@@ -26,7 +26,8 @@ import com.dgzt.core.menu.BaseMenuWindow;
 import com.dgzt.core.menu.EndGameMenuWindow;
 import com.dgzt.core.menu.InGameMenuWindow;
 import com.dgzt.core.menu.MainMenuWindow;
-import com.dgzt.core.menu.MenuButton;
+import com.dgzt.core.menu.button.BaseButton;
+import com.dgzt.core.menu.button.MainWindowButton;
 import com.dgzt.core.setting.Settings;
 
 /**
@@ -60,7 +61,7 @@ public final class MainWindow {
 	private final MultiInputProcessor multiInputProcessor;
 	
 	/** The menu button. */
-	private final MenuButton menuButton;
+	private final BaseButton menuButton;
 	
 	/** The game window. */
 	private final GameWindow gameWindow;
@@ -211,8 +212,8 @@ public final class MainWindow {
 	/**
 	 * Return with the menu button.
 	 */
-	private MenuButton getMenuButton(){
-		final MenuButton button = new MenuButton(MENU_BUTTON_TEXT);
+	private BaseButton getMenuButton(){
+		final BaseButton button = new MainWindowButton(MENU_BUTTON_TEXT);
 		button.addListener(new ClickListener(){
 			
 			@Override

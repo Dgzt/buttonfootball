@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.MultiInputProcessor;
+import com.dgzt.core.menu.button.BaseButton;
+import com.dgzt.core.menu.button.MenuButton;
 
 /**
  * The main menu window.
@@ -36,10 +38,10 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	// --------------------------------------------------
 	
 	/** Text for start game. */
-	private static final String START_GAME = " Start game ";
+	private static final String START_GAME = "Start game";
 	
 	/** Text for quit. */
-	private static final String QUIT = " Quit ";
+	private static final String QUIT = "Quit";
 
 
 	/**
@@ -81,8 +83,8 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	/**
 	 * Start game button.
 	 */
-	private MenuButton getStartGameButton(){
-		final MenuButton button = new MenuButton(START_GAME);
+	private BaseButton getStartGameButton(){
+		final BaseButton button = new MenuButton(START_GAME);
 		button.addListener(new ClickListener(){
 
 			@Override
@@ -99,8 +101,8 @@ public abstract class MainMenuWindow extends BaseMenuWindow{
 	/**
 	 * Quit button.
 	 */
-	private MenuButton getQuitButton(){
-		final MenuButton button = new MenuButton(QUIT);
+	private BaseButton getQuitButton(){
+		final BaseButton button = new MenuButton(QUIT);
 		
 		button.addListener(new ClickListener(){
 
