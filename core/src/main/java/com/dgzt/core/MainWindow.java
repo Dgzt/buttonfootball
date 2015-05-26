@@ -174,6 +174,8 @@ public final class MainWindow {
 	public void showEndGameMenuWindow(final int playerGoals, final int opponentGoals){
 		Gdx.app.log(getClass().getName() + ".showEndGameMenuWindow()", "init");
 		
+		menuButton.setVisible(false);
+		
 		menuWindow = getEndGameMenuWindow(playerGoals, opponentGoals);
 		menuWindow.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
