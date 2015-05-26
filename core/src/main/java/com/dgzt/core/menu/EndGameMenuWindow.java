@@ -15,24 +15,25 @@
 package com.dgzt.core.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dgzt.core.FontConstants;
 import com.dgzt.core.MultiInputProcessor;
+import com.dgzt.core.menu.button.BaseButton;
+import com.dgzt.core.menu.button.MenuButton;
 
 /**
  * The end game menu window.
@@ -58,7 +59,7 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	private static final int SCORE_GROUP_SPACE = 30;
 	
 	/** The text of quit to main menu button. */
-	private static final String QUIT_TO_MAIN_MENU = " Quit to main menu ";
+	private static final String QUIT_TO_MAIN_MENU = "Quit to main menu";
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -69,13 +70,13 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	 * 
 	 * @param shader - The shader.
 	 * @param batch - The batch.
-	 * @param camera - The camera.
+	 * @param viewport - The viewport.
 	 * @param multiInputProcessor - The multi input processor.
 	 * @param playerGoals - The number of player's goals.
 	 * @param opponentGoals - The number of opponent's goals.
 	 */
-	public EndGameMenuWindow(final ShaderProgram shader, final Batch batch, final Camera camera, final MultiInputProcessor multiInputProcessor, final int playerGoals, final int opponentGoals) {
-		super(shader, batch, camera, multiInputProcessor);
+	public EndGameMenuWindow(final ShaderProgram shader, final Batch batch, final Viewport viewport, final MultiInputProcessor multiInputProcessor, final int playerGoals, final int opponentGoals) {
+		super(shader, batch, viewport, multiInputProcessor);
 		
 		final HorizontalGroup hGroup = new HorizontalGroup();
 		hGroup.addActor(getScoreVerticalGroup(PLAYER, playerGoals));
@@ -145,8 +146,8 @@ public abstract class EndGameMenuWindow extends BaseMenuWindow{
 	/**
 	 * Return with the quit to main menu button.
 	 */
-	private TextButton getQuitToMainMenuButton(){
-		final TextButton button = new TextButton(QUIT_TO_MAIN_MENU, getStyle());
+	private BaseButton getQuitToMainMenuButton(){
+		final BaseButton button = new MenuButton(QUIT_TO_MAIN_MENU);
 		button.addListener(new ClickListener(){
 
 			@Override
