@@ -18,6 +18,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -45,17 +46,11 @@ public class LineShape extends Shape{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The first x coordinate value. */
-	private float x1;
+	/** The first point. */
+	private Vector2 pos1;
 	
-	/** The first y coordinate value. */
-	private float y1;
-	
-	/** The second x coordinate value. */
-	private float x2;
-	
-	/** The second y coordinate value. */
-	private float y2;
+	/** The second point. */
+	private Vector2 pos2;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -69,6 +64,9 @@ public class LineShape extends Shape{
 	 */
 	public LineShape(final ShaderProgram shader, final Color color){
 		super(shader, GL20.GL_TRIANGLES, VERTICES_NUM, new short[]{0,1,2,2,3,1}, color);
+		
+		pos1 = new Vector2();
+		pos2 = new Vector2();
 	}
 	
 	// --------------------------------------------------
@@ -85,10 +83,8 @@ public class LineShape extends Shape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float x1, final float y1, final float x2, final float y2, final double scale){
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+		pos1.set(x1, y1);
+		pos2.set(x2, y2);
 		
 		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
 
@@ -116,7 +112,7 @@ public class LineShape extends Shape{
 	 * Return with the length of line.
 	 */
 	public float getLength(){
-		return (float) MathUtil.distance(x1, y1, x2, y2);
+		return pos1.dst(pos2);
 	}
 	
 	// --------------------------------------------------
@@ -127,28 +123,28 @@ public class LineShape extends Shape{
 	 * Return with first x coordinate value.
 	 */
 	public final float getX1(){ 
-		return x1;
+		return pos1.x;
 	}
 	
 	/**
 	 * Return with first y coordinate value.
 	 */
 	public final float getY1(){
-		return y1;
+		return pos1.y;
 	}
 	
 	/**
 	 * Return with second x coordinate value.
 	 */
 	public final float getX2(){
-		return x2;
+		return pos2.x;
 	}
 	
 	/**
 	 * Return with second y coordinate value.
 	 */
 	public final float getY2(){
-		return y2;
+		return pos2.y;
 	}
 	
 }
