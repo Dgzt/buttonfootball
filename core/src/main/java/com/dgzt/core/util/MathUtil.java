@@ -71,7 +71,8 @@ public class MathUtil {
 	){
 		final double lineLength = Math.pow(distance(lineP1X, lineP1Y, lineP2X, lineP2Y), 2);
 		
-		if(lineLength == 0){
+		// Is equal 0
+		if(Double.compare(lineLength, 0) == 0){
 			return distance(pointX, pointY, lineP1X, lineP1Y);
 		}
 		

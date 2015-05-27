@@ -21,18 +21,20 @@ import com.dgzt.core.setting.StepMode;
  * 
  * @author Dgzt
  */
-public class GameConstans {
+public final class GameConstans {
 
 	/** The default first step. */
-	public static Player DEFAULT_FIRST_STEP = Player.PLAYER;
+	public static final Player DEFAULT_FIRST_STEP = Player.PLAYER;
 	
 	/** The default step mode. */
-	public static StepMode DEFAULT_STEP_MODE = StepMode.NORMAL;
+	public static final StepMode DEFAULT_STEP_MODE = StepMode.NORMAL;
 	
 	/** The default sec of the ball area. */
-	public static int DEFAULT_BALL_AREA_SEC = 5;
+	public static final int DEFAULT_BALL_AREA_SEC = 5;
 	
 	/** The default half time in sec. */
-	public static int DEFAULT_HALF_TIME = 13 * 60;
+	public static final int DEFAULT_HALF_TIME = 13 * 60;
 	
+	// Hidden constructor
+	private GameConstans(){}
 }
