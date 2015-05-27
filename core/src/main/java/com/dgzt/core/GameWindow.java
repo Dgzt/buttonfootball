@@ -22,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
+import com.dgzt.core.util.MathUtil;
 
 /**
  * The game window.
@@ -200,9 +201,12 @@ public final class GameWindow{
 		if(arrow.isVisible()){
 			arrow.hide();
 			
-			final Button movingButton = arrow.getLastSelectedButton();
-			movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
-			gameControl.playerStepped();
+			// If the length of arrow is bigger then radius of button
+			if(MathUtil.distance(arrow.getX1(), arrow.getY1(), arrow.getX2(), arrow.getY2()) > Button.RADIUS * scale){
+				final Button movingButton = arrow.getLastSelectedButton();
+				movingButton.move(arrow.getX1() - arrow.getX2(), arrow.getY1() - arrow.getY2());
+				gameControl.playerStepped();
+			}
 		}
 	}
 	
