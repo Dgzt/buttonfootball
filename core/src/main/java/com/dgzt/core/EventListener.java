@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.dgzt.core.button.AbstractButton;
 import com.dgzt.core.button.Ball;
+import com.dgzt.core.button.Button;
 import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.gate.RightGate;
@@ -103,6 +104,12 @@ public final class EventListener implements ContactListener{
 				button.startMove();
 			}
 		}
+		
+		// The ball contact with button
+		if(userDataB instanceof Ball && contact.getFixtureA().getUserData() instanceof Button){
+			final Button button = (Button) contact.getFixtureA().getUserData();
+			gameWindow.getGameControl().buttonContactBall(button);
+		}
 	}
 
 	/**
@@ -125,7 +132,7 @@ public final class EventListener implements ContactListener{
 				(ball.getBox2DY() < rightGate.getBox2DY() || ball.getBox2DY() > rightGate.getBox2DY() + AbstractGate.HEIGHT) // Right gate
 			){
 				Gdx.app.log(EventListener.class.getName() + ".endContact", "The ball leaved map.");
-				gameWindow.getGameControl().ballLeavedMap();
+				gameWindow.getGameControl().ballLeaveMapEvent();
 			}else{
 				final Map map = gameWindow.getTable().getMap();
 				
