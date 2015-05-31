@@ -48,6 +48,8 @@ public final class GameControl {
 		WAITING_AFTER_OPPONENT,
 		PLAYER_MOVE_ONE_BUTTON,
 		OPPONENT_MOVE_ONE_BUTTON,
+		PLAYER_MOVE_SOME_BUTTON,
+		OPPONENT_MOVE_SOME_BUTTON,
 		PLAYER_GOAL,
 		OPPONENT_GOAL
 	};
@@ -216,7 +218,7 @@ public final class GameControl {
 	 * Return true when the player can move button.
 	 */
 	public boolean isPlayerMoveButton(){
-		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON;	
+		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON || gameStatus == GameStatus.PLAYER_MOVE_SOME_BUTTON;
 	}
 	
 	/**
@@ -577,7 +579,11 @@ public final class GameControl {
 		if(ballLeavedMapCoordinate.x < map.getBox2DX()){
 			if(whoIsOnLeftSide() == Player.PLAYER && isOpponentButtonContactBallLastTime()){
 				// Goal kick
-				throw new RuntimeException("Goal kick");
+				Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side");
+				
+				newBallPos.set(map.getLeftGoalKickBox2DPosition());
+				
+				gameStatus = (whoIsOnLeftSide() == Player.PLAYER) ? GameStatus.PLAYER_MOVE_SOME_BUTTON : GameStatus.OPPONENT_MOVE_SOME_BUTTON;
 			}else{
 				// Corner kick
 				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick.");
@@ -599,7 +605,12 @@ public final class GameControl {
 		// The ball leaved the map on the right side	
 		if(ballLeavedMapCoordinate.x > map.getBox2DX() + Map.WIDTH){
 			if(whoIsOnRightSide() == Player.BOT && isPlayerButtonContactBallLastTime()){
-				throw new RuntimeException("Goal kick");
+				// Goal kick
+				Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side");
+				
+				newBallPos.set(map.getRightGoalKickBox2DPosition());
+				
+				gameStatus = (whoIsOnRightSide() == Player.BOT) ? GameStatus.OPPONENT_MOVE_SOME_BUTTON : GameStatus.PLAYER_MOVE_SOME_BUTTON;
 			}else{
 				// Corner kick
 				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick.");
