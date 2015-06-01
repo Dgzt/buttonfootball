@@ -31,7 +31,7 @@ import com.dgzt.core.gate.RightGate;
  * 
  * @author Dgzt
  */
-public final class EventListener implements ContactListener{
+public class EventListener implements ContactListener{
 	
 	// --------------------------------------------------
 	// ~ Private members

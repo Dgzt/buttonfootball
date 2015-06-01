@@ -35,7 +35,7 @@ import com.dgzt.core.setting.Settings;
  * 
  * @author Dgzt
  */
-public final class MainWindow {
+public class MainWindow {
 
 	// --------------------------------------------------
 	// ~ Static members

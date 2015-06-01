@@ -36,25 +36,6 @@ import com.dgzt.core.util.MathUtil;
 public final class GameControl {
 	
 	// --------------------------------------------------
-	// ~ Private enums
-	// --------------------------------------------------
-	
-	/** The status of the game. */
-	private enum GameStatus{
-		NOT_IN_GAME,
-		PLAYER_IN_GAME,
-		WAITING_AFTER_PLAYER, 
-		OPPONENT_IN_GAME, 
-		WAITING_AFTER_OPPONENT,
-		PLAYER_MOVE_ONE_BUTTON,
-		OPPONENT_MOVE_ONE_BUTTON,
-		PLAYER_MOVE_SOME_BUTTON,
-		OPPONENT_MOVE_SOME_BUTTON,
-		PLAYER_GOAL,
-		OPPONENT_GOAL
-	};
-	
-	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
@@ -575,73 +556,105 @@ public final class GameControl {
 		final Map map = table.getMap();
 		final Vector2 newBallPos = ballLeavedMapCoordinate.cpy();
 		
-		// The ball leaved the map on the left side
 		if(ballLeavedMapCoordinate.x < map.getBox2DX()){
-			if(whoIsOnLeftSide() == Player.PLAYER && isOpponentButtonContactBallLastTime()){
-				// Goal kick
-				Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side");
-				
-				newBallPos.set(map.getLeftGoalKickBox2DPosition());
-				
-				gameStatus = (whoIsOnLeftSide() == Player.PLAYER) ? GameStatus.PLAYER_MOVE_SOME_BUTTON : GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+			// The ball leaved the map on the left side
+			if(whoIsOnLeftSide() == Player.PLAYER){
+				// The player is on the left side
+				if(isOpponentButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side by player.");
+					newBallPos.set(map.getLeftGoalKickBox2DPosition());
+					
+					playerMoveSomeButton();
+				}else{ 
+					// Corner kick from opponent
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top left by opponent.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom left by opponent.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					opponentMoveOneButton();
+				}
 			}else{
-				// Corner kick
-				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick.");
-				
-				// Move ball to the top left corner
-				if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
-					Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Move ball to the top left corner.");
-					newBallPos.set(map.getBox2DX(), map.getBox2DY());
+				// The opponent is on the left side
+				if(isPlayerButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side by opponent.");
+					newBallPos.set(map.getLeftGoalKickBox2DPosition());
+					
+					opponentMoveSomeButton();
+				}else{
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top left by player.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom left by player.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					playerMoveOneButton();
 				}
-				// Move ball to the bottom left corner
-				else{
-					Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Move ball to the bottom left corner.");
-					newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
-				}
-				
-				moveOneButton();
 			}
-		}else 
-		// The ball leaved the map on the right side	
-		if(ballLeavedMapCoordinate.x > map.getBox2DX() + Map.WIDTH){
-			if(whoIsOnRightSide() == Player.BOT && isPlayerButtonContactBallLastTime()){
-				// Goal kick
-				Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side");
-				
-				newBallPos.set(map.getRightGoalKickBox2DPosition());
-				
-				gameStatus = (whoIsOnRightSide() == Player.BOT) ? GameStatus.OPPONENT_MOVE_SOME_BUTTON : GameStatus.PLAYER_MOVE_SOME_BUTTON;
+		}else if(ballLeavedMapCoordinate.x > map.getBox2DX() + Map.WIDTH){
+			// The ball leaved the map on the right side
+			if(whoIsOnRightSide() == Player.BOT){
+				// The opponent is on the right side
+				if(isPlayerButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side by opponent.");
+					newBallPos.set(map.getRightGoalKickBox2DPosition());
+					
+					opponentMoveSomeButton();
+				}else{
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top right by player.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom right by player.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					playerMoveOneButton();
+				}
 			}else{
-				// Corner kick
-				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick.");
-				
-				// Move ball to the top right corner
-				if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
-					Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Move ball to the top right corner.");
-					newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+				// The player in on the right side
+				if(isOpponentButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side by player.");
+					newBallPos.set(map.getRightGoalKickBox2DPosition());
+					
+					playerMoveSomeButton();
+				}else{ 
+					// Corner kick from opponent
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top right by opponent.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom right by opponent.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					opponentMoveOneButton();
 				}
-				// Move ball to the bottom right corner
-				else{
-					Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Move ball to the bottom right corner.");
-					newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
-				}
-				
-				moveOneButton();
 			}
-		}else
-		// The ball leaved the map on top side
-		if(ballLeavedMapCoordinate.y < map.getBox2DY()){
-			Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the top side.");
-
-			newBallPos.y = map.getBox2DY();
-			moveOneButton();
-		}
-		// THe ball leaved the map on the bottom side 
-		else{
-			Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the bottom side.");
-
-			newBallPos.y = map.getBox2DY() + Map.HEIGHT;
-			moveOneButton();
+		}else{
+			// Throw in
+			if(ballLeavedMapCoordinate.y < map.getBox2DY()){
+				// The ball leaved the map on top side
+				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the top side.");
+	
+				newBallPos.y = map.getBox2DY();
+			}else{
+				// THe ball leaved the map on the bottom side
+				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the bottom side.");
+	
+				newBallPos.y = map.getBox2DY() + Map.HEIGHT;
+			}
+			
+			if(isOpponentButtonContactBallLastTime()){
+				playerMoveOneButton();
+			}else{
+				opponentMoveOneButton();
+			}
 		}
 		
 		// Move ball to the new position
@@ -649,16 +662,54 @@ public final class GameControl {
 	}
 	
 	/**
-	 * Set the next player move one button to the ball.
+	 * The player move one button.
 	 */
-	private void moveOneButton(){
-		if(isOpponentButtonContactBallLastTime() || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
-			Gdx.app.log(GameControl.class.getName() + ".moveOneButton()", "The player move one button.");
+	private void playerMoveOneButton(){
+		Gdx.app.log(getClass().getName() + ".playerMoveOneButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
 			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
 		}else{
 			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
-			Gdx.app.log(GameControl.class.getName() + ".moveOneButton()", "The opponent move one button.");
-			throw new RuntimeException("The opponent move button to the ball.");
+		}
+	}
+	
+	/**
+	 * The opponent move one button.
+	 */
+	private void opponentMoveOneButton(){
+		Gdx.app.log(getClass().getName() + ".opponentMoveOneButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
+			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+		}else{
+			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
+		}
+	}
+	
+	/**
+	 * The player move some button.
+	 */
+	private void playerMoveSomeButton(){
+		Gdx.app.log(getClass().getName() + ".playerMoveSomeButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
+			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
+		}else{
+			gameStatus = GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+		}
+	}
+	
+	/**
+	 * The opponent move some button.
+	 */
+	private void opponentMoveSomeButton(){
+		Gdx.app.log(getClass().getName() + ".opponentMoveSomeButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
+			gameStatus = GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+		}else{
+			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
 		}
 	}
 	
@@ -778,6 +829,20 @@ public final class GameControl {
 	 */
 	public boolean isGamePaused(){
 		return gamePaused;
+	}
+
+	/**
+	 * Return with the game status for tests.
+	 */
+	protected GameStatus getGameStatus() {
+		return gameStatus;
+	}
+
+	/**
+	 * Set the game status for tests.
+	 */
+	protected void setGameStatus(GameStatus gameStatus) {
+		this.gameStatus = gameStatus;
 	}
 	
 }

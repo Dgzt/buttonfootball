@@ -32,7 +32,7 @@ import com.dgzt.core.util.Box2DUtil;
  * 
  * @author Dgzt
  */
-final public class Map extends RectangleShape{
+public class Map extends RectangleShape{
 
 	// --------------------------------------------------
 	// ~ Public static members
