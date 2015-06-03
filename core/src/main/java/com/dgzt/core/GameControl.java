@@ -220,6 +220,9 @@ public final class GameControl {
 		// Clear all movements
 		clearAllMovements();
 		
+		// Hide the arrow if it is visible
+		mainWindow.getGameWindow().hideArrow();
+		
 		if(scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF){
 			Gdx.app.log(GameControl.class.getName() + ".endHalfTime", "End half time");
 			

@@ -228,6 +228,15 @@ public final class GameWindow{
 		ballArea.setVisible(false);
 	}
 	
+	/**
+	 * Hide the arrow if it is visible.
+	 */
+	public void hideArrow(){
+		if(arrow.isVisible()){
+			arrow.hide();
+		}
+	}
+	
 	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
