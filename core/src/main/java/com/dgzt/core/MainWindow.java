@@ -86,7 +86,7 @@ public class MainWindow {
 		this.batch = batch;
 		this.multiInputProcessor = multiInputProcessor;
 		
-		stage = new Stage(viewport);
+		stage = new Stage(viewport, batch);
 		multiInputProcessor.add(stage);
 		
 		menuButton = getMenuButton();
@@ -149,9 +149,7 @@ public class MainWindow {
 		}
 
 		shader.end();
-		batch.begin();
 		stage.draw();
-		batch.end();
 		shader.begin();
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

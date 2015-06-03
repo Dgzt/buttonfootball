@@ -78,7 +78,7 @@ public class BaseMenuWindow extends RectangleShape{
 		this.shader = shader;
 		this.batch = batch;
 		
-		stage = new Stage(viewport);
+		stage = new Stage(viewport, batch);
 		
 		menuGroup = new VerticalGroup();
 		menuGroup.setFillParent(true);
@@ -131,9 +131,7 @@ public class BaseMenuWindow extends RectangleShape{
 		super.draw();
 		
 		shader.end();
-		batch.begin();
 		stage.draw();
-		batch.end();
 		shader.begin();
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);
