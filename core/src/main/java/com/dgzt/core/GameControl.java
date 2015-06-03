@@ -36,25 +36,6 @@ import com.dgzt.core.util.MathUtil;
 public final class GameControl {
 	
 	// --------------------------------------------------
-	// ~ Private enums
-	// --------------------------------------------------
-	
-	/** The status of the game. */
-	private enum GameStatus{
-		NOT_IN_GAME,
-		PLAYER_IN_GAME,
-		WAITING_AFTER_PLAYER, 
-		OPPONENT_IN_GAME, 
-		WAITING_AFTER_OPPONENT,
-		BALL_LEAVED_MAP_BY_PLAYER,
-		BALL_LEAVED_MAP_BY_OPPONENT,
-		PLAYER_MOVE_ONE_BUTTON,
-		OPPONENT_MOVE_ONE_BUTTON,
-		PLAYER_GOAL,
-		OPPONENT_GOAL
-	};
-	
-	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
@@ -88,6 +69,9 @@ public final class GameControl {
 	
 	/** The mooving button. If the player isn't move button then this variable is null. */
 	private Button moovingButton;
+	
+	/** The button which contact with ball the last time. */
+	private Button buttonContactBallLastTime;
 	
 	/** True when the game paused. */
 	private boolean gamePaused;
@@ -179,19 +163,10 @@ public final class GameControl {
 			
 			if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
 				if(ballLeavedMapCoordinate != null){
-					moveBallToBorderOfMap();
+					ballLeavedMap();
 					ballLeavedMapCoordinate = null;
-					gameStatus = (gameStatus == GameStatus.WAITING_AFTER_PLAYER) ? GameStatus.BALL_LEAVED_MAP_BY_PLAYER : GameStatus.BALL_LEAVED_MAP_BY_OPPONENT;
 				}else{
 					showBallArea();
-				}
-			}else if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_PLAYER || gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT){
-				Gdx.app.log(GameControl.class.getName() + ".allButtonIsStopped()", "The ball leaved map.");
-				if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
-					gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
-				}else{
-					gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
-					throw new RuntimeException("The opponent move button to the ball.");
 				}
 			}else if(gameStatus == GameStatus.OPPONENT_GOAL || gameStatus == GameStatus.PLAYER_GOAL){
 				goal();
@@ -224,7 +199,7 @@ public final class GameControl {
 	 * Return true when the player can move button.
 	 */
 	public boolean isPlayerMoveButton(){
-		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON;	
+		return gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON || gameStatus == GameStatus.PLAYER_MOVE_SOME_BUTTON;
 	}
 	
 	/**
@@ -269,12 +244,24 @@ public final class GameControl {
 	}
 	
 	/**
-	 * The ball leaved map.
+	 * The ball leave map event.
 	 */
-	public void ballLeavedMap(){
+	public void ballLeaveMapEvent(){
+		Gdx.app.log(GameControl.class.getName() + ".ballLeaveMapEvent()", "init");
 		if(ballLeavedMapCoordinate == null){
 			ballLeavedMapCoordinate = table.getBall().getBox2DPosition().cpy();
 		}
+	}
+	
+	/**
+	 * The button contact with the ball.
+	 * 
+	 * @param button - The button.
+	 */
+	public void buttonContactBall(final Button button){
+		Gdx.app.log(GameControl.class.getName() + ".ballContactButtonEvent(Button)", "init");
+		
+		buttonContactBallLastTime = button;
 	}
 	
 	/**
@@ -294,7 +281,7 @@ public final class GameControl {
 		
 		if(moovingButton == null){
 			Gdx.app.log(GameControl.class.getName() + ".selectMoovingButton()", "Not selected button.");
-			if(gameStatus == GameStatus.BALL_LEAVED_MAP_BY_OPPONENT || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
+			if(gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
 				gameStatus = GameStatus.PLAYER_IN_GAME;
 			}else{
 				throw new RuntimeException("Not implemented when bot start after the ball leaved the map.");
@@ -561,38 +548,169 @@ public final class GameControl {
 	}
 	
 	/**
-	 * Move the ball to the border of map.
+	 * Ball leaved the map. Set the next event.
 	 */
-	private void moveBallToBorderOfMap(){
-		final Map map = table.getMap();
-		Vector2 newBallPos = ballLeavedMapCoordinate.cpy();
+	private void ballLeavedMap(){
+		Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "init");
 		
-		// Move to the top left corner
-		if(ballLeavedMapCoordinate.x < map.getBox2DX() && ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
-			newBallPos.set(map.getBox2DX(), map.getBox2DY());
-		}else
-		// Move to the top line
-		if(ballLeavedMapCoordinate.x >= map.getBox2DX() && ballLeavedMapCoordinate.x <= (map.getBox2DX() + Map.WIDTH) && ballLeavedMapCoordinate.y < map.getBox2DY()){
-			newBallPos.y = map.getBox2DY();
-		}else
-		// Move to the top right corner
-		if(ballLeavedMapCoordinate.x > (map.getBox2DX() + Map.WIDTH) && ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
-			newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
-		}else
-		// Move to the bottom right corner
-		if(ballLeavedMapCoordinate.x > (map.getBox2DX() + Map.WIDTH) && ballLeavedMapCoordinate.y > (map.getBox2DY() + Map.HEIGHT / 2)){
-			newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
-		}else
-		// Move to the bottom line
-		if(ballLeavedMapCoordinate.x >= map.getBox2DX() && ballLeavedMapCoordinate.x <= map.getBox2DX() + Map.WIDTH && ballLeavedMapCoordinate.y > map.getBox2DY() + Map.HEIGHT){
-			newBallPos.y = map.getBox2DY() + Map.HEIGHT;
-		}else
-		// Move to the bottom left corner
-		if(ballLeavedMapCoordinate.x < map.getBox2DX() && ballLeavedMapCoordinate.y > (map.getBox2DY() + Map.HEIGHT / 2)){
-			newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
-		}
+		final Map map = table.getMap();
+		final Vector2 newBallPos = ballLeavedMapCoordinate.cpy();
+		
+		if(ballLeavedMapCoordinate.x < map.getBox2DX()){
+			// The ball leaved the map on the left side
+			if(whoIsOnLeftSide() == Player.PLAYER){
+				// The player is on the left side
+				if(isOpponentButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side by player.");
+					newBallPos.set(map.getLeftGoalKickBox2DPosition());
+					
+					playerMoveSomeButton();
+				}else{ 
+					// Corner kick from opponent
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top left by opponent.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom left by opponent.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					opponentMoveOneButton();
+				}
+			}else{
+				// The opponent is on the left side
+				if(isPlayerButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side by opponent.");
+					newBallPos.set(map.getLeftGoalKickBox2DPosition());
+					
+					opponentMoveSomeButton();
+				}else{
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top left by player.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom left by player.");
+						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					playerMoveOneButton();
+				}
+			}
+		}else if(ballLeavedMapCoordinate.x > map.getBox2DX() + Map.WIDTH){
+			// The ball leaved the map on the right side
+			if(whoIsOnRightSide() == Player.BOT){
+				// The opponent is on the right side
+				if(isPlayerButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side by opponent.");
+					newBallPos.set(map.getRightGoalKickBox2DPosition());
+					
+					opponentMoveSomeButton();
+				}else{
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top right by player.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom right by player.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					playerMoveOneButton();
+				}
+			}else{
+				// The player in on the right side
+				if(isOpponentButtonContactBallLastTime()){
+					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side by player.");
+					newBallPos.set(map.getRightGoalKickBox2DPosition());
+					
+					playerMoveSomeButton();
+				}else{ 
+					// Corner kick from opponent
+					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top right by opponent.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+					}else{
+						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom right by opponent.");
+						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+					}
+					
+					opponentMoveOneButton();
+				}
+			}
+		}else{
+			// Throw in
+			if(ballLeavedMapCoordinate.y < map.getBox2DY()){
+				// The ball leaved the map on top side
+				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the top side.");
+	
+				newBallPos.y = map.getBox2DY();
+			}else{
+				// THe ball leaved the map on the bottom side
+				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the bottom side.");
+	
+				newBallPos.y = map.getBox2DY() + Map.HEIGHT;
+			}
 			
+			if(isOpponentButtonContactBallLastTime()){
+				playerMoveOneButton();
+			}else{
+				opponentMoveOneButton();
+			}
+		}
+		
+		// Move ball to the new position
 		table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
+	}
+	
+	/**
+	 * The player move one button.
+	 */
+	private void playerMoveOneButton(){
+		Gdx.app.log(getClass().getName() + ".playerMoveOneButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
+			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
+		}else{
+			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+		}
+	}
+	
+	/**
+	 * The opponent move one button.
+	 */
+	private void opponentMoveOneButton(){
+		Gdx.app.log(getClass().getName() + ".opponentMoveOneButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
+			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+		}else{
+			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
+		}
+	}
+	
+	/**
+	 * The player move some button.
+	 */
+	private void playerMoveSomeButton(){
+		Gdx.app.log(getClass().getName() + ".playerMoveSomeButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
+			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
+		}else{
+			gameStatus = GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+		}
+	}
+	
+	/**
+	 * The opponent move some button.
+	 */
+	private void opponentMoveSomeButton(){
+		Gdx.app.log(getClass().getName() + ".opponentMoveSomeButton()", "init");
+		
+		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
+			gameStatus = GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+		}else{
+			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
+		}
 	}
 	
 	/**
@@ -674,6 +792,34 @@ public final class GameControl {
 		eventListener.clearMovings();
 	}
 	
+	/**
+	 * Return {@link Player#PLAYER} when the player is on the left side else {@link Player#BOT}.
+	 */
+	private Player whoIsOnLeftSide(){
+		return scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF ? Player.PLAYER : Player.BOT;
+	}
+	
+	/**
+	 * Return {@link Player#BOT} when the player is on the left side else {@link Player#Player}.
+	 */
+	private Player whoIsOnRightSide(){
+		return scoreBoard.getHalfTimeBoard().getHalfTimeType() == HalfTimeType.FIRST_HALF ? Player.BOT : Player.PLAYER;
+	}
+	
+	/**
+	 * Return true when the player's button contact with the ball at last time else false.
+	 */
+	private boolean isPlayerButtonContactBallLastTime(){
+		return table.getPlayerButtons().contains(buttonContactBallLastTime);
+	}
+	
+	/**
+	 * Return true when the opponent's button contact with the ball at last time else false.
+	 */
+	private boolean isOpponentButtonContactBallLastTime(){
+		return table.getOpponentButtons().contains(buttonContactBallLastTime);
+	}
+	
 	// --------------------------------------------------
 	// ~ Setter / Getter methods
 	// --------------------------------------------------
@@ -683,6 +829,20 @@ public final class GameControl {
 	 */
 	public boolean isGamePaused(){
 		return gamePaused;
+	}
+
+	/**
+	 * Return with the game status for tests.
+	 */
+	protected GameStatus getGameStatus() {
+		return gameStatus;
+	}
+
+	/**
+	 * Set the game status for tests.
+	 */
+	protected void setGameStatus(GameStatus gameStatus) {
+		this.gameStatus = gameStatus;
 	}
 	
 }

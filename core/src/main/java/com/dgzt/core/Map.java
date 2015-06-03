@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.shape.ArcShape;
 import com.dgzt.core.shape.CircleBorderShape;
@@ -31,7 +32,7 @@ import com.dgzt.core.util.Box2DUtil;
  * 
  * @author Dgzt
  */
-final public class Map extends RectangleShape{
+public class Map extends RectangleShape{
 
 	// --------------------------------------------------
 	// ~ Public static members
@@ -224,6 +225,20 @@ final public class Map extends RectangleShape{
 		resizeRightSector5(leftSector5.getY(), sector5Width, sector5Height, x, width, scale);
 		
 		resizeCenterLine(x, y, width, height, scale);
+	}
+	
+	/**
+	 * Return with the left goal kick position in Box2D coordinate system.
+	 */
+	public Vector2 getLeftGoalKickBox2DPosition(){
+		return new Vector2(getBox2DX() + SECTOR_5_WIDTH, getBox2DY() + (HEIGHT / 2));
+	}
+	
+	/**
+	 * Return with the eight goal kick position in Box2D coordinate system.
+	 */
+	public Vector2 getRightGoalKickBox2DPosition(){
+		return new Vector2(getBox2DX() + Map.WIDTH - SECTOR_5_WIDTH, getBox2DY() + (HEIGHT / 2));
 	}
 	
 	// --------------------------------------------------

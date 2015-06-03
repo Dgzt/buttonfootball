@@ -25,7 +25,7 @@ import com.dgzt.core.shape.RectangleBorderShape;
  * 
  * @author Dgzt
  */
-final public class HalfTimeBoard extends RectangleBorderShape{
+public class HalfTimeBoard extends RectangleBorderShape{
 	
 	// --------------------------------------------------
 	// ~ Static members

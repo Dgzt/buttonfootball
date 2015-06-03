@@ -33,7 +33,7 @@ import com.dgzt.core.util.Box2DUtil;
  * 
  * @author Dgzt
  */
-final public class Table extends RectangleShape{
+public class Table extends RectangleShape{
 	
 	// --------------------------------------------------
 	// ~ Public static members
@@ -350,7 +350,7 @@ final public class Table extends RectangleShape{
 	/**
 	 * Return with the map.
 	 */
-	public final Map getMap(){
+	public Map getMap(){
 		return map;
 	}
 	

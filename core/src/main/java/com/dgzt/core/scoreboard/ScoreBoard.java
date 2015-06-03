@@ -23,7 +23,7 @@ import com.dgzt.core.button.Button;
  * 
  * @author Dgzt
  */
-final public class ScoreBoard{
+public class ScoreBoard{
 	
 	// --------------------------------------------------
 	// ~ Public static members
