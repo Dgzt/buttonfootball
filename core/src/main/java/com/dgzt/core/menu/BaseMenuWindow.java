@@ -103,7 +103,6 @@ public class BaseMenuWindow extends RectangleShape{
 	 */
 	public void resize(final float width, final float height){
 		super.resize(0, 0, width, height);
-		stage.getViewport().update((int)width, (int)height, true);
 		
 		menuGroup.setPosition(0, -(height - menuGroup.getPrefHeight()) / 2);
 	}

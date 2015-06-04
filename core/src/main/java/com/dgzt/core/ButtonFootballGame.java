@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -53,9 +54,9 @@ final public class ButtonFootballGame implements ApplicationListener {
 	
 	/** The sprite batch for show text. */
 	private SpriteBatch spriteBatch;
-
-	/** The camera. */
-	private OrthographicCamera camera;
+	
+	/** The viewport. */
+	private Viewport viewport;
 	
 	/** The settings. */
 	private final Settings settings;
@@ -89,8 +90,8 @@ final public class ButtonFootballGame implements ApplicationListener {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
-        camera = new OrthographicCamera();
-        final Viewport viewport = new ScreenViewport(camera);
+        final Camera camera = new OrthographicCamera();
+        viewport = new ScreenViewport(camera);
 		
 		shader = new ShaderProgram(Gdx.files.internal(VERTEX_SHADER).readString(), Gdx.files.internal(FRAGMENT_SHADER).readString());
 		spriteBatch = new SpriteBatch();
@@ -115,11 +116,11 @@ final public class ButtonFootballGame implements ApplicationListener {
 	public void resize (int width, int height) {
 		Gdx.app.log(ButtonFootballGame.class.getName()+".resize", String.valueOf(width)+" x "+String.valueOf(height));
 		
-		camera.setToOrtho(false, width, height);
-		spriteBatch.setProjectionMatrix(camera.combined);
+		viewport.update(width, height, true);
+		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 			
 		shader.begin();
-		shader.setUniformMatrix(WORLD_VIEW, camera.combined);
+		shader.setUniformMatrix(WORLD_VIEW, viewport.getCamera().combined);
 		shader.end();
 		
 		mainWindow.resize(width, height);
@@ -130,7 +131,7 @@ final public class ButtonFootballGame implements ApplicationListener {
 	 */
 	@Override
 	public void render () {
-		camera.update();
+		viewport.getCamera().update();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
