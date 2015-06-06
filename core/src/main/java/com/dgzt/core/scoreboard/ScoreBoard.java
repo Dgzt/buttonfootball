@@ -52,8 +52,14 @@ public class ScoreBoard{
 	/** The time board. */
 	private final TimeBoard timeBoard;
 	
+	/** The player's time left board. */
+	private final TimeLeftBoard playerTimeLeftBoard;
+	
 	/** The player's goal board. */
 	private final GoalBoard playerGoalBoard;
+	
+	/** The opponent's time left board. */
+	private final TimeLeftBoard opponentTimeLeftBoard;
 	
 	/** The opponent's goal board. */
 	private final GoalBoard opponentGoalBoard;
@@ -71,7 +77,9 @@ public class ScoreBoard{
 		halfTimeBoard = new HalfTimeBoard(shader, COLOR);
 		
 		timeBoard = new TimeBoard(shader, COLOR);
+		playerTimeLeftBoard = new TimeLeftBoard(shader, COLOR, Button.PLAYER_COLOR);
 		playerGoalBoard = new GoalBoard(shader, COLOR, Button.PLAYER_COLOR);
+		opponentTimeLeftBoard = new TimeLeftBoard(shader, COLOR, Button.OPPONENT_COLOR);
 		opponentGoalBoard = new GoalBoard(shader, COLOR, Button.OPPONENT_COLOR);
 	}
 	
@@ -91,14 +99,18 @@ public class ScoreBoard{
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
 		final float halfTimeBoardWidth = (float)(HalfTimeBoard.WIDTH * scale);
 		final float halfTimeBoardHeight = (float)(HalfTimeBoard.HEIGHT * scale);
+		final float timeLeftBoardWidth = (float)(TimeLeftBoard.WIDTH * scale);
+		final float timeLeftBoardHeight = (float)(TimeLeftBoard.HEIGHT * scale);
 		final float goalBoardWidth = (float)(GoalBoard.WIDTH * scale);
 		final float goalBoardHeight = (float)(GoalBoard.HEIGHT * scale);
 		final float timeBoardWidth = (float)(TimeBoard.WIDTH * scale);
 		final float timeBoardHeight = (float)(TimeBoard.HEIGHT * scale);
 		
 		halfTimeBoard.resize(x + (width - halfTimeBoardWidth)/2, y, halfTimeBoardWidth, halfTimeBoardHeight, scale);
+		playerTimeLeftBoard.resize(x, y + height - goalBoardHeight - timeLeftBoardHeight, timeLeftBoardWidth, timeLeftBoardHeight, scale);
 		playerGoalBoard.resize(x, y + height - goalBoardHeight, goalBoardWidth, goalBoardHeight, scale);
 		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth(), y + halfTimeBoardHeight, timeBoardWidth, timeBoardHeight, scale);
+		opponentTimeLeftBoard.resize(timeBoard.getX() + timeBoard.getWidth(), playerTimeLeftBoard.getY(), timeLeftBoardWidth, timeLeftBoardHeight, scale);
 		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth(), playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
 	}
 	
@@ -107,8 +119,10 @@ public class ScoreBoard{
 	 */
 	public void draw() {
 		halfTimeBoard.draw();
+		playerTimeLeftBoard.draw();
 		playerGoalBoard.draw();
 		timeBoard.draw();
+		opponentTimeLeftBoard.draw();
 		opponentGoalBoard.draw();
 	}
 	
@@ -117,8 +131,10 @@ public class ScoreBoard{
 	 */
 	public void dispose(){
 		halfTimeBoard.dispose();
+		playerTimeLeftBoard.dispose();
 		playerGoalBoard.dispose();
 		timeBoard.dispose();
+		opponentTimeLeftBoard.dispose();
 		opponentGoalBoard.dispose();
 	}
 	
