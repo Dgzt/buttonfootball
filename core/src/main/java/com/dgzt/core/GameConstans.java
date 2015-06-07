@@ -35,6 +35,9 @@ public final class GameConstans {
 	/** The default half time in sec. */
 	public static final int DEFAULT_HALF_TIME = 13 * 60;
 	
+	/** The default time left in sec. */
+	public static final int DEFAULT_TIME_LEFT_SEC = 15;
+	
 	// Hidden constructor
 	private GameConstans(){}
 }

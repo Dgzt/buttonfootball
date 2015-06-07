@@ -119,10 +119,14 @@ public class ScoreBoard{
 	 */
 	public void draw() {
 		halfTimeBoard.draw();
-		playerTimeLeftBoard.draw();
+		if(playerTimeLeftBoard.isVisible()){
+			playerTimeLeftBoard.draw();
+		}
 		playerGoalBoard.draw();
 		timeBoard.draw();
-		opponentTimeLeftBoard.draw();
+		if(opponentTimeLeftBoard.isVisible()){
+			opponentTimeLeftBoard.draw();
+		}
 		opponentGoalBoard.draw();
 	}
 	
@@ -143,10 +147,24 @@ public class ScoreBoard{
 	// --------------------------------------------------
 
 	/**
+	 * Return with the player's time left board.
+	 */
+	public TimeLeftBoard getPlayerTimeLeftBoard() {
+		return playerTimeLeftBoard;
+	}
+	
+	/**
 	 * Get the player's goal board.
 	 */
 	public GoalBoard getPlayerGoalBoard() {
 		return playerGoalBoard;
+	}
+	
+	/**
+	 * Return with the opponent's time left board.
+	 */
+	public TimeLeftBoard getOpponentTimeLeftBoard() {
+		return opponentTimeLeftBoard;
 	}
 
 	/**

@@ -40,6 +40,9 @@ public class Settings {
 	/** The half time in sec. */
 	private int halfTime;
 	
+	/**	The time left in sec. */
+	private int timeLeftSec;
+	
 	// --------------------------------------------------
 	// ~ Constructors.
 	// --------------------------------------------------
@@ -52,6 +55,7 @@ public class Settings {
 		stepMode = GameConstans.DEFAULT_STEP_MODE;
 		ballAreaSec = GameConstans.DEFAULT_BALL_AREA_SEC;
 		halfTime = GameConstans.DEFAULT_HALF_TIME;
+		timeLeftSec = GameConstans.DEFAULT_TIME_LEFT_SEC;
 	}
 	
 	// --------------------------------------------------
@@ -90,6 +94,14 @@ public class Settings {
 		this.halfTime = halfTime;
 	}
 	
+	public int getTimeLeftSec() {
+		return timeLeftSec;
+	}
+
+	public void setTimeLeftSec(int timeLeftSec) {
+		this.timeLeftSec = timeLeftSec;
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -99,7 +111,13 @@ public class Settings {
 	 */
 	@Override
 	public String toString() {
-		return "Settings { firstStep = " + firstStep + ", stepMode = " + stepMode + ", ballAreaSec = " + ballAreaSec + ", halfTime = " + halfTime + " }";
+		return "Settings {" +
+				" firstStep = " + firstStep + "," +
+				" stepMode = " + stepMode + "," +
+				" ballAreaSec = " + ballAreaSec + "," +
+				" halfTime = " + halfTime + "," +
+				" timeLeftSec = " + timeLeftSec + 
+				" }";
 	}
 	
 }
