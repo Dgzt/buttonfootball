@@ -9,7 +9,7 @@
 	<name>ButtonFootballGame Parent</name>
 
 	<properties>
-		<gdx.version>1.6.0</gdx.version>
+		<gdx.version>1.6.2</gdx.version>
 		<gwt.version>2.6.1</gwt.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
