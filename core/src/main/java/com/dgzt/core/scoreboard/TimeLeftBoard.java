@@ -105,9 +105,8 @@ public class TimeLeftBoard extends RectangleBorderShape{
 	 * Start the countdown.
 	 * 
 	 * @param gameControl - The game control.
-	 * @param player - The player.
 	 */
-	public void start(final GameControl gameControl, final Player player){
+	public void start(final GameControl gameControl){
 		currentTimeSec = maxTimeLeft;
 		resizeTimeLeftLine();
 		
@@ -120,6 +119,8 @@ public class TimeLeftBoard extends RectangleBorderShape{
 				
 				if(currentTimeSec <= 0){
 					cancel();
+					visible = false;
+					gameControl.timeLeftEndEvent();
 				}
 				
 			}

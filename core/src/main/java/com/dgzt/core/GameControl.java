@@ -188,7 +188,7 @@ public final class GameControl {
 	/**
 	 * The opponent stepped.
 	 */
-	public void opponentStepepd(){
+	public void opponentStepped(){
 		gameStatus = GameStatus.WAITING_AFTER_OPPONENT;
 		scoreBoard.getOpponentTimeLeftBoard().clear();
 	}
@@ -273,6 +273,19 @@ public final class GameControl {
 	}
 	
 	/**
+	 * End of the time left event.
+	 */
+	public void timeLeftEndEvent(){
+		Gdx.app.log(getClass().getName() + ".timeLeftEndEvent()", "init");
+		
+		if(gameStatus == GameStatus.PLAYER_IN_GAME){
+			playerTimeLeftEnd();
+		}else{
+			opponentTimeLeftEnd();
+		}
+	}
+	
+	/**
 	 * Select a button to move to the ball.
 	 * 
 	 * @param x - The x coordinate value to select button.
@@ -347,7 +360,7 @@ public final class GameControl {
 			Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Bot in game.");
 			gameStatus = GameStatus.OPPONENT_IN_GAME;
 			bot.step();
-			opponentStepepd();
+			opponentStepped();
 		}
 	}
 	
@@ -418,6 +431,10 @@ public final class GameControl {
 		scoreBoard.getPlayerGoalBoard().setNumber(0);
 		scoreBoard.getOpponentGoalBoard().setNumber(0);
 		
+		// Clear the time player's and opponent's time left board
+		scoreBoard.getPlayerTimeLeftBoard().clear();
+		scoreBoard.getOpponentTimeLeftBoard().clear();
+		
 		// Hide the buttons
 		table.setVisibleButtons(false);
 	}
@@ -448,7 +465,7 @@ public final class GameControl {
 		Gdx.app.log(GameControl.class.getName() + ".playerInGame", "init");
 		
 		gameStatus = GameStatus.PLAYER_IN_GAME;
-		scoreBoard.getPlayerTimeLeftBoard().start(this, Player.PLAYER);
+		scoreBoard.getPlayerTimeLeftBoard().start(this);
 	}
 	
 	/**
@@ -458,9 +475,9 @@ public final class GameControl {
 		Gdx.app.log(GameControl.class.getName() + ".opponentInGame", "init");
 		
 		gameStatus = GameStatus.OPPONENT_IN_GAME;
-		scoreBoard.getOpponentTimeLeftBoard().start(this, Player.BOT);
+		scoreBoard.getOpponentTimeLeftBoard().start(this);
 		bot.step();
-		opponentStepepd();
+		opponentStepped();
 	}
 	
 	/**
@@ -793,6 +810,24 @@ public final class GameControl {
 		}else{
 			playerInGame();
 		}
+	}
+	
+	/**
+	 * End of the player's time left.
+	 */
+	private void playerTimeLeftEnd(){
+		Gdx.app.log(getClass().getName() + ".playerTimeLeftEnd()", "init");
+		
+		opponentInGame();
+	}
+	
+	/**
+	 * End of the opponent's time left.
+	 */
+	private void opponentTimeLeftEnd(){
+		Gdx.app.log(getClass().getName() + ".opponentTimeLeftEnd()", "init");
+		
+		playerInGame();
 	}
 	
 	/**
