@@ -60,8 +60,6 @@ public class RectangleShape extends Shape{
 	 * @param height The height value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height){
-		Gdx.app.log(RectangleShape.class.getName()+".resize", "x: "+String.valueOf(x)+", y: "+String.valueOf(y));
-
 		final float[] vertices = new float[RectangleShape.VERTICES_NUM * Shape.POSITION_NUM];
 		vertices[0] = x;		vertices[1]  = Gdx.graphics.getHeight() - y;
 		vertices[2] = x+width;	vertices[3]  = Gdx.graphics.getHeight() - y;
