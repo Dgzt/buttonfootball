@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
- * The abstract shape.
+ * The rectangle shape.
  * 
  * @author Dgzt
  */
@@ -59,9 +59,7 @@ public class RectangleShape extends Shape{
 	 * @param width - The width value.
 	 * @param height The height value.
 	 */
-	protected void resize(final float x, final float y, final float width, final float height){
-		Gdx.app.log(RectangleShape.class.getName()+".resize", "x: "+String.valueOf(x)+", y: "+String.valueOf(y));
-
+	public void resize(final float x, final float y, final float width, final float height){
 		final float[] vertices = new float[RectangleShape.VERTICES_NUM * Shape.POSITION_NUM];
 		vertices[0] = x;		vertices[1]  = Gdx.graphics.getHeight() - y;
 		vertices[2] = x+width;	vertices[3]  = Gdx.graphics.getHeight() - y;

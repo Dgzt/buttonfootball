@@ -135,4 +135,11 @@ public class RectangleBorderShape{
 	public final float getHeight(){
 		return rightLine.getLength();
 	}
+	
+	/**
+	 * Return with the scale.
+	 */
+	public final double getScale(){
+		return scale;
+	}
 }

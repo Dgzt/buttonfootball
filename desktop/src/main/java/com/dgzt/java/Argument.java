@@ -47,6 +47,9 @@ public class Argument {
 	@Parameter(names = "--halftime", description = "The half time.")
 	private int halfTime = GameConstans.DEFAULT_HALF_TIME;
 	
+	@Parameter(names = "--timeleft", description = "The time left in sec.")
+	private int timeLeftSec = GameConstans.DEFAULT_TIME_LEFT_SEC;
+	
 	// --------------------------------------------------
 	// ~ Public methods
 	// --------------------------------------------------
@@ -61,6 +64,7 @@ public class Argument {
 		settings.setStepMode(stepMode);
 		settings.setBallAreaSec(ballAreaSec);
 		settings.setHalfTime(halfTime);
+		settings.setTimeLeftSec(timeLeftSec);
 		
 		return settings;
 	}
@@ -99,6 +103,14 @@ public class Argument {
 
 	public void setHalfTime(int halfTime) {
 		this.halfTime = halfTime;
+	}
+
+	public int getTimeLeftSec() {
+		return timeLeftSec;
+	}
+
+	public void setTimeLeftSec(int timeLeftSec) {
+		this.timeLeftSec = timeLeftSec;
 	}
 	
 }
