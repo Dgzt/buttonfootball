@@ -14,11 +14,15 @@
  */
 package com.dgzt.core;
 
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.math.Vector2;
+import com.dgzt.core.button.Ball;
+import com.dgzt.core.button.Button;
 
 /**
  * Base shape tester. Mock the mesh in the shape. 
@@ -27,6 +31,7 @@ import com.badlogic.gdx.graphics.Mesh;
  * 
  * @author Dgzt
  */
+@RunWith(GdxTestRunner.class)
 public class BaseShapeTester {
 	
 	// --------------------------------------------------
@@ -51,6 +56,104 @@ public class BaseShapeTester {
 		});
 		
 		return mesh;
+	}
+	
+	/**
+	 * Return with mock {@link Button}.
+	 */
+	protected Button getMockButton(){
+		final Button button = Mockito.mock(Button.class);
+		final Vector2 box2DPosition = new Vector2();
+		
+		Mockito.doAnswer(new Answer<Object>() {
+
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				final float argumentBox2DPosX = (Float) invocation.getArguments()[0];
+				final float argumentBox2DPosY = (Float) invocation.getArguments()[1];
+				
+				box2DPosition.set(argumentBox2DPosX, argumentBox2DPosY);
+				
+				return null;
+			}
+		}).when(button).setBox2DPosition(Mockito.anyFloat(), Mockito.anyFloat());
+		
+		Mockito.when(button.getBox2DPosition()).thenAnswer(new Answer<Vector2>() {
+
+			@Override
+			public Vector2 answer(InvocationOnMock invocation) throws Throwable {
+				return box2DPosition;
+			}
+		});
+		
+		Mockito.when(button.getBox2DX()).thenAnswer(new Answer<Float>(){
+
+			@Override
+			public Float answer(InvocationOnMock invocation) throws Throwable {
+				return box2DPosition.x;
+			}
+			
+		});
+		
+		Mockito.when(button.getBox2DY()).thenAnswer(new Answer<Float>(){
+
+			@Override
+			public Float answer(InvocationOnMock invocation) throws Throwable {
+				return box2DPosition.y;
+			}
+			
+		});
+		
+		return button;
+	}
+	
+	/**
+	 * Return with mock {@link Ball}.
+	 */
+	protected Ball getMockBall(){
+		final Ball ball= Mockito.mock(Ball.class);
+		final Vector2 box2DPosition = new Vector2();
+		
+		Mockito.doAnswer(new Answer<Object>() {
+
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				final float argumentBox2DPosX = (Float) invocation.getArguments()[0];
+				final float argumentBox2DPosY = (Float) invocation.getArguments()[1];
+				
+				box2DPosition.set(argumentBox2DPosX, argumentBox2DPosY);
+				
+				return null;
+			}
+		}).when(ball).setBox2DPosition(Mockito.anyFloat(), Mockito.anyFloat());
+		
+		Mockito.when(ball.getBox2DPosition()).thenAnswer(new Answer<Vector2>() {
+
+			@Override
+			public Vector2 answer(InvocationOnMock invocation) throws Throwable {
+				return box2DPosition;
+			}
+		});
+		
+		Mockito.when(ball.getBox2DX()).thenAnswer(new Answer<Float>(){
+
+			@Override
+			public Float answer(InvocationOnMock invocation) throws Throwable {
+				return box2DPosition.x;
+			}
+			
+		});
+		
+		Mockito.when(ball.getBox2DY()).thenAnswer(new Answer<Float>(){
+
+			@Override
+			public Float answer(InvocationOnMock invocation) throws Throwable {
+				return box2DPosition.y;
+			}
+			
+		});
+		
+		return ball;
 	}
 	
 	// --------------------------------------------------

@@ -22,7 +22,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
  * 
  * @author Dgzt
  */
-final public class CircleBorderShape extends ArcShape{
+public class CircleBorderShape extends ArcShape{
 	
 	// --------------------------------------------------
 	// ~ Constructors

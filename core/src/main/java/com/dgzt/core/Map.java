@@ -141,35 +141,35 @@ public class Map extends RectangleShape{
 		this.box2DX = box2DX;
 		this.box2DY = box2DY;
 		
-		this.mapBorder = new RectangleBorderShape(shader, Color.WHITE);
+		this.mapBorder = getRectangleBorderShape(shader, Color.WHITE);
 		
-		this.leftSector16 = new RectangleBorderShape(shader, Color.WHITE);
-		this.rightSector16 = new RectangleBorderShape(shader, Color.WHITE);
+		this.leftSector16 = getRectangleBorderShape(shader, Color.WHITE);
+		this.rightSector16 = getRectangleBorderShape(shader, Color.WHITE);
 		
-		this.leftSector5 = new RectangleBorderShape(shader, Color.WHITE);
-		this.rightSector5 = new RectangleBorderShape(shader, Color.WHITE);
+		this.leftSector5 = getRectangleBorderShape(shader, Color.WHITE);
+		this.rightSector5 = getRectangleBorderShape(shader, Color.WHITE);
 
-		this.centerBigCircle = new CircleBorderShape(shader, Color.WHITE);
+		this.centerBigCircle = getCircleBorderShape(shader, Color.WHITE);
 		
-		this.centerLine = new LineShape(shader, Color.WHITE);
+		this.centerLine = getLineShape(shader, Color.WHITE);
 		
-		this.centerSmallCircle = new FilledCircleShape(shader, Color.WHITE);
+		this.centerSmallCircle = getFilledCircleShape(shader, Color.WHITE);
 		
-		this.leftSmallCircle = new FilledCircleShape(shader, Color.WHITE);
+		this.leftSmallCircle = getFilledCircleShape(shader, Color.WHITE);
 		
-		this.rightSmallCircle = new FilledCircleShape(shader, Color.WHITE);
+		this.rightSmallCircle = getFilledCircleShape(shader, Color.WHITE);
 		
-		this.topLeftSmallArc = new ArcShape(shader, 0, 90, Color.WHITE);
+		this.topLeftSmallArc = getArcShape(shader, 0, 90, Color.WHITE);
 		
-		this.topRightSmallArc = new ArcShape(shader, 270, 90, Color.WHITE);
+		this.topRightSmallArc = getArcShape(shader, 270, 90, Color.WHITE);
 		
-		this.bottomRightSmallArc = new ArcShape(shader, 180, 90, Color.WHITE);
+		this.bottomRightSmallArc = getArcShape(shader, 180, 90, Color.WHITE);
 		
-		this.bottomLeftSmallArc = new ArcShape(shader, 90, 90, Color.WHITE);
+		this.bottomLeftSmallArc = getArcShape(shader, 90, 90, Color.WHITE);
 		
-		this.leftBigArc = new ArcShape(shader, 37, 109, Color.WHITE);
+		this.leftBigArc = getArcShape(shader, 37, 109, Color.WHITE);
 		
-		this.rightBigArc = new ArcShape(shader, 217, 109, Color.WHITE);
+		this.rightBigArc = getArcShape(shader, 217, 109, Color.WHITE);
 		
 		addSensor(box2DWorld);
 	}
@@ -239,6 +239,90 @@ public class Map extends RectangleShape{
 	 */
 	public Vector2 getRightGoalKickBox2DPosition(){
 		return new Vector2(getBox2DX() + Map.WIDTH - SECTOR_5_WIDTH, getBox2DY() + (HEIGHT / 2));
+	}
+	
+	/**
+	 * Return with the position of the top left corner in Box2D.
+	 */
+	public Vector2 getTopLeftCornerBox2DPosition(){
+		return new Vector2(box2DX, box2DY);
+	}
+	
+	/**
+	 * Return with the position of the top right corner in Box2D.
+	 */
+	public Vector2 getTopRightCornerBox2DPosition(){
+		return new Vector2(box2DX + Map.WIDTH, box2DY);
+	}
+	
+	/**
+	 * Return with the position of the bottom left corner in Box2D.
+	 */
+	public Vector2 getBottomLeftCornerBox2DPosition(){
+		return new Vector2(box2DX, box2DY + Map.HEIGHT);
+	}
+	
+	/**
+	 * Return with the position of the bottom right corner in Box2D.
+	 */
+	public Vector2 getBottomRightCornerBox2DPosition(){
+		return new Vector2(box2DX + Map.WIDTH, box2DY + Map.HEIGHT);
+	}
+	
+	// --------------------------------------------------
+	// ~ Protected methods
+	// --------------------------------------------------
+	
+	/**
+	 * Create a {@link RectangleBorderShape} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param color - The color.
+	 */
+	protected RectangleBorderShape getRectangleBorderShape(final ShaderProgram shader, final Color color){
+		return new RectangleBorderShape(shader, color);
+	}
+	
+	/**
+	 * Create a {@link CircleBorderShape} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param color - The color.
+	 */
+	protected CircleBorderShape getCircleBorderShape(final ShaderProgram shader, final Color color){
+		return new CircleBorderShape(shader, color);
+	}
+	
+	/**
+	 * Create a {@link LineShape} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param color - The color.
+	 */
+	protected LineShape getLineShape(final ShaderProgram shader, final Color color){
+		return new LineShape(shader, color);
+	}
+	
+	/**
+	 * Create a {@link FilledCircleShape} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param color - The color.
+	 */
+	protected FilledCircleShape getFilledCircleShape(final ShaderProgram shader, final Color color){
+		return new FilledCircleShape(shader, color);
+	}
+	
+	/**
+	 * Create a {@link ArcShape} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param startDegrees - The starting degrees.
+	 * @param degreesNum - The number of degrees.
+	 * @param color - The color.
+	 */
+	protected ArcShape getArcShape(final ShaderProgram shader, final int startDegrees, final int degreesNum, final Color color){
+		return new ArcShape(shader, startDegrees, degreesNum, color);
 	}
 	
 	// --------------------------------------------------

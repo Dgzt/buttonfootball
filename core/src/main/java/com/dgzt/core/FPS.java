@@ -27,7 +27,7 @@ import com.dgzt.core.shape.Text;
  * 
  * @author Dgzt
  */
-final public class FPS extends Text{
+public class FPS extends Text{
 	
 	// --------------------------------------------------
 	// ~ Private static members

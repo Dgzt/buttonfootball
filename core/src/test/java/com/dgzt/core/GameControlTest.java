@@ -17,6 +17,7 @@ package com.dgzt.core;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.HalfTimeBoard;
 import com.dgzt.core.scoreboard.ScoreBoard;
+import com.dgzt.core.scoreboard.TimeLeftBoard;
 import com.dgzt.core.setting.Settings;
 
 /**
@@ -90,10 +92,14 @@ public final class GameControlTest {
 		final MainWindow mainWindow = Mockito.mock(MainWindow.class);
 		scoreBoard = Mockito.mock(ScoreBoard.class);
 		
+		// Opponent buttons
+		final List<Button> opponentButtons = new ArrayList<Button>();
+		opponentButtons.add(Mockito.mock(Button.class));
+		
 		// Table
 		table = Mockito.mock(Table.class);
 		Mockito.when(table.getPlayerButtons()).thenReturn(new ArrayList<Button>());
-		Mockito.when(table.getOpponentButtons()).thenReturn(new ArrayList<Button>());
+		Mockito.when(table.getOpponentButtons()).thenReturn(opponentButtons);
 		
 		// Map
 		Map map = Mockito.mock(Map.class);
@@ -110,6 +116,10 @@ public final class GameControlTest {
 		// Half time board
 		HalfTimeBoard halfTimeBoard = Mockito.mock(HalfTimeBoard.class);
 		Mockito.when(scoreBoard.getHalfTimeBoard()).thenReturn(halfTimeBoard);
+		
+		// Opponent time left board
+		final TimeLeftBoard opponentTimeLeftBoard = Mockito.mock(TimeLeftBoard.class);
+		Mockito.when(scoreBoard.getOpponentTimeLeftBoard()).thenReturn(opponentTimeLeftBoard);
 		
 		final EventListener eventListener = Mockito.mock(EventListener.class);
 		
@@ -218,7 +228,7 @@ public final class GameControlTest {
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(TOP_LEFT_CORCER_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -258,7 +268,7 @@ public final class GameControlTest {
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(BOTTOM_LEFT_CORCER_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -318,7 +328,7 @@ public final class GameControlTest {
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(TOP_RIGHT_CORCER_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -358,7 +368,7 @@ public final class GameControlTest {
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(BOTTOM_RIGHT_CORCER_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -396,7 +406,7 @@ public final class GameControlTest {
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(THROW_IN_TOP_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -434,7 +444,7 @@ public final class GameControlTest {
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(THROW_IN_BOTTOM_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	

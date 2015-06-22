@@ -22,7 +22,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * 
  * @author Dgzt
  */
-public final class LeftGate extends AbstractGate{
+public class LeftGate extends AbstractGate{
 
 	// --------------------------------------------------
 	// ~ Constructors

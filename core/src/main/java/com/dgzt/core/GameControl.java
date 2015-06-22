@@ -97,7 +97,7 @@ public final class GameControl {
 		this.table = table;
 		this.settings = settings;
 		this.eventListener = eventListener;
-		this.bot = new Bot(table.getOpponentButtons(), table.getBall());
+		this.bot = new Bot(table);
 		gameStatus = GameStatus.NOT_IN_GAME;
 		this.gamePaused = true;
 		
@@ -605,6 +605,7 @@ public final class GameControl {
 					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side by player.");
 					newBallPos.set(map.getLeftGoalKickBox2DPosition());
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					playerMoveSomeButton();
 				}else{ 
 					// Corner kick from opponent
@@ -616,6 +617,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
 					}
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveOneButton();
 				}
 			}else{
@@ -624,6 +626,7 @@ public final class GameControl {
 					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on left side by opponent.");
 					newBallPos.set(map.getLeftGoalKickBox2DPosition());
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveSomeButton();
 				}else{
 					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
@@ -634,6 +637,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
 					}
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					playerMoveOneButton();
 				}
 			}
@@ -645,6 +649,7 @@ public final class GameControl {
 					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side by opponent.");
 					newBallPos.set(map.getRightGoalKickBox2DPosition());
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveSomeButton();
 				}else{
 					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
@@ -655,6 +660,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
 					}
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					playerMoveOneButton();
 				}
 			}else{
@@ -663,6 +669,7 @@ public final class GameControl {
 					Gdx.app.log(getClass().getName() + ".ballLeavedMap()", "Goal kick on right side by player.");
 					newBallPos.set(map.getRightGoalKickBox2DPosition());
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					playerMoveSomeButton();
 				}else{ 
 					// Corner kick from opponent
@@ -674,6 +681,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
 					}
 					
+					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveOneButton();
 				}
 			}
@@ -691,15 +699,13 @@ public final class GameControl {
 				newBallPos.y = map.getBox2DY() + Map.HEIGHT;
 			}
 			
+			table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 			if(isOpponentButtonContactBallLastTime()){
 				playerMoveOneButton();
 			}else{
 				opponentMoveOneButton();
 			}
 		}
-		
-		// Move ball to the new position
-		table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 	}
 	
 	/**
@@ -711,7 +717,7 @@ public final class GameControl {
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
 			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
 		}else{
-			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+			opponentMoveOneButton();
 		}
 	}
 	
@@ -723,8 +729,10 @@ public final class GameControl {
 		
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
 			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+			bot.moveOneButton();
+			opponentInGame();
 		}else{
-			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
+			playerMoveOneButton();
 		}
 	}
 	

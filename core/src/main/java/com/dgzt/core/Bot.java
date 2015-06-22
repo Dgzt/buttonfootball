@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.util.MathUtil;
@@ -26,16 +27,22 @@ import com.dgzt.core.util.MathUtil;
  * @author Dgzt
  */
 public class Bot {
+
+	// --------------------------------------------------
+	// ~ Private static members
+	// --------------------------------------------------
+	
+	private static final float MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D = 5.0f;
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The bot's buttons. */
-	private final List<Button> botButtons;
+	/** The table. */
+	private final Table table;
 	
-	/** The ball. */
-	private final Ball ball;
+	/** Selected button to move. */
+	private Button selectedButton;
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -44,13 +51,16 @@ public class Bot {
 	/**
 	 * The constructor.
 	 * 
-	 * @param botButtons - The bot's buttons.
-	 * @param ball - The ball.
+	 * @param table - The table.
 	 */
-	public Bot(final List<Button> botButtons, final Ball ball){
-		this.botButtons = botButtons;
-		this.ball = ball;
+	public Bot(final Table table){
+		this.table = table;
+		this.selectedButton = null;
 	}
+	
+	// --------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------
 	
 	/**
 	 * The bot step.
@@ -58,10 +68,73 @@ public class Bot {
 	public void step(){
 		// TODO - Temp step
 		
+		if(selectedButton == null){
+			selectedButton = getLowestDistanceButton();	
+		}
+		final float power = 4;
+		
+		selectedButton.move(power * (table.getBall().getBox2DX() - selectedButton.getBox2DX()), power * (table.getBall().getBox2DY() - selectedButton.getBox2DY()));
+		selectedButton = null;
+	}
+	
+	/**
+	 * Move on button to the ball.
+	 */
+	public void moveOneButton(){
+		final Ball ball = table.getBall();
+		selectedButton = getLowestDistanceButton();
+		
+		if(table.isBallOnTopLeftCornerOfMap()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
+					ball.getBox2DY() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
+			);
+		}else if(table.isBallOnTopBorderOfMap()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX(),
+					ball.getBox2DY() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
+			);
+		}else if(table.isBallOnTopRightCornerOfMap()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
+					ball.getBox2DY() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
+			);
+		}else if(table.isBallOnBottomLeftCornerOfMap()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
+					ball.getBox2DY() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
+			);
+		}else if(table.isBallOnBottomBorderOfMap()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX(),
+					ball.getBox2DY() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
+			);
+		}else if(table.isBallOnBottomRightCornerOfMap()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
+					ball.getBox2DY() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
+			);
+		}else{
+			Gdx.app.log(getClass().getName() + ".moveOneButton", "Error state!");
+		}
+	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Get the lowest distance button from the ball.
+	 * 
+	 * @return A button.
+	 */
+	private Button getLowestDistanceButton(){
+		final List<Button> botButtons = table.getOpponentButtons();
 		double lowestDistance = Double.MAX_VALUE;
 		Button lowestDistanceButton = null;
-		for( final Button button : botButtons ){
-			final double actualDistance = MathUtil.distance(ball.getBox2DX(), ball.getBox2DY(), button.getBox2DX(), button.getBox2DY());
+		
+		for( final Button button : botButtons){
+			final double actualDistance = MathUtil.distance(table.getBall().getBox2DX(), table.getBall().getBox2DY(), button.getBox2DX(), button.getBox2DY());
 			
 			if(actualDistance < lowestDistance){
 				lowestDistance = actualDistance;
@@ -69,9 +142,6 @@ public class Bot {
 			}
 		}
 		
-		final float power = 4;
-		
-		lowestDistanceButton.move(power * (ball.getBox2DX() - lowestDistanceButton.getBox2DX()), power * (ball.getBox2DY() - lowestDistanceButton.getBox2DY())); 
+		return lowestDistanceButton;
 	}
-	
 }

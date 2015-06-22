@@ -24,7 +24,7 @@ import com.dgzt.core.shape.LineShape;
  * 
  * @author Dgzt
  */
-final public class Arrow extends LineShape{
+public class Arrow extends LineShape{
 
 	// --------------------------------------------------
 	// ~ Private members

@@ -96,17 +96,17 @@ public class Table extends RectangleShape{
 		
 		addBox2DWalls(box2DWorld);
 		
-		map = new Map(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
+		map = createMap(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
 		
-		leftGate = new LeftGate(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2 - LeftGate.WIDTH + LineShape.LINE_WIDTH, (Table.HEIGHT - LeftGate.HEIGHT) / 2);
-		rightGate = new RightGate(shader, box2DWorld, Table.WIDTH - (Table.WIDTH - Map.WIDTH) / 2  - LineShape.LINE_WIDTH, (Table.HEIGHT - RightGate.HEIGHT) / 2 );
+		leftGate = createLeftGate(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2 - LeftGate.WIDTH + LineShape.LINE_WIDTH, (Table.HEIGHT - LeftGate.HEIGHT) / 2);
+		rightGate = createRightGate(shader, box2DWorld, Table.WIDTH - (Table.WIDTH - Map.WIDTH) / 2  - LineShape.LINE_WIDTH, (Table.HEIGHT - RightGate.HEIGHT) / 2 );
 		
 		playerButtons = new ArrayList<Button>();
 		opponentButtons = new ArrayList<Button>();
 		
 		addButtons(shader, eventListener, box2DWorld);
 		
-		ball = new Ball(this, shader, eventListener, box2DWorld);
+		ball = createBall(shader, eventListener, box2DWorld);
 		
 		visibleButtons = false;
 	}
@@ -216,6 +216,48 @@ public class Table extends RectangleShape{
 		ball.setBox2DPosition(Table.WIDTH / 2, Table.HEIGHT / 2);
 	}
 	
+	/**
+	 * Return true when the ball is on the top left corner of map else false.
+	 */
+	public boolean isBallOnTopLeftCornerOfMap(){
+		return ball.getBox2DPosition().equals(map.getTopLeftCornerBox2DPosition());
+	}
+	
+	/**
+	 * Return true when the ball is on the top border of map else false.
+	 */
+	public boolean isBallOnTopBorderOfMap(){
+		return map.getBox2DX() < ball.getBox2DX() && ball.getBox2DX() < (map.getBox2DX() + Map.WIDTH) && Float.compare(ball.getBox2DY(), map.getBox2DY()) == 0;
+	}
+	
+	/**
+	 * Return true when the ball is on the top right corner of map else false.
+	 */
+	public boolean isBallOnTopRightCornerOfMap(){
+		return ball.getBox2DPosition().equals(map.getTopRightCornerBox2DPosition());
+	}
+	
+	/**
+	 * Return true when the ball is on the bottom left corner of map else false.
+	 */
+	public boolean isBallOnBottomLeftCornerOfMap(){
+		return ball.getBox2DPosition().equals(map.getBottomLeftCornerBox2DPosition());
+	}
+	
+	/**
+	 * Return true when the ball is on the bottom border of map else false.
+	 */
+	public boolean isBallOnBottomBorderOfMap(){
+		return map.getBox2DX() < ball.getBox2DX() && ball.getBox2DX() < (map.getBox2DX() + Map.WIDTH) && Float.compare(ball.getBox2DY(), map.getBox2DY() + Map.HEIGHT) == 0;
+	}
+	
+	/**
+	 * Return true when the ball is on the bottom right corner of map else false.
+	 */
+	public boolean isBallOnBottomRightCornerOfMap(){
+		return ball.getBox2DPosition().equals(map.getBottomRightCornerBox2DPosition());
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------
@@ -267,6 +309,69 @@ public class Table extends RectangleShape{
 	}
 	
 	// --------------------------------------------------
+	// ~ Protected methods
+	// --------------------------------------------------
+	
+	/**
+	 * Create {@link Map} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param box2DWorld - The Box2D world.
+	 * @param box2DX - The x coordinate value in Box2D world.
+	 * @param box2DY - The y coordinate value in Box2D world.
+	 */
+	protected Map createMap(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
+		return new Map(shader, box2DWorld, box2DX, box2DY);
+	}
+	
+	/**
+	 * Create {@link LeftGate} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param box2DWorld - The Box2D world.
+	 * @param box2DX - The x coordinate value in Box2D world.
+	 * @param box2DY - The y coordinate value in Box2D world.
+	 */
+	protected LeftGate createLeftGate(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
+		return new LeftGate(shader, box2DWorld, box2DX, box2DY);
+	}
+
+	/**
+	 * Create {@link RightGate} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param box2DWorld - The Box2D world.
+	 * @param box2DX - The x coordinate value in Box2D world.
+	 * @param box2DY - The y coordinate value in Box2D world.
+	 */
+	protected RightGate createRightGate(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
+		return new RightGate(shader, box2DWorld, box2DX, box2DY);
+	}
+
+	/**
+	 * Create {@link Button} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param eventListener - The event listener.
+	 * @param box2DWorld - The Box2D world.
+	 * @param color - The color.
+	 */
+	protected Button createButton(final ShaderProgram shader, final EventListener eventListener, final World box2DWorld, final Color color){
+		return new Button(this, shader, eventListener, box2DWorld, color);
+	}
+	
+	/**
+	 * Create {@link Ball} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param eventListener - The event listener.
+	 * @param box2DWorld - The Box2D world.
+	 */
+	protected Ball createBall(final ShaderProgram shader, final EventListener eventListener, final World box2DWorld){
+		return new Ball(this, shader, eventListener, box2DWorld);
+	}
+	
+	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
 	
@@ -280,12 +385,12 @@ public class Table extends RectangleShape{
 	private void addButtons(final ShaderProgram shader, final EventListener eventListener, final World box2DWorld){
 		// The player's buttons.
 		for(int i = 0; i < 11; ++i){
-			playerButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.PLAYER_COLOR));
+			playerButtons.add(createButton(shader, eventListener, box2DWorld, Button.PLAYER_COLOR));
 		}
 		
 		// The opponent's buttons.
 		for(int i = 0; i < 11; ++i){
-			opponentButtons.add(new Button(this, shader, eventListener, box2DWorld, Button.OPPONENT_COLOR));
+			opponentButtons.add(createButton(shader, eventListener, box2DWorld, Button.OPPONENT_COLOR));
 		}
 	}
 	
