@@ -96,13 +96,15 @@ public class EventListener implements ContactListener{
 	public void beginContact(final Contact contact) {
 		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
 		
+		final Object userDataA = contact.getFixtureA().getUserData();
 		final Object userDataB = contact.getFixtureB().getUserData();
 		
+		if(userDataA instanceof AbstractButton){
+			buttonStartMove((AbstractButton) userDataA);
+		}
+		
 		if(userDataB instanceof AbstractButton){
-			final AbstractButton button = (AbstractButton) userDataB;
-			if(!button.isMoving()){
-				button.startMove();
-			}
+			buttonStartMove((AbstractButton) userDataB);
 		}
 		
 		// The ball contact with button
@@ -154,5 +156,19 @@ public class EventListener implements ContactListener{
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
 
+	/**
+	 * The given abstract button will move.
+	 * 
+	 * @param button - The abstract button.
+	 */
+	private void buttonStartMove(AbstractButton button){
+		if(!button.isMoving()){
+			button.startMove();
+		}
+	}
 }
