@@ -278,10 +278,17 @@ public final class GameControl {
 	public void timeLeftEndEvent(){
 		Gdx.app.log(getClass().getName() + ".timeLeftEndEvent()", "init");
 		
-		if(gameStatus == GameStatus.PLAYER_IN_GAME){
-			playerTimeLeftEnd();
-		}else{
-			opponentTimeLeftEnd();
+		switch(gameStatus){
+			case PLAYER_IN_GAME:
+			case PLAYER_MOVE_ONE_BUTTON:
+				playerTimeLeftEnd(); 
+				break;
+			case OPPONENT_IN_GAME:
+			case OPPONENT_MOVE_ONE_BUTTON:
+				opponentTimeLeftEnd(); 
+				break;
+			default:
+				throw new RuntimeException("Incorrect game status!");
 		}
 	}
 	
@@ -302,11 +309,8 @@ public final class GameControl {
 		
 		if(moovingButton == null){
 			Gdx.app.log(GameControl.class.getName() + ".selectMoovingButton()", "Not selected button.");
-			if(gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
-				gameStatus = GameStatus.PLAYER_IN_GAME;
-			}else{
-				throw new RuntimeException("Not implemented when bot start after the ball leaved the map.");
-			}
+			scoreBoard.getPlayerTimeLeftBoard().clear();	
+			playerInGame();
 		}
 	}
 	
@@ -355,12 +359,8 @@ public final class GameControl {
 		
 		if(gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON){
 			Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Player in game.");
-			gameStatus = GameStatus.PLAYER_IN_GAME;
-		}else if(gameStatus == GameStatus.OPPONENT_MOVE_ONE_BUTTON){
-			Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Bot in game.");
-			gameStatus = GameStatus.OPPONENT_IN_GAME;
-			bot.step();
-			opponentStepped();
+			scoreBoard.getPlayerTimeLeftBoard().clear();
+			playerInGame();
 		}
 	}
 	
@@ -716,6 +716,7 @@ public final class GameControl {
 		
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
 			gameStatus = GameStatus.PLAYER_MOVE_ONE_BUTTON;
+			scoreBoard.getPlayerTimeLeftBoard().start(this);
 		}else{
 			opponentMoveOneButton();
 		}
@@ -729,7 +730,9 @@ public final class GameControl {
 		
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
 			gameStatus = GameStatus.OPPONENT_MOVE_ONE_BUTTON;
+			scoreBoard.getOpponentTimeLeftBoard().start(this);
 			bot.moveOneButton();
+			scoreBoard.getOpponentTimeLeftBoard().clear();
 			opponentInGame();
 		}else{
 			playerMoveOneButton();
@@ -826,7 +829,11 @@ public final class GameControl {
 	private void playerTimeLeftEnd(){
 		Gdx.app.log(getClass().getName() + ".playerTimeLeftEnd()", "init");
 		
-		opponentInGame();
+		switch(gameStatus){
+			case PLAYER_IN_GAME : opponentInGame(); break;
+			case PLAYER_MOVE_ONE_BUTTON : opponentMoveOneButton(); break;
+			default : throw new RuntimeException("Incorrect game status!");
+		}
 	}
 	
 	/**
@@ -835,7 +842,11 @@ public final class GameControl {
 	private void opponentTimeLeftEnd(){
 		Gdx.app.log(getClass().getName() + ".opponentTimeLeftEnd()", "init");
 		
-		playerInGame();
+		switch(gameStatus){
+			case OPPONENT_IN_GAME: playerInGame(); break;
+			case OPPONENT_MOVE_ONE_BUTTON: playerMoveOneButton(); break;
+			default : throw new RuntimeException("Incorrect game status!");
+		}
 	}
 	
 	/**

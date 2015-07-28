@@ -21,10 +21,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import com.badlogic.gdx.math.Vector2;
 import com.dgzt.core.button.Ball;
@@ -39,8 +36,7 @@ import com.dgzt.core.setting.Settings;
  * 
  * @author Dgzt
  */
-@RunWith(GdxTestRunner.class)
-public final class GameControlTest {
+public final class GameControlTest extends BaseShapeTester{
 	
 	// --------------------------------------------------
 	// ~ Static members
@@ -116,6 +112,10 @@ public final class GameControlTest {
 		// Half time board
 		HalfTimeBoard halfTimeBoard = Mockito.mock(HalfTimeBoard.class);
 		Mockito.when(scoreBoard.getHalfTimeBoard()).thenReturn(halfTimeBoard);
+		
+		// Player time left board
+		final TimeLeftBoard playerTimeLeftBoard = Mockito.mock(TimeLeftBoard.class);
+		Mockito.when(scoreBoard.getPlayerTimeLeftBoard()).thenReturn(playerTimeLeftBoard);
 		
 		// Opponent time left board
 		final TimeLeftBoard opponentTimeLeftBoard = Mockito.mock(TimeLeftBoard.class);
@@ -447,42 +447,27 @@ public final class GameControlTest {
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(THROW_IN_BOTTOM_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
-	
-	// --------------------------------------------------
-	// ~ Private methods
-	// --------------------------------------------------
-	
+
 	/**
-	 * Return with a mock {@link Ball}. 
-	 * This mock save the position in {@link Ball#setBox2DPosition(float, float)} to {@link Ball#getBox2DPosition()}.
+	 * Test for time left end when player move one button.
 	 */
-	private Ball getMockBall(){
-		Ball ball = Mockito.mock(Ball.class);
+	@Test
+	public void test_timeLeftEndAtPlayerMoveOneButton(){
+		final Button buttonContactBallLastTime = Mockito.mock(Button.class);
+		table.getOpponentButtons().add(buttonContactBallLastTime);
 		
-		final Vector2 box2DPosition = new Vector2();
+		table.getBall().setBox2DPosition(BALL_LEAVED_MAP_TOP_LEFT.x, BALL_LEAVED_MAP_TOP_LEFT.y);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.SECOND_HALF);
 		
-		Mockito.doAnswer(new Answer<Object>() {
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		gameControl.buttonContactBall(buttonContactBallLastTime);
+		gameControl.ballLeaveMapEvent();
+		
+		gameControl.allButtonIsStoppedEvent();
+		assertEquals(GameStatus.PLAYER_MOVE_ONE_BUTTON, gameControl.getGameStatus());
 
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				final float x = (Float) invocation.getArguments()[0];
-				final float y = (Float) invocation.getArguments()[1];
-				
-				box2DPosition.set(x, y);
-				
-				return null;
-			}
-		}).when(ball).setBox2DPosition(Mockito.anyFloat(), Mockito.anyFloat());
-		
-		Mockito.when(ball.getBox2DPosition()).thenAnswer(new Answer<Vector2>() {
-
-			@Override
-			public Vector2 answer(InvocationOnMock invocation) throws Throwable {
-				return box2DPosition;
-			}
-		});
-		
-		return ball;
+		gameControl.timeLeftEndEvent();
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 	}
-
+	
 }
