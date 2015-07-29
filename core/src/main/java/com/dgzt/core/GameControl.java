@@ -324,10 +324,16 @@ public final class GameControl {
 		// The new position is ok
 		boolean ok = true;
 		
+		if(moovingButton == null){
+			ok = false;
+		}
+		
 		// Check the player's button positions
-		for(final Button playerButton : table.getPlayerButtons()){
-			if(moovingButton != playerButton && MathUtil.distance(playerButton.getX(), playerButton.getY(), x, y) < table.getScale() * (Button.RADIUS * 2)){
-				ok = false;
+		if(ok){
+			for(final Button playerButton : table.getPlayerButtons()){
+				if(moovingButton != playerButton && MathUtil.distance(playerButton.getX(), playerButton.getY(), x, y) < table.getScale() * (Button.RADIUS * 2)){
+					ok = false;
+				}
 			}
 		}
 		
@@ -355,12 +361,15 @@ public final class GameControl {
 	 * End move the selected button.
 	 */
 	public void endMoveSelectedButton(){
-		moovingButton = null;
+		Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "init");
+		if(moovingButton != null){
+			moovingButton = null;
 		
-		if(gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON){
-			Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Player in game.");
-			scoreBoard.getPlayerTimeLeftBoard().clear();
-			playerInGame();
+			if(gameStatus == GameStatus.PLAYER_MOVE_ONE_BUTTON){
+				Gdx.app.log(GameControl.class.getName() + ".endMoveSelectedButton()", "Player in game.");
+				scoreBoard.getPlayerTimeLeftBoard().clear();
+				playerInGame();
+			}
 		}
 	}
 	
@@ -828,6 +837,11 @@ public final class GameControl {
 	 */
 	private void playerTimeLeftEnd(){
 		Gdx.app.log(getClass().getName() + ".playerTimeLeftEnd()", "init");
+		
+		// If the player is moving button then reset this variable.
+		if(moovingButton != null){
+			moovingButton = null;
+		}
 		
 		switch(gameStatus){
 			case PLAYER_IN_GAME : opponentInGame(); break;
