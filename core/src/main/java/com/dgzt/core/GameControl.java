@@ -328,6 +328,11 @@ public final class GameControl {
 			ok = false;
 		}
 		
+		// Check the border of table
+		if(ok && !table.isButtonPositionOnTable(x, y)){
+			ok = false;
+		}
+		
 		// Check the player's button positions
 		if(ok){
 			for(final Button playerButton : table.getPlayerButtons()){

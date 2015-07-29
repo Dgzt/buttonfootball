@@ -258,6 +258,19 @@ public class Table extends RectangleShape{
 		return ball.getBox2DPosition().equals(map.getBottomRightCornerBox2DPosition());
 	}
 	
+	/**
+	 * Return true when the position of button is on the table.
+	 * 
+	 * @param x - The x position of value of button.
+	 * @param y - The y position of value of button.
+	 */
+	public boolean isButtonPositionOnTable(final float x, final float y){
+		return getX() + getScale() * Button.RADIUS < x &&
+				x < getX() + getWidth() - getScale() * Button.RADIUS &&
+				getY() + getScale() * Button.RADIUS < y &&
+				y < getY() + getHeight() - getScale() * Button.RADIUS;
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------

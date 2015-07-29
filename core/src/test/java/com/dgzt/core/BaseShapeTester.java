@@ -33,6 +33,12 @@ import com.dgzt.core.button.Button;
  */
 @RunWith(GdxTestRunner.class)
 public class BaseShapeTester {
+
+	// --------------------------------------------------
+	// ~ Protected static members
+	// --------------------------------------------------
+	
+	protected static final double DELTA = 0.0001d;
 	
 	// --------------------------------------------------
 	// ~ Protected methods

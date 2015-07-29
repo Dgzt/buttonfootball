@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Ball;
@@ -43,6 +44,8 @@ public final class TableTest extends BaseShapeTester{
 	// ~ Private static members
 	// --------------------------------------------------
 	
+	private static final Rectangle TABLE_RECTANGLE = new Rectangle(100.0f, 200.0f, 80.0f, 60.0f);
+	private static final double SCALE = 1.0f;
 	private static final Vector2 MAP_BOX2D_POSITION = new Vector2(10.0f, 15.0f);
 	
 	private static final float DISTANCE = 11.0f;
@@ -224,5 +227,30 @@ public final class TableTest extends BaseShapeTester{
 		// True on bottom right corner of map
 		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y + Map.HEIGHT);
 		assertTrue(table.isBallOnBottomRightCornerOfMap());
+	}
+	
+	/**
+	 * Test for {@link Table#isButtonPositionOnTable(float, float)} method.
+	 */
+	@Test
+	public void test_isButtonPositionOnTable(){
+		table.resize(TABLE_RECTANGLE.x, TABLE_RECTANGLE.y, TABLE_RECTANGLE.width, TABLE_RECTANGLE.height, SCALE);
+		final float width = (float) (TABLE_RECTANGLE.width * SCALE);
+		final float height = (float) (TABLE_RECTANGLE.height * SCALE);
+		
+		// The correct
+		assertTrue(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + DISTANCE, TABLE_RECTANGLE.y + DISTANCE));
+		
+		// Left the table
+		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x, TABLE_RECTANGLE.y + DISTANCE));
+		
+		// Up the table
+		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + DISTANCE, TABLE_RECTANGLE.y));
+		
+		// Right the table
+		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + width, TABLE_RECTANGLE.y + height - DISTANCE));
+		
+		// Down the table
+		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + width - DISTANCE, TABLE_RECTANGLE.y + height));
 	}
 }

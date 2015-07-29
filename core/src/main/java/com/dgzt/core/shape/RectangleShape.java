@@ -95,4 +95,13 @@ public class RectangleShape extends Shape{
 		
 		return vertices[2] - vertices[0];
 	}
+	
+	/**
+	 * Return with the height value.
+	 */
+	public final float getHeight(){
+		final float[] vertices = getVertices();
+		
+		return vertices[3] - vertices[5];
+	}
 }
