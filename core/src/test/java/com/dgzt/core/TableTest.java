@@ -228,7 +228,7 @@ public final class TableTest extends BaseShapeTester{
 		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y + Map.HEIGHT);
 		assertTrue(table.isBallOnBottomRightCornerOfMap());
 	}
-	
+
 	/**
 	 * Test for {@link Table#isButtonPositionOnTable(float, float)} method.
 	 */
@@ -239,18 +239,18 @@ public final class TableTest extends BaseShapeTester{
 		final float height = (float) (TABLE_RECTANGLE.height * SCALE);
 		
 		// The correct
-		assertTrue(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + DISTANCE, TABLE_RECTANGLE.y + DISTANCE));
+		assertTrue(table.isButtonPositionOnTable(new Vector2(TABLE_RECTANGLE.x + DISTANCE, TABLE_RECTANGLE.y + DISTANCE)));
 		
 		// Left the table
-		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x, TABLE_RECTANGLE.y + DISTANCE));
+		assertFalse(table.isButtonPositionOnTable(new Vector2(TABLE_RECTANGLE.x, TABLE_RECTANGLE.y + DISTANCE)));
 		
 		// Up the table
-		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + DISTANCE, TABLE_RECTANGLE.y));
+		assertFalse(table.isButtonPositionOnTable(new Vector2(TABLE_RECTANGLE.x + DISTANCE, TABLE_RECTANGLE.y)));
 		
 		// Right the table
-		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + width, TABLE_RECTANGLE.y + height - DISTANCE));
+		assertFalse(table.isButtonPositionOnTable(new Vector2(TABLE_RECTANGLE.x + width, TABLE_RECTANGLE.y + height - DISTANCE)));
 		
 		// Down the table
-		assertFalse(table.isButtonPositionOnTable(TABLE_RECTANGLE.x + width - DISTANCE, TABLE_RECTANGLE.y + height));
+		assertFalse(table.isButtonPositionOnTable(new Vector2(TABLE_RECTANGLE.x + width - DISTANCE, TABLE_RECTANGLE.y + height)));
 	}
 }

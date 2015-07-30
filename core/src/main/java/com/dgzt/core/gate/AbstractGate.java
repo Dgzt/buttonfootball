@@ -19,7 +19,12 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.button.Button;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.util.BitsUtil;
@@ -76,7 +81,6 @@ public abstract class AbstractGate extends RectangleBorderShape{
 
 	/** The row lines. */
 	private final List<LineShape> rowLines;
-
 	
 	// --------------------------------------------------
 	// ~ Constructors
@@ -119,7 +123,7 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	protected abstract short getWallBits();
 	
 	// --------------------------------------------------
-	// ~ Override methods
+	// ~ Public methods
 	// --------------------------------------------------
 	
 	/**
@@ -152,6 +156,37 @@ public abstract class AbstractGate extends RectangleBorderShape{
 			rowLines.get(i).resize(x, lineY, x + width, lineY, scale);
 		}
 	}
+	
+	/**
+	 * Return true when the given position is on the wall of gate else false.
+	 * 
+	 * @param box2DPos - The position in Box2D world.
+	 */
+	public boolean isButtonPositionOnWall(final Vector2 box2DPos){
+		final Circle button = new Circle(box2DPos, Button.RADIUS);
+
+		if(isTopWall() && Intersector.overlaps(button, getTopBox2DWallRectangle())){
+			return true;
+		}
+		
+		if(isRightWall() && Intersector.overlaps(button, getRightBox2DWallRectangle())){
+			return true;
+		}
+		
+		if(isBottomWall() && Intersector.overlaps(button, getBottomBox2DWallRectangle())){
+			return true;
+		}
+		
+		if(isLeftWall() && Intersector.overlaps(button, getLeftBox2DWallRectangle())){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// --------------------------------------------------
+	// ~ Override methods
+	// --------------------------------------------------
 
 	/**
 	 * Draw the shape and the child shapes.
@@ -203,56 +238,78 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	 * @param box2DWorld - The world of the Box2D.
 	 */
 	private void addBox2DWalls(final World box2DWorld){
-		final short wallBits = getWallBits();
-		
-		if((wallBits & TOP_WALL_BITS) != 0){
-			addTopBox2DWall(box2DWorld);
+		if(isTopWall()){
+			final Rectangle rec = getTopBox2DWallRectangle();
+			Box2DUtil.addWall(box2DWorld, rec.x, rec.y, rec.width, rec.height);
 		}
-		if((wallBits & RIGHT_WALL_BITS) != 0){
-			addRightBox2DWall(box2DWorld);
+		if(isRightWall()){
+			final Rectangle rec = getRightBox2DWallRectangle();
+			Box2DUtil.addWall(box2DWorld, rec.x, rec.y, rec.width, rec.height);
 		}
-		if((wallBits & BOTTOM_WALL_BITS) != 0){
-			addBottomBox2DWall(box2DWorld);
+		if(isBottomWall()){
+			final Rectangle rec = getBottomBox2DWallRectangle();
+			Box2DUtil.addWall(box2DWorld, rec.x, rec.y, rec.width, rec.height);
 		}
-		if((wallBits & LEFT_WALL_BITS) != 0){
-			addLeftBox2DWall(box2DWorld);
+		if(isLeftWall()){
+			final Rectangle rec = getLeftBox2DWallRectangle();
+			Box2DUtil.addWall(box2DWorld, rec.x, rec.y, rec.width, rec.height);
 		}
 	}
 	
-	/** 
-	 * Add the top wall of gate to the Box2D. 
-	 * 
-	 * @param Box2DWorld - The world of the Box2D.
+	/**
+	 * Return true when the top wall is exists else false.
 	 */
-	private void addTopBox2DWall(final World box2DWorld){
-		Box2DUtil.addWall(box2DWorld, box2DX, box2DY, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
+	private boolean isTopWall(){
+		return (getWallBits() & TOP_WALL_BITS) != 0;
 	}
 	
-	/** 
-	 * Add the bottom wall of gate to the Box2D. 
-	 * 
-	 * @param Box2DWorld - The world of the Box2D.
+	/**
+	 * Return true when the right wall is exists else false.
 	 */
-	private void addBottomBox2DWall(final World box2DWorld){
-		Box2DUtil.addWall(box2DWorld, box2DX, box2DY + AbstractGate.HEIGHT - LineShape.LINE_WIDTH, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
+	private boolean isRightWall(){
+		return (getWallBits() & RIGHT_WALL_BITS) != 0;
 	}
 	
-	/** 
-	 * Add the left wall of gate to the Box2D. 
-	 * 
-	 * @param Box2DWorld - The world of the Box2D.
+	/**
+	 * Return true when the bottom wall is exists else false.
 	 */
-	private void addLeftBox2DWall(final World box2DWorld){
-		Box2DUtil.addWall(box2DWorld, box2DX, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
+	private boolean isBottomWall(){
+		return (getWallBits() & BOTTOM_WALL_BITS) != 0;
 	}
 	
-	/** 
-	 * Add the right wall of gate to the Box2D. 
-	 * 
-	 * @param Box2DWorld - The world of the Box2D.
+	/**
+	 * Return true when the left wall is exists else false.
 	 */
-	private void addRightBox2DWall(final World box2DWorld) {
-		Box2DUtil.addWall(box2DWorld, box2DX + AbstractGate.WIDTH - LineShape.LINE_WIDTH, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
+	private boolean isLeftWall(){
+		return (getWallBits() & LEFT_WALL_BITS) != 0;
+	}
+	
+	/**
+	 * Return with the rectangle of the top wall in Box2D world.
+	 */
+	private Rectangle getTopBox2DWallRectangle(){
+		return new Rectangle(box2DX, box2DY, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
+	}
+	
+	/**
+	 * Return with the rectangle of the bottom wall in Box2D world.
+	 */
+	private Rectangle getBottomBox2DWallRectangle(){
+		return new Rectangle(box2DX, box2DY + AbstractGate.HEIGHT - LineShape.LINE_WIDTH, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
+	}
+	
+	/**
+	 * Return with the rectangle of the left wall in Box2D world.
+	 */
+	private Rectangle getLeftBox2DWallRectangle(){
+		return new Rectangle(box2DX, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
+	}
+	
+	/**
+	 * Return with the rectangle of the right wall in Box2D world.
+	 */
+	private Rectangle getRightBox2DWallRectangle(){
+		return new Rectangle(box2DX + AbstractGate.WIDTH - LineShape.LINE_WIDTH, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
 	}
 	
 	// --------------------------------------------------

@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.util;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -74,6 +75,22 @@ public class Box2DUtil {
 			final short maskBits
 	){
 		addRectangle(box2dWorld, x, y, width, height, true, userData, categoryBits, maskBits);
+	}
+	
+	/**
+	 * The screen position convert to Box2D position.
+	 * 
+	 * @param screenPosition - The screen position.
+	 * @param tablePosition - The position of table.
+	 * @param scale - The scale.
+	 */
+	public static Vector2 screenPositionToBox2DPosition(final Vector2 screenPosition, final Vector2 tablePosition, final double scale){
+		final Vector2 box2DPos = new Vector2(screenPosition);
+		box2DPos.sub(tablePosition);
+		box2DPos.x /= scale;
+		box2DPos.y /= scale;
+		
+		return box2DPos;
 	}
 	
 	// --------------------------------------------------

@@ -15,8 +15,14 @@
 package com.dgzt.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Util for {@link MathUtil}.
@@ -92,6 +98,21 @@ public class MathUtilTest {
 		assertEquals(point1Distance, MathUtil.distance(point1X, point1Y, linePoint1X, linePoint1Y, linePoint2X, linePoint2Y), DELTA);
 		assertEquals(point2Distance, MathUtil.distance(point2X, point2Y, linePoint1X, linePoint1Y, linePoint2X, linePoint2Y), DELTA);
 		assertEquals(point3Distance, MathUtil.distance(point3X, point3Y, linePoint1X, linePoint1Y, linePoint2X, linePoint2Y), DELTA);
+	}
+	
+	/**
+	 * Test for {@link MathUtil#isRectangleFullyContainsCircle(Rectangle, Circle)} method.
+	 */
+	@Test
+	public void test_isRectangleFullyContainsCircle(){
+		final Rectangle rec = new Rectangle(10.0f, 15.0f, 100.0f, 115.0f);
+		final float radius = 4.0f;
+		
+		assertFalse(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + radius, rec.y + radius, radius)));
+		assertFalse(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + rec.width - radius, rec.y + radius, radius)));
+		assertFalse(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + rec.width - radius, rec.y + rec.height - radius, radius)));
+		assertFalse(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + radius, rec.y + rec.height - radius, radius)));
+		assertTrue(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + radius + 1, rec.y + radius + 1, radius)));
 	}
 
 }

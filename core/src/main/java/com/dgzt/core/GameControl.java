@@ -26,6 +26,7 @@ import com.dgzt.core.scoreboard.GoalBoard;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
 import com.dgzt.core.setting.StepMode;
+import com.dgzt.core.util.Box2DUtil;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -317,10 +318,9 @@ public final class GameControl {
 	/**
 	 * Move the selected button to the given position.
 	 * 
-	 * @param x - The new x coordinate value.
-	 * @param y - The new y coordinate value.
+	 * @param position - The new position.
 	 */
-	public void moveSelectedButton(final float x, final float y){
+	public void moveSelectedButton(final Vector2 position){
 		// The new position is ok
 		boolean ok = true;
 		
@@ -329,14 +329,22 @@ public final class GameControl {
 		}
 		
 		// Check the border of table
-		if(ok && !table.isButtonPositionOnTable(x, y)){
+		if(ok && !table.isButtonPositionOnTable(position)){
+			ok = false;
+		}
+		
+		// The x,y position in box2D world
+		final Vector2 box2DPos = Box2DUtil.screenPositionToBox2DPosition(position, new Vector2(table.getX(), table.getY()), table.getScale());
+		
+		// Check the gates
+		if(ok && (table.getLeftGate().isButtonPositionOnWall(box2DPos) || table.getRightGate().isButtonPositionOnWall(box2DPos))){
 			ok = false;
 		}
 		
 		// Check the player's button positions
 		if(ok){
 			for(final Button playerButton : table.getPlayerButtons()){
-				if(moovingButton != playerButton && MathUtil.distance(playerButton.getX(), playerButton.getY(), x, y) < table.getScale() * (Button.RADIUS * 2)){
+				if(moovingButton != playerButton && playerButton.getBox2DPosition().dst(box2DPos) < Button.RADIUS * 2){
 					ok = false;
 				}
 			}
@@ -345,20 +353,20 @@ public final class GameControl {
 		// Check the opponent's button positions
 		if(ok){
 			for(final Button opponentButton : table.getOpponentButtons()){
-				if(MathUtil.distance(opponentButton.getX(), opponentButton.getY(), x, y) < table.getScale() * (Button.RADIUS * 2)){
+				if(opponentButton.getBox2DPosition().dst(box2DPos) < Button.RADIUS * 2){
 					ok = false;
 				}
 			}
 		}
 		
 		// Check the ball position
-		if(ok && MathUtil.distance(table.getBall().getX(), table.getBall().getY(), x, y) < table.getScale() * (Button.RADIUS + Ball.RADIUS)){
+		if(ok && table.getBall().getBox2DPosition().dst(box2DPos) < Button.RADIUS + Ball.RADIUS){
 			ok = false;
 		}
 		
 		// If the button will not on other button or ball then move to the new position
 		if(ok){
-			moovingButton.setPosition(x, y);
+			moovingButton.setBox2DPosition(box2DPos.x, box2DPos.y);
 		}
 	}
 	

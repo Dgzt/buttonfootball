@@ -114,4 +114,18 @@ public class Box2DUtilTest {
 		assertEquals(SENSOR_USER_DATA, fixture.getUserData());
 	}
 
+	/**
+	 * Test for {@link Box2DUtil#screenPositionToBox2DPosition(Vector2, Vector2, double)} method.
+	 */
+	@Test
+	public void test_screenPositionToBox2DPosition(){
+		final Vector2 screenPosition = new Vector2(126.0f, 189.0f);
+		final Vector2 tablePosition = new Vector2(100.0f, 150.0f);
+		final double scale = 1.3d;
+		final Vector2 result = new Vector2(20.0f, 30.0f);
+		
+		final Vector2 box2DPos = Box2DUtil.screenPositionToBox2DPosition(screenPosition, tablePosition, scale);
+		
+		assertEquals(result, box2DPos);
+	}
 }

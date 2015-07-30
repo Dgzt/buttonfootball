@@ -18,6 +18,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * The input listener for game window.
@@ -88,7 +89,7 @@ final public class GameWindowInputListener extends InputAdapter{
 			if(gameControl.isPlayerStep()){
 				gameWindow.mouseButtonMoved(screenX, screenY);
 			}else if(gameControl.isPlayerMoveButton()){
-				gameControl.moveSelectedButton(screenX, screenY);
+				gameControl.moveSelectedButton(new Vector2(screenX, screenY));
 			}
 		}
 		return super.touchDragged(screenX, screenY, pointer);

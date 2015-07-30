@@ -142,21 +142,7 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Return with the position in Box2D.
 	 */
 	public Vector2 getBox2DPosition(){
-		return box2DBody.getPosition();
-	}
-	
-	/**
-	 * Set the position in the application.
-	 * 
-	 * @param x - The new x coordinate value.
-	 * @param y - The new y coordinate value.
-	 */
-	public void setPosition(final float x, final float y){
-		final Vector2 newBox2DPos = new Vector2();
-		newBox2DPos.x = (x - parent.getX()) / (float) parent.getScale();
-		newBox2DPos.y = (y - parent.getY()) / (float) parent.getScale();
-		
-		setBox2DPosition(newBox2DPos.x, newBox2DPos.y);
+		return box2DPosition;
 	}
 	
 	/**

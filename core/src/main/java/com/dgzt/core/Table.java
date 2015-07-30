@@ -19,6 +19,9 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
@@ -27,6 +30,7 @@ import com.dgzt.core.gate.RightGate;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleShape;
 import com.dgzt.core.util.Box2DUtil;
+import com.dgzt.core.util.MathUtil;
 
 /**
  * The table object.
@@ -261,14 +265,13 @@ public class Table extends RectangleShape{
 	/**
 	 * Return true when the position of button is on the table.
 	 * 
-	 * @param x - The x position of value of button.
-	 * @param y - The y position of value of button.
+	 * @param position - The position.
 	 */
-	public boolean isButtonPositionOnTable(final float x, final float y){
-		return getX() + getScale() * Button.RADIUS < x &&
-				x < getX() + getWidth() - getScale() * Button.RADIUS &&
-				getY() + getScale() * Button.RADIUS < y &&
-				y < getY() + getHeight() - getScale() * Button.RADIUS;
+	public boolean isButtonPositionOnTable(final Vector2 position){
+		final Rectangle rectangle = new Rectangle(getX(), getY(), getWidth(), getHeight());
+		final Circle circle = new Circle(position, (float) (getScale() * Button.RADIUS));
+		
+		return MathUtil.isRectangleFullyContainsCircle(rectangle, circle);
 	}
 	
 	// --------------------------------------------------

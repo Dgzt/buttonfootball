@@ -14,6 +14,9 @@
  */
 package com.dgzt.core.util;
 
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
+
 /**
  * Math utils.
  * 
@@ -88,4 +91,18 @@ public class MathUtil {
 		return distance(pointX, pointY, (float) (lineP1X + t * (lineP2X - lineP1X)), (float) (lineP1Y + t * (lineP2Y - lineP1Y)) );
 	}
 	
+	/**
+	 * Return true when the rectangle fully contains the circle else false.
+	 * If the border of the circle is on the border of rectangle then return false.
+	 * 
+	 * @param rec - The rectangle.
+	 * @param circle - The circle.
+	 */
+	public static boolean isRectangleFullyContainsCircle(final Rectangle rec, final Circle circle){
+		return rec.x + circle.radius < circle.x &&
+				circle.x < rec.x + rec.width - circle.radius &&
+				rec.y + circle.radius < circle.y &&
+				circle.y < rec.y + rec.height - circle.radius;
+	}
+
 }
