@@ -65,6 +65,9 @@ public abstract class AbstractButton extends FilledCircleShape{
 	/** The event listener. */
 	private final EventListener eventListener;
 	
+	/** The coordinate value in Box2D. */
+	private Vector2 box2DPosition;
+	
 	/** The radius value in Box2D. */
 	private final float box2DRadius;
 	
@@ -100,8 +103,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 		this.parent = parent;
 		this.eventListener = eventListener;
 		this.box2DRadius = box2DRadius;
+		this.box2DPosition = new Vector2(0, 0);
 		this.moving = false;
-		
 		this.box2DBody = createBox2DBody(box2DWorld);
 	}
 	
@@ -130,8 +133,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param box2DY - The y coordinate value in box2D.
 	 */
 	public void setBox2DPosition(final float box2DX, final float box2DY){
+		box2DPosition.set(box2DX, box2DY);
 		box2DBody.setTransform(box2DX, box2DY, box2DBody.getAngle());
-		
 		resize();
 	}
 	
@@ -170,8 +173,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Resize the object.
 	 */
 	public void resize(){
-		final float x = parent.getX() + (float)(box2DBody.getPosition().x * parent.getScale());
-		final float y = parent.getY() + (float)(box2DBody.getPosition().y * parent.getScale());
+		final float x = parent.getX() + (float)(box2DPosition.x * parent.getScale());
+		final float y = parent.getY() + (float)(box2DPosition.y * parent.getScale());
 		final float radius = (float)(box2DRadius * parent.getScale());
 		
 		super.resize(x, y, radius);
@@ -184,7 +187,6 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param y - The y coordinate value.
 	 */
 	public void move(final float x, final float y){
-		startMove();
 		box2DBody.setLinearVelocity(x, y);
 	}
 	
@@ -192,18 +194,7 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Clear the move.
 	 */
 	public void clearMove(){
-		moving = false;
 		box2DBody.setLinearVelocity(0, 0);
-	}
-	
-	/**
-	 * Start move
-	 */
-	public void startMove(){
-		Gdx.app.log(getClass().getName() + ".startMove()", "init");
-		
-		moving = true;
-		eventListener.buttonStartMoving();
 	}
 	
 	/**
@@ -227,14 +218,20 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	@Override
 	public void draw() {
-		if(moving){
+		if( !box2DPosition.equals(box2DBody.getPosition()) ){
+			box2DPosition.set(box2DBody.getPosition());
+
 			resize();
 			
-			if(isStopped()){
-				Gdx.app.log(getClass().getName() + ".draw()", "Stop move.");
-				moving = false;
-				eventListener.buttonEndMoving();
+			if(!moving){
+				moving = true;
+				Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Start mooving.");
+				eventListener.buttonStartMoving();
 			}
+		}else if(moving && isStopped()){
+			moving = false;
+			Gdx.app.log(AbstractButton.class.getName() + ".draw()", "Stop mooving.");
+			eventListener.buttonEndMoving();
 		}
 		
 		super.draw();
@@ -306,21 +303,14 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Return with the x coordinate value in Box2D.
 	 */
 	public float getBox2DX() {
-		return box2DBody.getPosition().x;
+		return box2DPosition.x;
 	}
 
 	/**
 	 * Return with the y coordinate value in Box2D.
 	 */
 	public float getBox2DY() {
-		return box2DBody.getPosition().y;
-	}
-	
-	/**
-	 * Return true when the button is moving.
-	 */
-	public boolean isMoving(){
-		return moving;
+		return box2DPosition.y;
 	}
 
 }

@@ -99,14 +99,6 @@ public class EventListener implements ContactListener{
 		final Object userDataA = contact.getFixtureA().getUserData();
 		final Object userDataB = contact.getFixtureB().getUserData();
 		
-		if(userDataA instanceof AbstractButton){
-			buttonStartMove((AbstractButton) userDataA);
-		}
-		
-		if(userDataB instanceof AbstractButton){
-			buttonStartMove((AbstractButton) userDataB);
-		}
-		
 		// The ball contact with button
 		if(userDataB instanceof Ball && contact.getFixtureA().getUserData() instanceof Button){
 			final Button button = (Button) contact.getFixtureA().getUserData();
@@ -156,19 +148,4 @@ public class EventListener implements ContactListener{
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {}
-	
-	// --------------------------------------------------
-	// ~ Private methods
-	// --------------------------------------------------
-
-	/**
-	 * The given abstract button will move.
-	 * 
-	 * @param button - The abstract button.
-	 */
-	private void buttonStartMove(AbstractButton button){
-		if(!button.isMoving()){
-			button.startMove();
-		}
-	}
 }
