@@ -94,7 +94,7 @@ public abstract class Shape {
 	 * @param isStatic - Is static.
 	 * @param verticesNum - The number of vertices.
 	 * @param maxIndices - The max indices.
-	 * @param vattribs - The attributes.
+	 * @param vAttribs - The attributes.
 	 */
 	protected Mesh getMesh(final boolean isStatic, final int verticesNum, final int maxIndices, final VertexAttribute... vAttribs){
 		return new Mesh(isStatic, verticesNum, maxIndices, vAttribs);

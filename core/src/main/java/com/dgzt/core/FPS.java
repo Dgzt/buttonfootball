@@ -49,6 +49,9 @@ public class FPS extends Text{
 	/** The width of the fps text in cm. */
 	public static final float WIDTH = getWidth(FPS_PREFIX + "00");
 	
+	/** The height of the fps text in cm. */
+	public static final float HEIGHT = getHeight(FPS_PREFIX);
+	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------

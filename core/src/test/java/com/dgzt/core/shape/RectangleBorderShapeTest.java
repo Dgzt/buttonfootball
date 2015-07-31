@@ -26,27 +26,28 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.dgzt.core.BaseShapeTester;
 
 /**
- * Test for {@link RectangleShapeTest}.
+ * Test for {@link RectangleBorderShapeTest}.
  * 
  * @author Dgzt
  */
-public final class RectangleShapeTest extends BaseShapeTester{
+public final class RectangleBorderShapeTest extends BaseShapeTester{
 	
 	// --------------------------------------------------
 	// ~ Private static members
 	// --------------------------------------------------
 
-	private static final Color COLOR = Color.RED;
-	private static final float X = 120.0f;
-	private static final float Y = 190.0f;
-	private static final float WIDTH = 110.0f;
-	private static final float HEIGHT = 45.0f;
+	private final Color COLOR = Color.RED;
+	private final float X = 120.0f;
+	private final float Y = 190.0f;
+	private final float WIDTH = 110.0f;
+	private final float HEIGHT = 45.0f;
+	private final double SCALE = 1.0f;
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	
-	private RectangleShape rectangleShape;
+	private RectangleBorderShape rectangleBorderShape;
 
 	// --------------------------------------------------
 	// ~ Init methods
@@ -59,7 +60,7 @@ public final class RectangleShapeTest extends BaseShapeTester{
 	public void setUp(){
 		final ShaderProgram shader = Mockito.mock(ShaderProgram.class);
 		
-		rectangleShape = new RectangleShape(shader, COLOR){
+		rectangleBorderShape = new RectangleBorderShape(shader, COLOR){
 			@Override
 			protected Mesh getMesh(final boolean isStatic, final int verticesNum, final int maxIndices, final VertexAttribute... vAttribs) {
 				return getMockMesh();
@@ -72,43 +73,52 @@ public final class RectangleShapeTest extends BaseShapeTester{
 	// --------------------------------------------------
 
 	/**
-	 * Test for {@link RectangleShape#getX()} method.
+	 * Test for {@link RectangleBorderShape#getX()} method.
 	 */
 	@Test
 	public void test_getX(){
-		rectangleShape.resize(X, Y, WIDTH, HEIGHT);
+		rectangleBorderShape.resize(X, Y, WIDTH, HEIGHT, SCALE);
 		
-		Assert.assertEquals(X, rectangleShape.getX(), DELTA);
+		Assert.assertEquals(X, rectangleBorderShape.getX(), DELTA);
 	}
 	
 	/**
-	 * Test for {@link RectangleShape#getY()} method.
+	 * Test for {@link RectangleBorderShape#getY()} method.
 	 */
 	@Test
 	public void test_getY(){
-		rectangleShape.resize(X, Y, WIDTH, HEIGHT);
+		rectangleBorderShape.resize(X, Y, WIDTH, HEIGHT, SCALE);
 		
-		Assert.assertEquals(Y, rectangleShape.getY(), DELTA);
+		Assert.assertEquals(Y, rectangleBorderShape.getY(), DELTA);
 	}
 
 	/**
-	 * Test for {@link RectangleShape#getWidth()} method.
+	 * Test for {@link RectangleBorderShape#getWidth()} method.
 	 */
 	@Test
 	public void test_getWidth(){
-		rectangleShape.resize(X, Y, WIDTH, HEIGHT);
+		rectangleBorderShape.resize(X, Y, WIDTH, HEIGHT, SCALE);
 		
-		Assert.assertEquals(WIDTH, rectangleShape.getWidth(), DELTA);
+		Assert.assertEquals(WIDTH, rectangleBorderShape.getWidth(), DELTA);
 	}
 	
 	/**
-	 * Test for {@link RectangleShape#getHeight()} method.
+	 * Test for {@link RectangleBorderShape#getHeight()} method.
 	 */
 	@Test
 	public void test_getHeight(){
-		rectangleShape.resize(X, Y, WIDTH, HEIGHT);
+		rectangleBorderShape.resize(X, Y, WIDTH, HEIGHT, SCALE);
 		
-		Assert.assertEquals(HEIGHT, rectangleShape.getHeight(), DELTA);
+		Assert.assertEquals(HEIGHT, rectangleBorderShape.getHeight(), DELTA);
 	}
-	
+
+	/**
+	 * Test for {@link RectangleBorderShape#getScale()} method.
+	 */
+	@Test
+	public void test_getScale(){
+		rectangleBorderShape.resize(X, Y, WIDTH, HEIGHT, SCALE);
+		
+		Assert.assertEquals(SCALE, rectangleBorderShape.getScale(), DELTA);
+	}
 }

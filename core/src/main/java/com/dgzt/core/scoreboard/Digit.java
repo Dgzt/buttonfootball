@@ -138,15 +138,15 @@ final public class Digit{
 		final float horizontalLineLength = (float)(baseHorizontalLineLength * scale);
 		final float verticalLineLength = (float)(baseVerticalLineLength * scale);
 		
-		resizeTopLine(horizontalLineLength, x, y, width, horizontalLineDistance, scale);
-		resizeCenterLine(topLine.getX1(), topLine.getX2(), y, height, scale);
-		resizeBottomLine(topLine.getX1(), topLine.getX2(), y, height, horizontalLineDistance, scale);
+		resizeBottomLine(horizontalLineLength, x, y, width, horizontalLineDistance, scale);
+		resizeCenterLine(bottomLine.getX1(), bottomLine.getX2(), y, height, scale);
+		resizeTopLine(bottomLine.getX1(), bottomLine.getX2(), y, height, horizontalLineDistance, scale);
 		
-		resizeTopLeftLine(verticalLineLength, topLine.getX1(), topLine.getY1(), verticalLineDistance, scale);
-		resizeTopRightLine(topLeftLine.getY1(), topLeftLine.getY2(), topLine.getX2(), scale);
+		resizeBottomLeftLine(verticalLineLength, bottomLine.getX1(), bottomLine.getY1(), verticalLineDistance, scale);
+		resizeBottomRightLine(bottomLeftLine.getY1(), bottomLeftLine.getY2(), bottomLine.getX2(), scale);
 		
-		resizeBottomLeftLine(topLeftLine.getX1(), verticalLineLength, centerLine.getY1(), verticalLineDistance, scale);
-		resizeBottomRightLine(topRightLine.getX1(), bottomLeftLine.getY1(), bottomLeftLine.getY2(), scale);
+		resizeTopLeftLine(bottomLeftLine.getX1(), verticalLineLength, centerLine.getY1(), verticalLineDistance, scale);
+		resizeTopRightLine(bottomRightLine.getX1(), topLeftLine.getY1(), topLeftLine.getY2(), scale);
 	}
 	
 	// --------------------------------------------------
@@ -154,7 +154,7 @@ final public class Digit{
 	// --------------------------------------------------
 	
 	/**
-	 * Resize the top horizontal line.
+	 * Resize the bottom horizontal line.
 	 * 
 	 * @param width - The width value.
 	 * @param digitX - The x coordinate value of digit.
@@ -163,12 +163,12 @@ final public class Digit{
 	 * @param horizontalLineDistance - The distance of line.
 	 * @param scale - The scale value.
 	 */
-	private void resizeTopLine(final float width, final float digitX, final float digitY, final float digitWidth,final float horizontalLineDistance, final double scale){
+	private void resizeBottomLine(final float width, final float digitX, final float digitY, final float digitWidth,final float horizontalLineDistance, final double scale){
 		final float x1 = digitX + (digitWidth - width) /2;
 		final float y = digitY + horizontalLineDistance;
 		final float x2 = x1 + width;
 		
-		topLine.resize(x1, y, x2, y, scale);
+		bottomLine.resize(x1, y, x2, y, scale);
 	}
 	
 	/**
@@ -187,66 +187,34 @@ final public class Digit{
 	}
 	
 	/**
-	 * Resize the bottom horizontal line.
+	 * Resize the top horizontal line.
 	 * 
-	 * @param x1 - The x1 coordiante value.
+	 * @param x1 - The x1 coordinate value.
 	 * @param x2 - The x2 coordinate value.
 	 * @param digitY - The y coordinate value of digit.
 	 * @param digitHeight - The height value of digit.
 	 * @param horizontalLineDistance - The distance of line.
 	 * @param scale - The scale value.
 	 */
-	private void resizeBottomLine(final float x1, final float x2, final float digitY, final float digitHeight, final float horizontalLineDistance, final double scale){
+	private void resizeTopLine(final float x1, final float x2, final float digitY, final float digitHeight, final float horizontalLineDistance, final double scale){
 		final float y = digitY + digitHeight - horizontalLineDistance;
 		
-		bottomLine.resize(x1, y, x2, y, scale);
-	}
-	
-	/**
-	 * Resize the top left vertical line.
-	 * 
-	 * @param height - The height value of line.
-	 * @param topLineX - The x coordinate value of top horizontal line.
-	 * @param topLineY - The y coordinate value of top horizontal line.
-	 * @param verticalLineDistance - The vertical distance of line.
-	 * @param scale - The scale value.
-	 */
-	private void resizeTopLeftLine(final float height, final float topLineX, final float topLineY, final float verticalLineDistance, final double scale ){
-		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
-		final float x = topLineX + halfLineWidth;
-		final float y1 = topLineY + halfLineWidth + verticalLineDistance;
-		final float y2 = y1 + height;
-		
-		topLeftLine.resize(x, y1, x, y2, scale);
-	}
-	
-	/**
-	 * Resize the top right vertical line.
-	 * 
-	 * @param y1 - The y1 coordinate value.
-	 * @param y2 - The y2 coordinate value.
-	 * @param topLineX2 - The x2 coordinate value of top horizontal line.
-	 * @param scale - The scale value.
-	 */
-	private void resizeTopRightLine(final float y1, final float y2, final float topLineX2, final double scale){
-		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
-		final float x = topLineX2 - halfLineWidth;
-		
-		topRightLine.resize(x, y1, x, y2, scale);
+		topLine.resize(x1, y, x2, y, scale);
 	}
 	
 	/**
 	 * Resize the bottom left vertical line.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param height - The height value.
-	 * @param centerLineY - The y coordinate value of center horizontal line.
+	 * @param height - The height value of line.
+	 * @param topLineX - The x coordinate value of bottom horizontal line.
+	 * @param topLineY - The y coordinate value of bottom horizontal line.
 	 * @param verticalLineDistance - The vertical distance of line.
 	 * @param scale - The scale value.
 	 */
-	private void resizeBottomLeftLine(final float x, final float height, final float centerLineY, final float verticalLineDistance, final double scale){
+	private void resizeBottomLeftLine(final float height, final float bottomLineX, final float bottomLineY, final float verticalLineDistance, final double scale ){
 		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
-		final float y1 = centerLineY + halfLineWidth + verticalLineDistance;
+		final float x = bottomLineX + halfLineWidth;
+		final float y1 = bottomLineY + halfLineWidth + verticalLineDistance;
 		final float y2 = y1 + height;
 		
 		bottomLeftLine.resize(x, y1, x, y2, scale);
@@ -255,13 +223,45 @@ final public class Digit{
 	/**
 	 * Resize the bottom right vertical line.
 	 * 
+	 * @param y1 - The y1 coordinate value.
+	 * @param y2 - The y2 coordinate value.
+	 * @param bottomLineX2 - The x2 coordinate value of bottom horizontal line.
+	 * @param scale - The scale value.
+	 */
+	private void resizeBottomRightLine(final float y1, final float y2, final float bottomLineX2, final double scale){
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
+		final float x = bottomLineX2 - halfLineWidth;
+		
+		bottomRightLine.resize(x, y1, x, y2, scale);
+	}
+	
+	/**
+	 * Resize the top left vertical line.
+	 * 
+	 * @param x - The x coordinate value.
+	 * @param height - The height value.
+	 * @param centerLineY - The y coordinate value of center horizontal line.
+	 * @param verticalLineDistance - The vertical distance of line.
+	 * @param scale - The scale value.
+	 */
+	private void resizeTopLeftLine(final float x, final float height, final float centerLineY, final float verticalLineDistance, final double scale){
+		final float halfLineWidth = (float)(LineShape.LINE_WIDTH * scale) / 2;
+		final float y1 = centerLineY + halfLineWidth + verticalLineDistance;
+		final float y2 = y1 + height;
+		
+		topLeftLine.resize(x, y1, x, y2, scale);
+	}
+	
+	/**
+	 * Resize the top right vertical line.
+	 * 
 	 * @param x - The x coordinate value.
 	 * @param y1 - The y1 coordinate value.
 	 * @param y2 - The y2 coordinate value.
 	 * @param scale - The scale value.
 	 */
-	private void resizeBottomRightLine(final float x, final float y1, final float y2, final double scale){
-		bottomRightLine.resize(x, y1, x, y2, scale);
+	private void resizeTopRightLine(final float x, final float y1, final float y2, final double scale){
+		topRightLine.resize(x, y1, x, y2, scale);
 	}
 	
 	// --------------------------------------------------

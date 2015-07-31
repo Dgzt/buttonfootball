@@ -63,6 +63,7 @@ final public class GameWindowInputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		screenY = Gdx.graphics.getHeight() - screenY;
 		this.button = button;
 		
 		if(button == Buttons.LEFT && !gameControl.isGamePaused()){
@@ -81,6 +82,8 @@ final public class GameWindowInputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		screenY = Gdx.graphics.getHeight() - screenY;
+		
 		if(button == Buttons.LEFT && !gameControl.isGamePaused()){
 			if(gameControl.isPlayerStep()){
 				gameWindow.mouseButtonMoved(screenX, screenY);
@@ -96,6 +99,8 @@ final public class GameWindowInputListener extends InputAdapter{
 	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		screenY = Gdx.graphics.getHeight() - screenY;
+		
 		if(button == Buttons.LEFT && !gameControl.isGamePaused()){
 			if(gameControl.isPlayerStep()){
 				gameWindow.mouseButtonReleased();

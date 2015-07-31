@@ -114,25 +114,26 @@ public final class GameWindow{
 	 * @param width - The width value.
 	 * @param scale - The scale value.
 	 */
-	public void resize(final float x, final float y, final float width, final double scale){
+	public void resize(final float x, final float y, final float width, final float height, final double scale){
 		this.scale = scale;
-		
-		final float scoreBoardWidth = (float)(ScoreBoard.WIDTH * scale);
-		final float scoreBoardHeight = (float)(ScoreBoard.HEIGHT * scale);
-		final float scoreBoardX = x + (width - scoreBoardWidth) / 2;
-		final float scoreBoardY = y;
 		
 		final float tableWidth = (float)(Table.WIDTH * scale);
 		final float tableHeight = (float)(Table.HEIGHT * scale);
 		final float tableX = x  + (width - tableWidth) / 2;
-		final float tableY = scoreBoardY + scoreBoardHeight;
+		final float tableY = y;
+		
+		final float scoreBoardWidth = (float)(ScoreBoard.WIDTH * scale);
+		final float scoreBoardHeight = (float)(ScoreBoard.HEIGHT * scale);
+		final float scoreBoardX = x + (width - scoreBoardWidth) / 2;
+		final float scoreBoardY = tableY + tableHeight;
 		
 		final float fpsWidth = FPS.WIDTH;
+		final float fpsHeight = FPS.HEIGHT;
 		final float fpsX = x + width - fpsWidth;
-		final float fpsY = y;
+		final float fpsY = y + height - fpsHeight;
 		
-		scoreBoard.resize(scoreBoardX, scoreBoardY, scoreBoardWidth, scoreBoardHeight, scale);
 		table.resize(tableX, tableY, tableWidth, tableHeight, scale);
+		scoreBoard.resize(scoreBoardX, scoreBoardY, scoreBoardWidth, scoreBoardHeight, scale);
 		fps.resize(fpsX, fpsY);
 		
 		ballArea.resize(scale);

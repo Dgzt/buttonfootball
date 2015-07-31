@@ -82,7 +82,7 @@ public class Text {
 	 */
 	public void resize(final float x, final float y){
 		this.x = x;
-		this.y = Gdx.graphics.getHeight() - y;
+		this.y = y;
 	}
 	
 	/**
@@ -122,6 +122,12 @@ public class Text {
 		GlyphLayout layout = new GlyphLayout();
 		layout.setText(new BitmapFont(), text);
 		return layout.width;
+	}
+
+	public static float getHeight(final String text){
+		GlyphLayout layout = new GlyphLayout();
+		layout.setText(new BitmapFont(), text);
+		return layout.height;
 	}
 
 }

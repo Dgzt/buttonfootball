@@ -128,7 +128,7 @@ public class MainWindow {
 		final float gameWindowY = (height-gameWindowHeight)/2;
 		final double scale = (double)gameWindowWidth / GameWindow.WIDTH;
 		
-		gameWindow.resize(gameWindowX, gameWindowY, gameWindowWidth, scale);
+		gameWindow.resize(gameWindowX, gameWindowY, gameWindowWidth, gameWindowHeight, scale);
 		
 		if(menuWindow != null){
 			menuWindow.resize(width, height);

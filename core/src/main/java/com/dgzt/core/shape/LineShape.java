@@ -89,7 +89,7 @@ public class LineShape extends Shape{
 		final float lineWidth = (float) (LineShape.LINE_WIDTH * scale);
 
 		final float vectorX = x2 - x1;
-		final float vectorY = (Gdx.graphics.getHeight() - y2) - (Gdx.graphics.getHeight() - y1);
+		final float vectorY = y2 - y1;
 		
 		final float vectorLength = (float) MathUtil.distance(vectorX, vectorY);
 		
@@ -100,10 +100,10 @@ public class LineShape extends Shape{
 		final float vectorPYUnit = vectorXUnit;
 		
 		final float[] vertices = new float[VERTICES_NUM * POSITION_NUM];
-		vertices[0] = x1 - lineWidth/2 * vectorPXUnit;		vertices[1] = Gdx.graphics.getHeight() - y1 - lineWidth/2 * vectorPYUnit;
-		vertices[2] = x1 + lineWidth/2 * vectorPXUnit;		vertices[3] = Gdx.graphics.getHeight() - y1 + lineWidth/2 * vectorPYUnit;
-		vertices[4] = x2 - lineWidth/2 * vectorPXUnit;		vertices[5] = Gdx.graphics.getHeight() - y2 - lineWidth/2 * vectorPYUnit;
-		vertices[6] = x2 + lineWidth/2 * vectorPXUnit;		vertices[7] = Gdx.graphics.getHeight() - y2 + lineWidth/2 * vectorPYUnit;
+		vertices[0] = x1 - lineWidth/2 * vectorPXUnit;		vertices[1] = y1 - lineWidth/2 * vectorPYUnit;
+		vertices[2] = x1 + lineWidth/2 * vectorPXUnit;		vertices[3] = y1 + lineWidth/2 * vectorPYUnit;
+		vertices[4] = x2 - lineWidth/2 * vectorPXUnit;		vertices[5] = y2 - lineWidth/2 * vectorPYUnit;
+		vertices[6] = x2 + lineWidth/2 * vectorPXUnit;		vertices[7] = y2 + lineWidth/2 * vectorPYUnit;
 		
 		setVertices(vertices);
 	}

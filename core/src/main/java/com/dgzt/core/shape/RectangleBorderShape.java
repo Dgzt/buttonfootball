@@ -15,6 +15,8 @@
 package com.dgzt.core.shape;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
@@ -40,6 +42,7 @@ public class RectangleBorderShape{
 	/** The left line. */
 	private final LineShape leftLine;
 	
+	/** The scale. */
 	private double scale;
 	
 	// --------------------------------------------------
@@ -53,10 +56,10 @@ public class RectangleBorderShape{
 	 * @param color - The color.
 	 */
 	public RectangleBorderShape(final ShaderProgram shader, final Color color){
-		topLine = new LineShape(shader, color);
-		rightLine = new LineShape(shader, color);
-		bottomLine = new LineShape(shader, color);
-		leftLine = new LineShape(shader, color);
+		topLine = createLineShape(shader, color);
+		rightLine = createLineShape(shader, color);
+		bottomLine = createLineShape(shader, color);
+		leftLine = createLineShape(shader, color);
 	}
 	
 	// --------------------------------------------------
@@ -75,10 +78,9 @@ public class RectangleBorderShape{
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
 		this.scale = scale;
 		final float halfLineWidth = (float) (LineShape.LINE_WIDTH * scale) / 2;
-		
-		topLine.resize(x, y + halfLineWidth, x + width, y + halfLineWidth, scale);
+		bottomLine.resize(x, y + halfLineWidth, x + width, y + halfLineWidth, scale);
 		rightLine.resize(x + width - halfLineWidth, y, x + width - halfLineWidth, y + height, scale);
-		bottomLine.resize(x, y + height - halfLineWidth, x + width, y + height - halfLineWidth, scale);
+		topLine.resize(x, y + height - halfLineWidth, x + width, y + height - halfLineWidth, scale);
 		leftLine.resize(x + halfLineWidth, y, x + halfLineWidth, y + height, scale);
 	}
 	
@@ -103,6 +105,45 @@ public class RectangleBorderShape{
 	}
 	
 	// --------------------------------------------------
+	// ~ Protected methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return with {@link Mesh}. If the return object is null then use the origin mesh of the {@link LineShape} else this.
+	 * Create for tests.
+	 * 
+	 * @param isStatic - Is static.
+	 * @param verticesNum - The number of vertices.
+	 * @param maxIndices - The max indices.
+	 * @param vAttribs - The attributes.
+	 */
+	protected Mesh getMesh(final boolean isStatic, final int verticesNum, final int maxIndices, final VertexAttribute... vAttribs){
+		return null;
+	}
+	
+	// --------------------------------------------------
+	// ~ Private methods
+	// --------------------------------------------------
+	
+	/**
+	 * Create a {@link LineShape} object.
+	 * 
+	 * @param shader - The shader.
+	 * @param color - The color.
+	 */
+	private LineShape createLineShape(final ShaderProgram shader, final Color color){
+		return new LineShape(shader, color){
+			
+			@Override
+			protected Mesh getMesh(final boolean isStatic, final int verticesNum, final int maxIndices, final VertexAttribute... vAttribs) {
+				final Mesh rectangleBorderShapeMesh = RectangleBorderShape.this.getMesh(isStatic, verticesNum, maxIndices, vAttribs);
+				
+				return rectangleBorderShapeMesh == null ? super.getMesh(isStatic, verticesNum, maxIndices, vAttribs) : rectangleBorderShapeMesh;
+			}
+		};
+	}
+	
+	// --------------------------------------------------
 	// ~ Getter methods
 	// --------------------------------------------------
 
@@ -110,7 +151,7 @@ public class RectangleBorderShape{
 	 * Return with x coordinate value;
 	 */
 	public final float getX(){
-		return topLine.getX1();
+		return bottomLine.getX1();
 	}
 	
 	/**
@@ -119,14 +160,14 @@ public class RectangleBorderShape{
 	public final float getY(){
 		final float halfLineWidth = (float) (LineShape.LINE_WIDTH * scale) / 2;
 		
-		return topLine.getY1() - halfLineWidth;
+		return bottomLine.getY1() - halfLineWidth;
 	}
 	
 	/**
 	 * Return with width value.
 	 */
 	public final float getWidth(){
-		return topLine.getLength();
+		return bottomLine.getLength();
 	}
 	
 	/**

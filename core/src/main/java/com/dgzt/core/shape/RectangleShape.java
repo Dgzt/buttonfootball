@@ -44,7 +44,7 @@ public class RectangleShape extends Shape{
 	 * @param color - The color.
 	 */
 	public RectangleShape(final ShaderProgram shader, final Color color){
-		super(shader, GL20.GL_TRIANGLES, VERTICES_NUM, new short[]{0,1,2,2,3,0}, color);
+		super(shader, GL20.GL_TRIANGLES, VERTICES_NUM, new short[]{0,1,3,1,2,3}, color);
 	}
 	
 	// --------------------------------------------------
@@ -54,17 +54,17 @@ public class RectangleShape extends Shape{
 	/**
 	 * Resize the shape.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
+	 * @param x - The x coordinate value of the bottom left corner.
+	 * @param y - The y coordinate value of the bottom left corner.
 	 * @param width - The width value.
 	 * @param height The height value.
 	 */
 	public void resize(final float x, final float y, final float width, final float height){
 		final float[] vertices = new float[RectangleShape.VERTICES_NUM * Shape.POSITION_NUM];
-		vertices[0] = x;		vertices[1]  = Gdx.graphics.getHeight() - y;
-		vertices[2] = x+width;	vertices[3]  = Gdx.graphics.getHeight() - y;
-		vertices[4] = x+width;	vertices[5]  = Gdx.graphics.getHeight() - y-height;
-		vertices[6] = x;		vertices[7]  = Gdx.graphics.getHeight() - y-height;
+		vertices[0] = x;			vertices[1] = y;			// The bottom left corner
+		vertices[2] = x;			vertices[3] = y + height;	// The top left corner
+		vertices[4] = x + width;	vertices[5] = y + height;	// The top right corner
+		vertices[6] = x + width;	vertices[7] = y;			// The bottom right corner
 		
 		setVertices(vertices);
 	}
@@ -84,7 +84,7 @@ public class RectangleShape extends Shape{
 	 * Return with y coordinate value.
 	 */
 	public final float getY(){
-		return Gdx.graphics.getHeight() - getVertices()[1];
+		return getVertices()[1];
 	}
 	
 	/**
@@ -93,7 +93,7 @@ public class RectangleShape extends Shape{
 	public final float getWidth(){
 		final float[] vertices = getVertices();
 		
-		return vertices[2] - vertices[0];
+		return vertices[4] - vertices[0];
 	}
 	
 	/**
@@ -102,6 +102,6 @@ public class RectangleShape extends Shape{
 	public final float getHeight(){
 		final float[] vertices = getVertices();
 		
-		return vertices[3] - vertices[5];
+		return vertices[3] - vertices[1];
 	}
 }

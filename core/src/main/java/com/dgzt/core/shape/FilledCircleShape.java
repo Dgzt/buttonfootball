@@ -88,12 +88,12 @@ public class FilledCircleShape extends Shape{
 		final float[] vertices = new float[FilledCircleShape.VERTICES_NUM * Shape.POSITION_NUM];
 		
 		vertices[0]=x;
-		vertices[1]=Gdx.graphics.getHeight() - y;
+		vertices[1]=y;
 		for(int i=0;i<FilledCircleShape.VERTICES_NUM-1;++i){
 			final float angle = (float) Math.toRadians(i);
 			
 			vertices[i*Shape.POSITION_NUM+2]=x + (float)Math.sin( angle ) * radius;
-			vertices[i*Shape.POSITION_NUM+3]=Gdx.graphics.getHeight() - (y + (float)Math.cos( angle ) * radius);
+			vertices[i*Shape.POSITION_NUM+3]=y + (float)Math.cos( angle ) * radius;
 		}
 		
 		super.setVertices(vertices);
@@ -114,7 +114,7 @@ public class FilledCircleShape extends Shape{
 	 * Return with the y coordinate value.
 	 */
 	public final float getY(){
-		return Gdx.graphics.getHeight() - getVertices()[1];
+		return getVertices()[1];
 	}
 	
 	/**

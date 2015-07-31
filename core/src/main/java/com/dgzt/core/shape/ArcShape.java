@@ -127,10 +127,10 @@ public class ArcShape extends Shape{
 			final float angle = (float) Math.toRadians(degrees);
 			
 			vertices[i++]=x + (float)Math.sin( angle ) * radius;
-			vertices[i++]=Gdx.graphics.getHeight() - (y + (float)Math.cos( angle ) * radius);
+			vertices[i++]=y + (float)Math.cos( angle ) * radius;
 			
 			vertices[i++]=x + (float)Math.sin( angle ) * smallRadius;
-			vertices[i++]=Gdx.graphics.getHeight() - (y + (float)Math.cos( angle ) * smallRadius);
+			vertices[i++]=y + (float)Math.cos( angle ) * smallRadius;
 		}
 		
 		super.setVertices(vertices);

@@ -106,12 +106,12 @@ public class ScoreBoard{
 		final float timeBoardWidth = (float)(TimeBoard.WIDTH * scale);
 		final float timeBoardHeight = (float)(TimeBoard.HEIGHT * scale);
 		
-		halfTimeBoard.resize(x + (width - halfTimeBoardWidth)/2, y, halfTimeBoardWidth, halfTimeBoardHeight, scale);
-		playerTimeLeftBoard.resize(x, y + height - goalBoardHeight - timeLeftBoardHeight, timeLeftBoardWidth, timeLeftBoardHeight, scale);
-		playerGoalBoard.resize(x, y + height - goalBoardHeight, goalBoardWidth, goalBoardHeight, scale);
-		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth(), y + halfTimeBoardHeight, timeBoardWidth, timeBoardHeight, scale);
-		opponentTimeLeftBoard.resize(timeBoard.getX() + timeBoard.getWidth(), playerTimeLeftBoard.getY(), timeLeftBoardWidth, timeLeftBoardHeight, scale);
-		opponentGoalBoard.resize(timeBoard.getX() + timeBoard.getWidth(), playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
+		playerGoalBoard.resize(x, y, goalBoardWidth, goalBoardHeight, scale);
+		playerTimeLeftBoard.resize(x, playerGoalBoard.getY() + playerGoalBoard.getHeight(), timeLeftBoardWidth, timeLeftBoardHeight, scale);
+		timeBoard.resize(playerGoalBoard.getX() + playerGoalBoard.getWidth(), y, timeBoardWidth, timeBoardHeight, scale);
+		opponentGoalBoard.resize(timeBoard.getX() + timeBoardWidth, playerGoalBoard.getY(), goalBoardWidth, goalBoardHeight, scale);
+		opponentTimeLeftBoard.resize(timeBoard.getX() + timeBoardWidth, playerTimeLeftBoard.getY(), timeLeftBoardWidth, timeLeftBoardHeight, scale);
+		halfTimeBoard.resize(x + (width - halfTimeBoardWidth)/2, y + timeBoardHeight, halfTimeBoardWidth, halfTimeBoardHeight, scale);
 	}
 	
 	/**
