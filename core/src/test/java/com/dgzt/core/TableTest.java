@@ -46,9 +46,10 @@ public final class TableTest extends BaseShapeTester{
 	
 	private static final Rectangle TABLE_RECTANGLE = new Rectangle(100.0f, 200.0f, 80.0f, 60.0f);
 	private static final double SCALE = 1.0f;
-	private static final Vector2 MAP_BOX2D_POSITION = new Vector2(10.0f, 15.0f);
-	
 	private static final float DISTANCE = 11.0f;
+	private static final Vector2 MAP_BOX2D_POSITION = new Vector2(10.0f, 15.0f);
+	private static final Vector2 MAP_LEFT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT / 2);
+	private static final Vector2 MAP_RIGHT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH - DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT / 2);
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -82,6 +83,8 @@ public final class TableTest extends BaseShapeTester{
 		Mockito.when(map.getTopRightCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y));
 		Mockito.when(map.getBottomLeftCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_POSITION.x, MAP_BOX2D_POSITION.y + Map.HEIGHT));
 		Mockito.when(map.getBottomRightCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y + Map.HEIGHT));
+		Mockito.when(map.getLeftGoalKickBox2DPosition()).thenReturn(MAP_LEFT_GOAL_KICK_BOX2D_POSITION);
+		Mockito.when(map.getRightGoalKickBox2DPosition()).thenReturn(MAP_RIGHT_GOAL_KICK_BOX2D_POSITION);
 		
 		table = new Table(shader, box2DWorld, eventListener){
 			
@@ -252,5 +255,33 @@ public final class TableTest extends BaseShapeTester{
 		
 		// Down the table
 		assertFalse(table.isButtonPositionOnTable(new Vector2(TABLE_RECTANGLE.x + width - DISTANCE, TABLE_RECTANGLE.y + height)));
+	}
+	
+	/**
+	 * Test for {@link Table#isBallOnLeftGoalKickPosition()} method.
+	 */
+	@Test
+	public void test_isBallOnLeftGoalKickPosition(){
+		final Ball ball = table.getBall();
+		
+		ball.setBox2DPosition(MAP_LEFT_GOAL_KICK_BOX2D_POSITION.x - DISTANCE, MAP_LEFT_GOAL_KICK_BOX2D_POSITION.y);
+		assertFalse(table.isBallOnLeftGoalKickPosition());
+		
+		ball.setBox2DPosition(MAP_LEFT_GOAL_KICK_BOX2D_POSITION.x, MAP_LEFT_GOAL_KICK_BOX2D_POSITION.y);
+		assertTrue(table.isBallOnLeftGoalKickPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#isBallOnRightGoalKickPosition()} method.
+	 */
+	@Test
+	public void test_isBallOnRightGoalKickPosition(){
+		final Ball ball = table.getBall();
+		
+		ball.setBox2DPosition(MAP_RIGHT_GOAL_KICK_BOX2D_POSITION.x - DISTANCE, MAP_RIGHT_GOAL_KICK_BOX2D_POSITION.y);
+		assertFalse(table.isBallOnRightGoalKickPosition());
+		
+		ball.setBox2DPosition(MAP_RIGHT_GOAL_KICK_BOX2D_POSITION.x, MAP_RIGHT_GOAL_KICK_BOX2D_POSITION.y);
+		assertTrue(table.isBallOnRightGoalKickPosition());
 	}
 }

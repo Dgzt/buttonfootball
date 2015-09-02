@@ -161,6 +161,7 @@ public final class GameControlTest extends BaseShapeTester{
 		
 		table.getBall().setBox2DPosition(BALL_LEAVED_MAP_TOP_LEFT.x, BALL_LEAVED_MAP_TOP_LEFT.y);
 		
+		Mockito.when(table.isBallOnLeftGoalKickPosition()).thenReturn(Boolean.TRUE);
 		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.SECOND_HALF);
 		
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
@@ -168,7 +169,7 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.ballLeaveMapEvent();
 		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_SOME_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(LEFT_GOAL_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -207,8 +208,10 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
 		
+		Mockito.when(table.isBallOnRightGoalKickPosition()).thenReturn(Boolean.TRUE);
+		
 		gameControl.allButtonIsStoppedEvent();
-		assertEquals(GameStatus.OPPONENT_MOVE_SOME_BUTTON, gameControl.getGameStatus());
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(RIGHT_GOAL_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
 	
@@ -226,6 +229,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
+		
+		Mockito.when(table.isBallOnTopLeftCornerOfMap()).thenReturn(Boolean.TRUE);
 		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
@@ -266,6 +271,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
+		
+		Mockito.when(table.isBallOnBottomLeftCornerOfMap()).thenReturn(Boolean.TRUE);
 		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
@@ -327,6 +334,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
 		
+		Mockito.when(table.isBallOnTopRightCornerOfMap()).thenReturn(Boolean.TRUE);
+		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(TOP_RIGHT_CORCER_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
@@ -367,6 +376,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
 		
+		Mockito.when(table.isBallOnBottomRightCornerOfMap()).thenReturn(Boolean.TRUE);
+		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(BOTTOM_RIGHT_CORCER_KICK_BOX2D_POSITION, table.getBall().getBox2DPosition());
@@ -404,6 +415,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
+		
+		Mockito.when(table.isBallOnTopBorderOfMap()).thenReturn(Boolean.TRUE);
 		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
@@ -443,6 +456,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
 		
+		Mockito.when(table.isBallOnBottomBorderOfMap()).thenReturn(Boolean.TRUE);
+		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(THROW_IN_BOTTOM_BOX2D_POSITION, table.getBall().getBox2DPosition());
@@ -462,6 +477,8 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
 		gameControl.buttonContactBall(buttonContactBallLastTime);
 		gameControl.ballLeaveMapEvent();
+		
+		Mockito.when(table.isBallOnTopLeftCornerOfMap()).thenReturn(Boolean.TRUE);
 		
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.PLAYER_MOVE_ONE_BUTTON, gameControl.getGameStatus());

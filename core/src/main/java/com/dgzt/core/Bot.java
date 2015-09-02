@@ -16,9 +16,9 @@ package com.dgzt.core;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
+import com.dgzt.core.exception.IllegalBotButtonMoveException;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -78,7 +78,7 @@ public class Bot {
 	}
 	
 	/**
-	 * Move on button to the ball.
+	 * Move one button to the ball.
 	 */
 	public void moveOneButton(){
 		final Ball ball = table.getBall();
@@ -115,7 +115,29 @@ public class Bot {
 					ball.getBox2DY() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
 			);
 		}else{
-			Gdx.app.log(getClass().getName() + ".moveOneButton", "Error state!");
+			throw new IllegalBotButtonMoveException("Unhandled ball position on 'moveOneButton' function.");
+		}
+	}
+	
+	/**
+	 * Move some button to the ball.
+	 */
+	public void moveSomeButton(){
+		final Ball ball = table.getBall();
+		selectedButton = getLowestDistanceButton();
+		
+		if(table.isBallOnLeftGoalKickPosition()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
+					ball.getBox2DY()
+			);
+		}else if(table.isBallOnRightGoalKickPosition()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
+					ball.getBox2DY()
+			);
+		}else{
+			throw new IllegalBotButtonMoveException("Unhandled ball position on 'moveSomeButton' function.");
 		}
 	}
 	

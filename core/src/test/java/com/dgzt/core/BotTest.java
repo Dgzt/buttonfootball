@@ -209,5 +209,44 @@ public final class BotTest extends BaseShapeTester{
 		Assert.assertEquals(table.getOpponentButtons().get(1).getBox2DPosition(), nearestButtonNewBox2DPosition);
 		Assert.assertEquals(table.getOpponentButtons().get(2).getBox2DPosition(), THIRD_NEAREST_BUTTON_BOX2D_POS);
 	}
+	
+	/**
+	 * Test for move some button to the left goal kick position.
+	 */
+	@Test
+	public void test_moveSomeButtonToLeftGoalKickPosition(){
+		table.getOpponentButtons().get(0).setBox2DPosition(SECOND_NEAREST_BUTTON_BOX2D_POS.x, SECOND_NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(1).setBox2DPosition(NEAREST_BUTTON_BOX2D_POS.x, NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(2).setBox2DPosition(THIRD_NEAREST_BUTTON_BOX2D_POS.x, THIRD_NEAREST_BUTTON_BOX2D_POS.y);
+		
+		Mockito.when(table.isBallOnLeftGoalKickPosition()).thenReturn(Boolean.TRUE);
+		
+		bot.moveSomeButton();
+		
+		final Vector2 nearestButtonNewBox2DPosition = new Vector2(BALL_BOX2D_X - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D, BALL_BOX2D_Y);
+		
+		Assert.assertEquals(table.getOpponentButtons().get(0).getBox2DPosition(), SECOND_NEAREST_BUTTON_BOX2D_POS);
+		Assert.assertEquals(table.getOpponentButtons().get(1).getBox2DPosition(), nearestButtonNewBox2DPosition);
+		Assert.assertEquals(table.getOpponentButtons().get(2).getBox2DPosition(), THIRD_NEAREST_BUTTON_BOX2D_POS);
+	}
 
+	/**
+	 * Test for move some button to the right goal kick position.
+	 */
+	@Test
+	public void test_moveSomeButtonToRightGoalKickPosition(){
+		table.getOpponentButtons().get(0).setBox2DPosition(SECOND_NEAREST_BUTTON_BOX2D_POS.x, SECOND_NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(1).setBox2DPosition(NEAREST_BUTTON_BOX2D_POS.x, NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(2).setBox2DPosition(THIRD_NEAREST_BUTTON_BOX2D_POS.x, THIRD_NEAREST_BUTTON_BOX2D_POS.y);
+		
+		Mockito.when(table.isBallOnRightGoalKickPosition()).thenReturn(Boolean.TRUE);
+		
+		bot.moveSomeButton();
+		
+		final Vector2 nearestButtonNewBox2DPosition = new Vector2(BALL_BOX2D_X + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D, BALL_BOX2D_Y);
+		
+		Assert.assertEquals(table.getOpponentButtons().get(0).getBox2DPosition(), SECOND_NEAREST_BUTTON_BOX2D_POS);
+		Assert.assertEquals(table.getOpponentButtons().get(1).getBox2DPosition(), nearestButtonNewBox2DPosition);
+		Assert.assertEquals(table.getOpponentButtons().get(2).getBox2DPosition(), THIRD_NEAREST_BUTTON_BOX2D_POS);
+	}
 }

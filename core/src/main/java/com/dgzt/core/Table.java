@@ -263,6 +263,20 @@ public class Table extends RectangleShape{
 	}
 	
 	/**
+	 * Return true when the ball is on the left goal kick position else false.
+	 */
+	public boolean isBallOnLeftGoalKickPosition(){
+		return ball.getBox2DPosition().equals(map.getLeftGoalKickBox2DPosition());
+	}
+	
+	/**
+	 * Return true when the ball is on the right goal kick position else false.
+	 */
+	public boolean isBallOnRightGoalKickPosition(){
+		return ball.getBox2DPosition().equals(map.getRightGoalKickBox2DPosition());
+	}
+	
+	/**
 	 * Return true when the position of button is on the table.
 	 * 
 	 * @param position - The position.

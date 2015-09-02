@@ -770,7 +770,7 @@ public final class GameControl {
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
 			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
 		}else{
-			gameStatus = GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+			opponentMoveSomeButton();
 		}
 	}
 	
@@ -782,8 +782,12 @@ public final class GameControl {
 		
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_BOT){
 			gameStatus = GameStatus.OPPONENT_MOVE_SOME_BUTTON;
+			scoreBoard.getOpponentTimeLeftBoard().start(this);
+			bot.moveSomeButton();
+			scoreBoard.getOpponentTimeLeftBoard().clear();
+			opponentInGame();
 		}else{
-			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
+			playerMoveSomeButton();
 		}
 	}
 	
