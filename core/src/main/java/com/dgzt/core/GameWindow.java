@@ -29,7 +29,7 @@ import com.dgzt.core.util.MathUtil;
  * 
  * @author Dgzt
  */
-public final class GameWindow{
+public class GameWindow{
 	
 	// --------------------------------------------------
 	// ~ Static members

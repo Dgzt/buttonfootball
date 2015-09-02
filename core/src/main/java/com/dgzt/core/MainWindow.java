@@ -304,7 +304,7 @@ public class MainWindow {
 	/**
 	 * Return with the game window.
 	 */
-	public final GameWindow getGameWindow() {
+	public GameWindow getGameWindow() {
 		return gameWindow;
 	}
 }

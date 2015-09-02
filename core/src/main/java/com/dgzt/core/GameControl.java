@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
+import com.dgzt.core.exception.IllegalGameStatusException;
 import com.dgzt.core.scoreboard.GoalBoard;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
@@ -282,14 +283,16 @@ public final class GameControl {
 		switch(gameStatus){
 			case PLAYER_IN_GAME:
 			case PLAYER_MOVE_ONE_BUTTON:
+			case PLAYER_MOVE_SOME_BUTTON :
 				playerTimeLeftEnd(); 
 				break;
 			case OPPONENT_IN_GAME:
 			case OPPONENT_MOVE_ONE_BUTTON:
+			case OPPONENT_MOVE_SOME_BUTTON:
 				opponentTimeLeftEnd(); 
 				break;
 			default:
-				throw new RuntimeException("Incorrect game status!");
+				throw new IllegalGameStatusException();
 		}
 	}
 	
@@ -462,6 +465,40 @@ public final class GameControl {
 	}
 	
 	// --------------------------------------------------
+	// ~ Protected methods
+	// --------------------------------------------------
+	
+	/**
+	 * After when end of the player's ball area.
+	 */
+	protected void afterPlayerBallArea(){
+		Gdx.app.log(GameControl.class.getName() + ".afterPlayerBallArea()", "");
+		
+		final List<Button> playerButtons = table.getPlayerButtons();
+		
+		if(settings.getStepMode().equals(StepMode.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
+			playerInGame();
+		}else{
+			opponentInGame();
+		}
+	}
+	
+	/**
+	 * After when end of the opponent's ball area.
+	 */
+	protected void afterOpponentBallArea(){
+		Gdx.app.log(GameControl.class.getName() + ".afterOpponentBallArea()", "");
+		
+		final List<Button> opponentButtons = table.getOpponentButtons();
+		
+		if(settings.getStepMode().equals(StepMode.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
+			opponentInGame();
+		}else{
+			playerInGame();
+		}
+	}
+	
+	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
 	
@@ -523,36 +560,6 @@ public final class GameControl {
 				}
 				
 			}, 1);
-		}
-	}
-	
-	/**
-	 * After when end of the player's ball area.
-	 */
-	private void afterPlayerBallArea(){
-		Gdx.app.log(GameControl.class.getName() + ".afterPlayerBallArea()", "");
-		
-		final List<Button> playerButtons = table.getPlayerButtons();
-		
-		if(settings.getStepMode().equals(StepMode.ALWAYS_PLAYER) || isActualPlayerStepAgain(playerButtons)){
-			playerInGame();
-		}else{
-			opponentInGame();
-		}
-	}
-	
-	/**
-	 * After when end of the opponent's ball area.
-	 */
-	private void afterOpponentBallArea(){
-		Gdx.app.log(GameControl.class.getName() + ".afterOpponentBallArea()", "");
-		
-		final List<Button> opponentButtons = table.getOpponentButtons();
-		
-		if(settings.getStepMode().equals(StepMode.ALWAYS_BOT) || isActualPlayerStepAgain(opponentButtons)){
-			opponentInGame();
-		}else{
-			playerInGame();
 		}
 	}
 	
@@ -769,6 +776,7 @@ public final class GameControl {
 		
 		if(settings.getStepMode() == StepMode.NORMAL || settings.getStepMode() == StepMode.ALWAYS_PLAYER){
 			gameStatus = GameStatus.PLAYER_MOVE_SOME_BUTTON;
+			scoreBoard.getPlayerTimeLeftBoard().start(this);
 		}else{
 			opponentMoveSomeButton();
 		}
@@ -861,9 +869,14 @@ public final class GameControl {
 		}
 		
 		switch(gameStatus){
-			case PLAYER_IN_GAME : opponentInGame(); break;
-			case PLAYER_MOVE_ONE_BUTTON : opponentMoveOneButton(); break;
-			default : throw new RuntimeException("Incorrect game status!");
+			case PLAYER_IN_GAME : 
+				opponentInGame(); 
+				break;
+			case PLAYER_MOVE_ONE_BUTTON :
+			case PLAYER_MOVE_SOME_BUTTON :
+				playerInGame();
+				break;
+			default : throw new IllegalGameStatusException();
 		}
 	}
 	
@@ -874,9 +887,14 @@ public final class GameControl {
 		Gdx.app.log(getClass().getName() + ".opponentTimeLeftEnd()", "init");
 		
 		switch(gameStatus){
-			case OPPONENT_IN_GAME: playerInGame(); break;
-			case OPPONENT_MOVE_ONE_BUTTON: playerMoveOneButton(); break;
-			default : throw new RuntimeException("Incorrect game status!");
+			case OPPONENT_IN_GAME: 
+				playerInGame(); 
+				break;
+			case OPPONENT_MOVE_ONE_BUTTON: 
+			case OPPONENT_MOVE_SOME_BUTTON:
+				opponentInGame();
+				break;
+			default : throw new IllegalGameStatusException();
 		}
 	}
 	

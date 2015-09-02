@@ -53,7 +53,7 @@ public final class GameControlTest extends BaseShapeTester{
 	private static final Vector2 BALL_LEAVED_MAP_BOTTOM_RIGHT = new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH + 2, MAP_BOX2D_POSITION.y + Map.HEIGHT - 10);
 	private static final Vector2 BALL_LEAVED_MAP_TOP = new Vector2(MAP_BOX2D_POSITION.x + 2, MAP_BOX2D_POSITION.y - 2);
 	private static final Vector2 BALL_LEAVED_MAP_BOTTOM = new Vector2(MAP_BOX2D_POSITION.x + 2, MAP_BOX2D_POSITION.y + Map.HEIGHT + 2);
-	
+	private static final Vector2 BALL_ON_MAP = new Vector2(MAP_BOX2D_POSITION.x + 40, MAP_BOX2D_POSITION.y + 30);
 	
 	private static final Vector2 TOP_LEFT_CORCER_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION);
 	private static final Vector2 TOP_RIGHT_CORCER_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y);
@@ -86,6 +86,10 @@ public final class GameControlTest extends BaseShapeTester{
 	public void setUp(){
 		final Settings settings = new Settings();
 		final MainWindow mainWindow = Mockito.mock(MainWindow.class);
+		
+		final GameWindow gameWindow = Mockito.mock(GameWindow.class);
+		Mockito.when(mainWindow.getGameWindow()).thenReturn(gameWindow);
+		
 		scoreBoard = Mockito.mock(ScoreBoard.class);
 		
 		// Opponent buttons
@@ -462,6 +466,26 @@ public final class GameControlTest extends BaseShapeTester{
 		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
 		assertEquals(THROW_IN_BOTTOM_BOX2D_POSITION, table.getBall().getBox2DPosition());
 	}
+	
+	/**
+	 * Test for time left end when player in game.
+	 */
+	@Test
+	public void test_timeLeftAndAtPlayerPlayerInGame(){
+		table.getBall().setBox2DPosition(BALL_ON_MAP.x, BALL_ON_MAP.y);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		gameControl.afterOpponentBallArea();
+
+		assertEquals(GameStatus.PLAYER_IN_GAME, gameControl.getGameStatus());
+		
+		gameControl.timeLeftEndEvent();
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
+	}
 
 	/**
 	 * Test for time left end when player move one button.
@@ -484,7 +508,31 @@ public final class GameControlTest extends BaseShapeTester{
 		assertEquals(GameStatus.PLAYER_MOVE_ONE_BUTTON, gameControl.getGameStatus());
 
 		gameControl.timeLeftEndEvent();
-		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
+		assertEquals(GameStatus.PLAYER_IN_GAME, gameControl.getGameStatus());
+	}
+	
+	/**
+	 * Test for time left end when player move some button.
+	 */
+	@Test
+	public void test_timeLeftAtPlayerMoveSomeButton(){
+		final Button buttonContactBallLastTime = Mockito.mock(Button.class);
+		table.getOpponentButtons().add(buttonContactBallLastTime);
+		
+		table.getBall().setBox2DPosition(BALL_LEAVED_MAP_TOP_LEFT.x, BALL_LEAVED_MAP_TOP_LEFT.y);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		gameControl.buttonContactBall(buttonContactBallLastTime);
+		gameControl.ballLeaveMapEvent();
+		
+		Mockito.when(table.isBallOnTopLeftCornerOfMap()).thenReturn(Boolean.TRUE);
+		
+		gameControl.allButtonIsStoppedEvent();
+		assertEquals(GameStatus.PLAYER_MOVE_SOME_BUTTON, gameControl.getGameStatus());
+
+		gameControl.timeLeftEndEvent();
+		assertEquals(GameStatus.PLAYER_IN_GAME, gameControl.getGameStatus());
 	}
 	
 }
