@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -533,6 +534,70 @@ public final class GameControlTest extends BaseShapeTester{
 
 		gameControl.timeLeftEndEvent();
 		assertEquals(GameStatus.PLAYER_IN_GAME, gameControl.getGameStatus());
+	}
+	
+	/**
+	 * Test for fault by player.
+	 * TODO Fix Bot to move some button.
+	 */
+	@Test
+	@Ignore
+	public void test_faultByPlayer(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(10, 20);
+		final Vector2 opponentButtonPos = new Vector2(20, 40);
+		final Vector2 ballStartPos = new Vector2(0,0);
+		final Vector2 ballEndPos = new Vector2(15, 30);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballStartPos.x, ballStartPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
+		assertEquals(ballEndPos, ball.getBox2DPosition());
+	}
+	
+	/**
+	 * Test for fault by Opponent.
+	 */
+	@Test
+	public void test_faultByOpponent(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(10, 20);
+		final Vector2 opponentButtonPos = new Vector2(20, 40);
+		final Vector2 ballStartPos = new Vector2(0,0);
+		final Vector2 ballEndPos = new Vector2(15, 30);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballStartPos.x, ballStartPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.PLAYER_MOVE_SOME_BUTTON, gameControl.getGameStatus());
+		assertEquals(ballEndPos, ball.getBox2DPosition());
 	}
 	
 }

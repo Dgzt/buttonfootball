@@ -114,5 +114,17 @@ public class MathUtilTest {
 		assertFalse(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + radius, rec.y + rec.height - radius, radius)));
 		assertTrue(MathUtil.isRectangleFullyContainsCircle(rec, new Circle(rec.x + radius + 1, rec.y + radius + 1, radius)));
 	}
+	
+	/**
+	 * Test for {@link MathUtil#midPoint(Vector2, Vector2)} method.
+	 */
+	@Test
+	public void test_midPoint(){
+		final Vector2 point1 = new Vector2(-3, 5);
+		final Vector2 point2 = new Vector2(8, -1);
+		final Vector2 result = new Vector2(2.5f, 2);
+		
+		assertEquals(result, MathUtil.midPoint(point1, point2));
+	}
 
 }

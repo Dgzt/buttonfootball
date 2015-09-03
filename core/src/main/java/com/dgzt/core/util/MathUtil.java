@@ -16,6 +16,7 @@ package com.dgzt.core.util;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Math utils.
@@ -105,4 +106,16 @@ public class MathUtil {
 				circle.y < rec.y + rec.height - circle.radius;
 	}
 
+	/**
+	 * Return with the mid point from two given points.
+	 * 
+	 * @param point1 - The first point.
+	 * @param point2 - The second point.
+	 */
+	public static Vector2 midPoint(final Vector2 point1, final Vector2 point2){
+		final float x = ( point1.x + point2.x ) / 2;
+		final float y = ( point1.y + point2.y ) / 2;
+		
+		return new Vector2(x, y);
+	}
 }

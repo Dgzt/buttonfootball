@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.dgzt.core.button.AbstractButton;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.gate.AbstractGate;
@@ -94,15 +93,32 @@ public class EventListener implements ContactListener{
 	 */
 	@Override
 	public void beginContact(final Contact contact) {
-		Gdx.app.log(EventListener.class.getName() + ".beginContact", "");
+		Gdx.app.log(EventListener.class.getName() + ".beginContact", "init");
 		
 		final Object userDataA = contact.getFixtureA().getUserData();
 		final Object userDataB = contact.getFixtureB().getUserData();
 		
 		// The ball contact with button
-		if(userDataB instanceof Ball && contact.getFixtureA().getUserData() instanceof Button){
-			final Button button = (Button) contact.getFixtureA().getUserData();
+		if(userDataB instanceof Ball && userDataA instanceof Button){
+			final Button button = (Button) userDataA;
 			gameWindow.getGameControl().buttonContactBall(button);
+		}
+		
+		// The button contact with button
+		if(userDataA instanceof Button && userDataB instanceof Button){
+			final GameStatus gameStatus = gameWindow.getGameControl().getGameStatus();
+			
+			if(gameStatus.equals(GameStatus.WAITING_AFTER_PLAYER) || gameStatus.equals(GameStatus.WAITING_AFTER_OPPONENT)){
+				final Button buttonA = (Button) userDataA;
+				final Button buttonB = (Button) userDataB;
+				final Table table = gameWindow.getTable();
+				
+				if( (table.getPlayerButtons().contains(buttonA) && table.getOpponentButtons().contains(buttonB)) ||
+					(table.getPlayerButtons().contains(buttonB) && table.getOpponentButtons().contains(buttonA)) ){
+					gameWindow.getGameControl().buttonContactButton(buttonA, buttonB);
+				}
+			}
+			
 		}
 	}
 
@@ -111,7 +127,7 @@ public class EventListener implements ContactListener{
 	 */
 	@Override
 	public void endContact(final Contact contact) {
-		Gdx.app.log(EventListener.class.getName() + ".endContact", "");
+		Gdx.app.log(EventListener.class.getName() + ".endContact", "init");
 		
 		final Object userDataA = contact.getFixtureA().getUserData();
 		

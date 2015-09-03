@@ -75,6 +75,9 @@ public final class GameControl {
 	/** The button which contact with ball the last time. */
 	private Button buttonContactBallLastTime;
 	
+	/** The fault position at the current step. When wasn't fault then this variable is null. */
+	private Vector2 faultBox2DPosition;
+	
 	/** True when the game paused. */
 	private boolean gamePaused;
 	
@@ -101,6 +104,8 @@ public final class GameControl {
 		this.eventListener = eventListener;
 		this.bot = new Bot(table);
 		gameStatus = GameStatus.NOT_IN_GAME;
+		buttonContactBallLastTime = null;
+		faultBox2DPosition = null;
 		this.gamePaused = true;
 		
 		ballAreaTimer = new Timer();
@@ -167,9 +172,10 @@ public final class GameControl {
 		if(gameStatus != GameStatus.NOT_IN_GAME){
 			
 			if(gameStatus == GameStatus.WAITING_AFTER_PLAYER || gameStatus == GameStatus.WAITING_AFTER_OPPONENT){
-				if(ballLeavedMapCoordinate != null){
+				if(faultBox2DPosition != null){
+					fault();
+				}else if(ballLeavedMapCoordinate != null){
 					ballLeavedMap();
-					ballLeavedMapCoordinate = null;
 				}else{
 					showBallArea();
 				}
@@ -177,6 +183,10 @@ public final class GameControl {
 				goal();
 			}
 		}
+		
+		// Clear variables
+		faultBox2DPosition = null;
+		buttonContactBallLastTime = null;
 	}
 	
 	/** 
@@ -272,6 +282,17 @@ public final class GameControl {
 		Gdx.app.log(GameControl.class.getName() + ".ballContactButtonEvent(Button)", "init");
 		
 		buttonContactBallLastTime = button;
+	}
+	
+	/**
+	 * The new playing player's button contact with other player's button.
+	 */
+	public void buttonContactButton(final Button button1, final Button button2){
+		Gdx.app.log(GameControl.class.getName() + ".buttonContactButton", "init");
+		
+		if(buttonContactBallLastTime == null){
+			faultBox2DPosition = MathUtil.midPoint(button1.getBox2DPosition(), button2.getBox2DPosition());
+		}
 	}
 	
 	/**
@@ -587,6 +608,23 @@ public final class GameControl {
 		}else{
 			Gdx.app.log(GameControl.class.getName() + ".isActualPlayerStepAgain()", "Next player step");
 			return false;
+		}
+	}
+	
+	private void fault(){
+		Gdx.app.log(GameControl.class.getName() + ".fault", "init");
+		
+		table.getBall().setBox2DPosition(faultBox2DPosition.x, faultBox2DPosition.y);
+		
+		switch (gameStatus) {
+			case WAITING_AFTER_PLAYER : 
+				opponentMoveSomeButton();
+				break;
+			case WAITING_AFTER_OPPONENT :
+				playerMoveSomeButton();
+				break;
+			default : 
+				throw new IllegalGameStatusException();
 		}
 	}
 	
