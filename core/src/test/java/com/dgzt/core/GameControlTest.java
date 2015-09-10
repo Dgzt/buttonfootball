@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.badlogic.gdx.math.Vector2;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
+import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.scoreboard.HalfTimeBoard;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.scoreboard.TimeLeftBoard;
@@ -44,6 +44,7 @@ public final class GameControlTest extends BaseShapeTester{
 	// --------------------------------------------------
 	
 	private static final Vector2 MAP_BOX2D_POSITION = new Vector2(10, 10);
+	private static final Vector2 LEFT_GATE_BOX2D_POSITION = new Vector2(5, MAP_BOX2D_POSITION.y + 50);
 	
 	private static final Vector2 LEFT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + 10, 10);
 	private static final Vector2 RIGHT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH - 10, 10);
@@ -113,6 +114,11 @@ public final class GameControlTest extends BaseShapeTester{
 		// Ball
 		Ball ball = getMockBall();
 		Mockito.when(table.getBall()).thenReturn(ball);
+		
+		// Left gate
+		LeftGate leftGate = Mockito.mock(LeftGate.class);
+		Mockito.when(leftGate.getBox2DPosition()).thenReturn(LEFT_GATE_BOX2D_POSITION);
+		Mockito.when(table.getLeftGate()).thenReturn(leftGate);
 		
 		// Half time board
 		HalfTimeBoard halfTimeBoard = Mockito.mock(HalfTimeBoard.class);
@@ -538,11 +544,11 @@ public final class GameControlTest extends BaseShapeTester{
 	
 	/**
 	 * Test for fault by player.
-	 * TODO Fix Bot to move some button.
 	 */
 	@Test
-	@Ignore
 	public void test_faultByPlayer(){
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
+		
 		final Ball ball = table.getBall();
 		final Vector2 playerButtonPos = new Vector2(10, 20);
 		final Vector2 opponentButtonPos = new Vector2(20, 40);

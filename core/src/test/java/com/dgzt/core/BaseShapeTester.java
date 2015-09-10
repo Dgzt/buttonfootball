@@ -117,7 +117,7 @@ public class BaseShapeTester {
 	 * Return with mock {@link Ball}.
 	 */
 	protected Ball getMockBall(){
-		final Ball ball= Mockito.mock(Ball.class);
+		final Ball ball = Mockito.mock(Ball.class);
 		final Vector2 box2DPosition = new Vector2();
 		
 		Mockito.doAnswer(new Answer<Object>() {
@@ -137,7 +137,7 @@ public class BaseShapeTester {
 
 			@Override
 			public Vector2 answer(InvocationOnMock invocation) throws Throwable {
-				return box2DPosition;
+				return box2DPosition.cpy();
 			}
 		});
 		
@@ -160,6 +160,22 @@ public class BaseShapeTester {
 		});
 		
 		return ball;
+	}
+	
+	/**
+	 * Return with an answer with the copy of the given value.
+	 * 
+	 * @param returnValue - The return value. 
+	 */
+	protected Answer<Vector2> getVector2Answer(final Vector2 returnValue){
+		return new Answer<Vector2>(){
+
+			@Override
+			public Vector2 answer(InvocationOnMock invocation) throws Throwable {
+				return returnValue.cpy();
+			}
+			
+		};
 	}
 	
 	// --------------------------------------------------

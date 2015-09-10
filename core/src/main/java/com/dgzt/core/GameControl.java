@@ -102,7 +102,7 @@ public final class GameControl {
 		this.table = table;
 		this.settings = settings;
 		this.eventListener = eventListener;
-		this.bot = new Bot(table);
+		this.bot = createBot(table);
 		gameStatus = GameStatus.NOT_IN_GAME;
 		buttonContactBallLastTime = null;
 		faultBox2DPosition = null;
@@ -522,6 +522,23 @@ public final class GameControl {
 	// --------------------------------------------------
 	// ~ Private methods
 	// --------------------------------------------------
+	
+	/**
+	 * Create a bot.
+	 * 
+	 * @param table - The table.
+	 * @return A bot.
+	 */
+	private Bot createBot(final Table table) {
+		return new Bot(table){
+
+			@Override
+			protected Player whoIsOnLeftSide() {
+				return GameControl.this.whoIsOnLeftSide();
+			}
+			
+		};
+	}
 	
 	/**
 	 * Player goal event.

@@ -184,6 +184,13 @@ public abstract class AbstractGate extends RectangleBorderShape{
 		return false;
 	}
 	
+	/**
+	 * Return with the Box2D position.
+	 */
+	public Vector2 getBox2DPosition(){
+		return new Vector2(box2DX, box2DY);
+	}
+	
 	// --------------------------------------------------
 	// ~ Override methods
 	// --------------------------------------------------

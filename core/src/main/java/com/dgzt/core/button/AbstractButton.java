@@ -142,7 +142,7 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * Return with the position in Box2D.
 	 */
 	public Vector2 getBox2DPosition(){
-		return box2DPosition;
+		return box2DPosition.cpy();
 	}
 	
 	/**

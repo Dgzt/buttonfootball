@@ -16,9 +16,12 @@ package com.dgzt.core;
 
 import java.util.List;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.exception.IllegalBotButtonMoveException;
+import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -26,7 +29,7 @@ import com.dgzt.core.util.MathUtil;
  * 
  * @author Dgzt
  */
-public class Bot {
+public abstract class Bot {
 
 	// --------------------------------------------------
 	// ~ Private static members
@@ -57,6 +60,15 @@ public class Bot {
 		this.table = table;
 		this.selectedButton = null;
 	}
+	
+	// --------------------------------------------------
+	// ~ Abstract methods
+	// --------------------------------------------------
+	
+	/**
+	 * Return that who is on the left side.
+	 */
+	protected abstract Player whoIsOnLeftSide();
 	
 	// --------------------------------------------------
 	// ~ Public methods
@@ -137,7 +149,34 @@ public class Bot {
 					ball.getBox2DY()
 			);
 		}else{
-			throw new IllegalBotButtonMoveException("Unhandled ball position on 'moveSomeButton' function.");
+			final boolean doAttackToLeftSide = whoIsOnLeftSide() == Player.PLAYER;
+			final Vector2 ballPosition = ball.getBox2DPosition();
+			final Vector2 gatePosition = doAttackToLeftSide ? table.getLeftGate().getBox2DPosition() : table.getRightGate().getBox2DPosition();
+			gatePosition.add(0, AbstractGate.HEIGHT / 2);
+			final boolean isGateUnderBall = gatePosition.y < ballPosition.y;
+			
+			final float x1 = doAttackToLeftSide ? ballPosition.x - gatePosition.x : gatePosition.x - ballPosition.x;
+			final float y1 = isGateUnderBall ? ballPosition.y - gatePosition.y : gatePosition.y - ballPosition.y;
+			
+			// Angle in radiant
+			final float angle = (float) Math.atan(y1/x1);
+			
+			final float x2 = MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D * MathUtils.cos(angle);
+			final float y2 = MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D * MathUtils.sin(angle);
+			
+			if(doAttackToLeftSide){
+				ballPosition.x += x2;
+			}else{
+				ballPosition.x -= x2;
+			}
+			
+			if(isGateUnderBall){
+				ballPosition.y += y2;
+			}else{
+				ballPosition.y -= y2;
+			}
+			
+			selectedButton.setBox2DPosition(ballPosition.x, ballPosition.y);
 		}
 	}
 	
