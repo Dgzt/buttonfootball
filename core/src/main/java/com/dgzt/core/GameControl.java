@@ -631,6 +631,7 @@ public final class GameControl {
 	private void fault(){
 		Gdx.app.log(GameControl.class.getName() + ".fault", "init");
 		
+		table.createFreeSpaceForFreeKick(faultBox2DPosition);
 		table.getBall().setBox2DPosition(faultBox2DPosition.x, faultBox2DPosition.y);
 		
 		switch (gameStatus) {

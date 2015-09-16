@@ -84,11 +84,23 @@ public class BaseShapeTester {
 			}
 		}).when(button).setBox2DPosition(Mockito.anyFloat(), Mockito.anyFloat());
 		
+		Mockito.doAnswer(new Answer<Object>() {
+
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				final Vector2 newPosition = (Vector2) invocation.getArguments()[0];
+				
+				box2DPosition.set(newPosition);
+				
+				return null;
+			}
+		}).when(button).setBox2DPosition(Mockito.any(Vector2.class));
+		
 		Mockito.when(button.getBox2DPosition()).thenAnswer(new Answer<Vector2>() {
 
 			@Override
 			public Vector2 answer(InvocationOnMock invocation) throws Throwable {
-				return box2DPosition;
+				return box2DPosition.cpy();
 			}
 		});
 		
@@ -132,6 +144,18 @@ public class BaseShapeTester {
 				return null;
 			}
 		}).when(ball).setBox2DPosition(Mockito.anyFloat(), Mockito.anyFloat());
+		
+		Mockito.doAnswer(new Answer<Object>() {
+
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				final Vector2 newPosition = (Vector2) invocation.getArguments()[0];
+				
+				box2DPosition.set(newPosition);
+				
+				return null;
+			}
+		}).when(ball).setBox2DPosition(Mockito.any(Vector2.class));
 		
 		Mockito.when(ball.getBox2DPosition()).thenAnswer(new Answer<Vector2>() {
 

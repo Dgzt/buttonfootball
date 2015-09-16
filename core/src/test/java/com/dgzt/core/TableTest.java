@@ -17,6 +17,7 @@ package com.dgzt.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -123,6 +124,39 @@ public final class TableTest extends BaseShapeTester{
 	// --------------------------------------------------
 	// ~ Test methods
 	// --------------------------------------------------
+	
+	/**
+	 * Test for {@link Table#createFreeSpaceForFreeKick(Vector2)} method.
+	 */
+	@Test
+	public void test_createFreeSpaceForFreeKick(){
+		table.getPlayerButtons().clear();
+		table.getOpponentButtons().clear();
+		
+		final Vector2 ballPos = new Vector2(30, 30);
+		final Vector2 movingPlayerButtonPos = new Vector2(ballPos.x - 2, ballPos.y -2);
+		final Vector2 movingOpponentButtonPos = new Vector2(ballPos.x + 2, ballPos.y + 2);
+		final Vector2 notMovingOpponentButtonPos = new Vector2(ballPos.x + 30, ballPos.y + 30);
+		
+		table.getBall().setBox2DPosition(ballPos);
+		
+		final Button movingPlayerButton = getMockButton();
+		movingPlayerButton.setBox2DPosition(movingPlayerButtonPos);
+		table.getPlayerButtons().add(movingPlayerButton);
+		
+		final Button movingOpponentButton = getMockButton();
+		movingOpponentButton.setBox2DPosition(movingOpponentButtonPos);
+		table.getOpponentButtons().add(movingOpponentButton);
+		final Button notMovingOpponentButton = getMockButton();
+		notMovingOpponentButton.setBox2DPosition(notMovingOpponentButtonPos);
+		table.getOpponentButtons().add(notMovingOpponentButton);
+		
+		table.createFreeSpaceForFreeKick(ballPos);
+		
+		Assert.assertNotEquals(movingPlayerButtonPos, movingPlayerButton.getBox2DPosition());
+		Assert.assertNotEquals(movingOpponentButtonPos, movingOpponentButton.getBox2DPosition());
+		Assert.assertEquals(notMovingOpponentButtonPos, notMovingOpponentButton.getBox2DPosition());
+	}
 	
 	/**
 	 * Test for {@link Table#isBallOnTopLeftCornerOfMap()} method.

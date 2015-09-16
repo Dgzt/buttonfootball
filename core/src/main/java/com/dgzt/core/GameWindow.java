@@ -36,10 +36,10 @@ public class GameWindow{
 	// --------------------------------------------------
 	
 	/** The width of main window in cm. */
-	public static final float WIDTH = Table.WIDTH;
+	public static final float WIDTH = Table.RECTANGLE.getWidth();
 
 	/** The height of main window in cm. */
-	public static final float HEIGHT = ScoreBoard.HEIGHT +Table.HEIGHT;
+	public static final float HEIGHT = ScoreBoard.HEIGHT + Table.RECTANGLE.getHeight();
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -117,8 +117,8 @@ public class GameWindow{
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
 		this.scale = scale;
 		
-		final float tableWidth = (float)(Table.WIDTH * scale);
-		final float tableHeight = (float)(Table.HEIGHT * scale);
+		final float tableWidth = (float)(Table.RECTANGLE.getWidth() * scale);
+		final float tableHeight = (float)(Table.RECTANGLE.getHeight() * scale);
 		final float tableX = x  + (width - tableWidth) / 2;
 		final float tableY = y;
 		

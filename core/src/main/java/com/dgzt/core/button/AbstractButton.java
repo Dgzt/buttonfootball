@@ -139,6 +139,15 @@ public abstract class AbstractButton extends FilledCircleShape{
 	}
 	
 	/**
+	 * Set the position in the Box2D world.
+	 * 
+	 * @param box2DPosition - The new position.
+	 */
+	public void setBox2DPosition(final Vector2 box2DPosition){
+		setBox2DPosition(box2DPosition.x, box2DPosition.y);
+	}
+	
+	/**
 	 * Return with the position in Box2D.
 	 */
 	public Vector2 getBox2DPosition(){

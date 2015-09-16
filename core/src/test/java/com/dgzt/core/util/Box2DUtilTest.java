@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.dgzt.core.Table;
 
 /**
  * Test for {@link Box2DUtil}.
@@ -127,5 +128,59 @@ public class Box2DUtilTest {
 		final Vector2 box2DPos = Box2DUtil.screenPositionToBox2DPosition(screenPosition, tablePosition, scale);
 		
 		assertEquals(result, box2DPos);
+	}
+	
+	/**
+	 * Test for {@link Box2DUtil#newDistancePosition(Vector2, Vector2, float)} method.
+	 */
+	@Test
+	public void test_newDistancePosition(){
+		final float originDistanceFromBorder = 10;
+		final float pointDistanceFromBorder = originDistanceFromBorder - 2;
+		
+		// Center of table
+		final Vector2 origin = new Vector2(30, 30);
+		final float distance = 19.0f;
+		
+		final Vector2 p1 = new Vector2(32, 30);
+		final Vector2 p1Result = new Vector2(origin.x + distance, p1.y);
+		
+		final Vector2 p2 = new Vector2(28, 30);
+		final Vector2 p2Result = new Vector2(origin.x - distance, p2.y);
+		
+		assertEquals(p1Result, Box2DUtil.newDistancePosition(origin, p1, distance));
+		assertEquals(p2Result, Box2DUtil.newDistancePosition(origin, p2, distance));
+		
+		// Top border of table
+		origin.set(30, Table.RECTANGLE.y + Table.RECTANGLE.height - originDistanceFromBorder);
+		
+		final Vector2 pTop = new Vector2(30, Table.RECTANGLE.y + Table.RECTANGLE.height - pointDistanceFromBorder);
+		final Vector2 pTopResult = new Vector2(30, origin.y - distance);
+		
+		assertEquals(pTopResult, Box2DUtil.newDistancePosition(origin, pTop, distance));
+		
+		// Right border of table
+		origin.set(Table.RECTANGLE.x + Table.RECTANGLE.width - originDistanceFromBorder, 30);
+		
+		final Vector2 pRight = new Vector2(Table.RECTANGLE.x + Table.RECTANGLE.width - pointDistanceFromBorder, 30);
+		final Vector2 pRightResult = new Vector2(origin.x - distance, 30);
+		
+		assertEquals(pRightResult, Box2DUtil.newDistancePosition(origin, pRight, distance));
+		
+		// Bottom border of table
+		origin.set(30, Table.RECTANGLE.y + originDistanceFromBorder);
+		
+		final Vector2 pBottom = new Vector2(30, Table.RECTANGLE.y + pointDistanceFromBorder);
+		final Vector2 pBottomResult = new Vector2(origin.x, origin.y + distance);
+		
+		assertEquals(pBottomResult, Box2DUtil.newDistancePosition(origin, pBottom, distance));
+		
+		// Left border of table
+		origin.set(Table.RECTANGLE.x + originDistanceFromBorder, 30);
+		
+		final Vector2 pLeft = new Vector2(Table.RECTANGLE.x + pointDistanceFromBorder, 30);
+		final Vector2 pLeftResult = new Vector2(origin.x + distance, 30);
+		
+		assertEquals(pLeftResult, Box2DUtil.newDistancePosition(origin, pLeft, distance));
 	}
 }

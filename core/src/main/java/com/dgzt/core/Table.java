@@ -17,6 +17,7 @@ package com.dgzt.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Circle;
@@ -43,11 +44,8 @@ public class Table extends RectangleShape{
 	// ~ Public static members
 	// --------------------------------------------------
 	
-	/** The width in cm. */
-	public static final float WIDTH = 184.0f;
-	
-	/** The height in cm. */
-	public static final float HEIGHT = 120.0f;
+	/** The rectangle of table in Box2D coordinate system. */
+	public static final Rectangle RECTANGLE = new Rectangle(0.0f, 0.0f, 184.0f, 120.0f);
 	
 	// --------------------------------------------------
 	// ~ Private static members
@@ -55,6 +53,12 @@ public class Table extends RectangleShape{
 	
 	/** The Box2D wall size in cm. */
 	private static final float BOX2D_WALL_SIZE = 10.0f;
+	
+	/** The distance at free kick */
+	private static final float FREE_KICK_DISTANCE = 18.0f;
+	
+	/** The distance at free kick with radius of button */
+	private static final float FREE_KICK_DISTANCE_WITH_BUTTON = FREE_KICK_DISTANCE + Button.RADIUS;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -100,10 +104,10 @@ public class Table extends RectangleShape{
 		
 		addBox2DWalls(box2DWorld);
 		
-		map = createMap(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2, (Table.HEIGHT - Map.HEIGHT) / 2);
+		map = createMap(shader, box2DWorld, (Table.RECTANGLE.getWidth() - Map.WIDTH) / 2, (Table.RECTANGLE.getHeight() - Map.HEIGHT) / 2);
 		
-		leftGate = createLeftGate(shader, box2DWorld, (Table.WIDTH - Map.WIDTH) / 2 - LeftGate.WIDTH + LineShape.LINE_WIDTH, (Table.HEIGHT - LeftGate.HEIGHT) / 2);
-		rightGate = createRightGate(shader, box2DWorld, Table.WIDTH - (Table.WIDTH - Map.WIDTH) / 2  - LineShape.LINE_WIDTH, (Table.HEIGHT - RightGate.HEIGHT) / 2 );
+		leftGate = createLeftGate(shader, box2DWorld, (Table.RECTANGLE.getWidth() - Map.WIDTH) / 2 - LeftGate.WIDTH + LineShape.LINE_WIDTH, (Table.RECTANGLE.getHeight() - LeftGate.HEIGHT) / 2);
+		rightGate = createRightGate(shader, box2DWorld, Table.RECTANGLE.getWidth() - (Table.RECTANGLE.getWidth() - Map.WIDTH) / 2  - LineShape.LINE_WIDTH, (Table.RECTANGLE.getHeight() - RightGate.HEIGHT) / 2 );
 		
 		playerButtons = new ArrayList<Button>();
 		opponentButtons = new ArrayList<Button>();
@@ -155,11 +159,11 @@ public class Table extends RectangleShape{
 	 * @param player - The player.
 	 */
 	public void moveButtonsToLeftPartOfMap(final Player player){
-		final float goalKeeperX = ( Table.WIDTH - Map.WIDTH ) / 2 + Button.RADIUS;
-		final float goalKeeperY = Table.HEIGHT / 2;
-		final float buttonDistanceX = Table.WIDTH / 2 / 4;
-		final float buttonDistanceY = Table.HEIGHT / 5;
-		final float halfTableHeight = Table.HEIGHT / 2;
+		final float goalKeeperX = ( Table.RECTANGLE.getWidth() - Map.WIDTH ) / 2 + Button.RADIUS;
+		final float goalKeeperY = Table.RECTANGLE.getHeight() / 2;
+		final float buttonDistanceX = Table.RECTANGLE.getWidth() / 2 / 4;
+		final float buttonDistanceY = Table.RECTANGLE.getHeight() / 5;
+		final float halfTableHeight = Table.RECTANGLE.getHeight() / 2;
 
 		final List<Button> buttons = player.equals(Player.PLAYER) ? playerButtons : opponentButtons;
 
@@ -187,37 +191,59 @@ public class Table extends RectangleShape{
 	 * @param player - The player.
 	 */
 	public void moveButtonsToRightPartOfMap(final Player player){
-		final float goalKeeperX = Table.WIDTH - ( Table.WIDTH - Map.WIDTH ) / 2 - Button.RADIUS;
-		final float goalKeeperY = Table.HEIGHT / 2;
-		final float buttonDistanceX = Table.WIDTH / 2 / 4;
-		final float buttonDistanceY = Table.HEIGHT / 5;
-		final float halfTableHeight = Table.HEIGHT / 2;
+		final float goalKeeperX = Table.RECTANGLE.getWidth() - ( Table.RECTANGLE.getWidth() - Map.WIDTH ) / 2 - Button.RADIUS;
+		final float goalKeeperY = Table.RECTANGLE.getHeight() / 2;
+		final float buttonDistanceX = Table.RECTANGLE.getWidth() / 2 / 4;
+		final float buttonDistanceY = Table.RECTANGLE.getHeight() / 5;
+		final float halfTableHeight = Table.RECTANGLE.getHeight() / 2;
 		
 		final List<Button> buttons = player.equals(Player.PLAYER) ? playerButtons : opponentButtons;
 		
 		// Add right goalkeeper
 		buttons.get(0).setBox2DPosition(goalKeeperX, goalKeeperY);
-				
+		
 		// Add right defenders
 		for(int i=1; i <= 4; ++i){
-			buttons.get(i).setBox2DPosition(Table.WIDTH - buttonDistanceX, i*buttonDistanceY);
+			buttons.get(i).setBox2DPosition(Table.RECTANGLE.getWidth() - buttonDistanceX, i*buttonDistanceY);
 		}
 		
 		// Add right midfielders
 		for(int i=1; i <= 4; ++i){
-			buttons.get(i+4).setBox2DPosition(Table.WIDTH - 2*buttonDistanceX, i*buttonDistanceY);
+			buttons.get(i+4).setBox2DPosition(Table.RECTANGLE.getWidth() - 2*buttonDistanceX, i*buttonDistanceY);
 		}
 		
 		// Add right forwards
-		buttons.get(9).setBox2DPosition(Table.WIDTH - 3*buttonDistanceX, halfTableHeight - buttonDistanceY);
-		buttons.get(10).setBox2DPosition(Table.WIDTH - 3*buttonDistanceX, halfTableHeight + buttonDistanceY);
+		buttons.get(9).setBox2DPosition(Table.RECTANGLE.getWidth() - 3*buttonDistanceX, halfTableHeight - buttonDistanceY);
+		buttons.get(10).setBox2DPosition(Table.RECTANGLE.getWidth() - 3*buttonDistanceX, halfTableHeight + buttonDistanceY);
 	}
 	
 	/**
 	 * Move ball to the center of the map.
 	 */
 	public void moveBallToCenter(){
-		ball.setBox2DPosition(Table.WIDTH / 2, Table.HEIGHT / 2);
+		ball.setBox2DPosition(Table.RECTANGLE.getWidth() / 2, Table.RECTANGLE.getHeight() / 2);
+	}
+	
+	/**
+	 * Create free space for free kick.
+	 * 
+	 * @param freeKickBox2DPosition - The box2D position of free kick
+	 */
+	public void createFreeSpaceForFreeKick(final Vector2 freeKickBox2DPosition){
+		Gdx.app.log(getClass().getName() + ".createFreeSpaceForFreeKick", "init");
+		
+		final List<Button> buttons = new ArrayList<Button>();
+		buttons.addAll(playerButtons);
+		buttons.addAll(opponentButtons);
+
+		for(final Button button : buttons){
+			if(freeKickBox2DPosition.dst(button.getBox2DPosition()) < FREE_KICK_DISTANCE_WITH_BUTTON){
+				final Vector2 newButtonPos = Box2DUtil.newDistancePosition(freeKickBox2DPosition, button.getBox2DPosition(), FREE_KICK_DISTANCE_WITH_BUTTON);
+				
+				button.setBox2DPosition(newButtonPos);
+			}
+		}
+
 	}
 	
 	/**
@@ -431,16 +457,16 @@ public class Table extends RectangleShape{
 	 */
 	private void addBox2DWalls(final World box2DWorld){
 		// Add top wall
-		Box2DUtil.addWall(box2DWorld, 0, 0 - BOX2D_WALL_SIZE, Table.WIDTH, BOX2D_WALL_SIZE);
+		Box2DUtil.addWall(box2DWorld, 0, 0 - BOX2D_WALL_SIZE, Table.RECTANGLE.getWidth(), BOX2D_WALL_SIZE);
 		
 		// Add right wall
-		Box2DUtil.addWall(box2DWorld, Table.WIDTH, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
+		Box2DUtil.addWall(box2DWorld, Table.RECTANGLE.getWidth(), 0, BOX2D_WALL_SIZE, Table.RECTANGLE.getHeight());
 		
 		// Add bottom wall
-		Box2DUtil.addWall(box2DWorld, 0, Table.HEIGHT, Table.WIDTH, BOX2D_WALL_SIZE);
+		Box2DUtil.addWall(box2DWorld, 0, Table.RECTANGLE.getHeight(), Table.RECTANGLE.getWidth(), BOX2D_WALL_SIZE);
 		
 		// Add left Wall
-		Box2DUtil.addWall(box2DWorld, 0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, Table.HEIGHT);
+		Box2DUtil.addWall(box2DWorld, 0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, Table.RECTANGLE.getHeight());
 	}
 	
 	// --------------------------------------------------

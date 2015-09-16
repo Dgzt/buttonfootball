@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.Table;
 
 /**
  * Util for Box2D.
@@ -91,6 +92,40 @@ public class Box2DUtil {
 		box2DPos.y /= scale;
 		
 		return box2DPos;
+	}
+	
+	/**
+	 * Return with the new position.
+	 * 
+	 * @param originPosition - The origin position.
+	 * @param oldPosition - The old position.
+	 * @param newDistance - The new distance between originPosition and newPosition.
+	 */
+	public static Vector2 newDistancePosition(final Vector2 originPosition, final Vector2 oldPosition, final float newDistance){
+		// TODO originPosition and oldPosition equals
+		
+		final Vector2 newPosition = oldPosition.cpy();
+		newPosition.sub(originPosition);
+		newPosition.setLength(newDistance);
+		newPosition.add(originPosition);
+		
+		if(newPosition.x < Table.RECTANGLE.x){
+			newPosition.x = originPosition.x + (originPosition.x - newPosition.x);
+		}
+
+		if(Table.RECTANGLE.x + Table.RECTANGLE.getWidth() < newPosition.x){
+			newPosition.x = originPosition.x - (newPosition.x - originPosition.x);
+		}
+		
+		if(newPosition.y < Table.RECTANGLE.y){
+			newPosition.y = originPosition.y + (originPosition.y - newPosition.y);
+		}
+
+		if(Table.RECTANGLE.y + Table.RECTANGLE.getHeight() < newPosition.y){
+			newPosition.y = originPosition.y - (newPosition.y - originPosition.y);
+		}
+		
+		return newPosition;
 	}
 	
 	// --------------------------------------------------
