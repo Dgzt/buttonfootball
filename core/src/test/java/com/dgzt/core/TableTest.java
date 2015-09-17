@@ -126,10 +126,10 @@ public final class TableTest extends BaseShapeTester{
 	// --------------------------------------------------
 	
 	/**
-	 * Test for {@link Table#createFreeSpaceForFreeKick(Vector2)} method.
+	 * Test for {@link Table#create18MeterFreeSpace(Vector2)} method.
 	 */
 	@Test
-	public void test_createFreeSpaceForFreeKick(){
+	public void test_create18MeterFreeSpace(){
 		table.getPlayerButtons().clear();
 		table.getOpponentButtons().clear();
 		
@@ -151,7 +151,7 @@ public final class TableTest extends BaseShapeTester{
 		notMovingOpponentButton.setBox2DPosition(notMovingOpponentButtonPos);
 		table.getOpponentButtons().add(notMovingOpponentButton);
 		
-		table.createFreeSpaceForFreeKick(ballPos);
+		table.create18MeterFreeSpace(ballPos);
 		
 		Assert.assertNotEquals(movingPlayerButtonPos, movingPlayerButton.getBox2DPosition());
 		Assert.assertNotEquals(movingOpponentButtonPos, movingOpponentButton.getBox2DPosition());

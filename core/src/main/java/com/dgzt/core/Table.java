@@ -225,20 +225,20 @@ public class Table extends RectangleShape{
 	}
 	
 	/**
-	 * Create free space for free kick.
+	 * Create 18 meter free space for given position.
 	 * 
-	 * @param freeKickBox2DPosition - The box2D position of free kick
+	 * @param box2DPosition - The box2D position.
 	 */
-	public void createFreeSpaceForFreeKick(final Vector2 freeKickBox2DPosition){
-		Gdx.app.log(getClass().getName() + ".createFreeSpaceForFreeKick", "init");
+	public void create18MeterFreeSpace(final Vector2 box2DPosition){
+		Gdx.app.log(getClass().getName() + ".create18MeterFreeSpace", "init");
 		
 		final List<Button> buttons = new ArrayList<Button>();
 		buttons.addAll(playerButtons);
 		buttons.addAll(opponentButtons);
 
 		for(final Button button : buttons){
-			if(freeKickBox2DPosition.dst(button.getBox2DPosition()) < FREE_KICK_DISTANCE_WITH_BUTTON){
-				final Vector2 newButtonPos = Box2DUtil.newDistancePosition(freeKickBox2DPosition, button.getBox2DPosition(), FREE_KICK_DISTANCE_WITH_BUTTON);
+			if(box2DPosition.dst(button.getBox2DPosition()) < FREE_KICK_DISTANCE_WITH_BUTTON){
+				final Vector2 newButtonPos = Box2DUtil.newDistancePosition(box2DPosition, button.getBox2DPosition(), FREE_KICK_DISTANCE_WITH_BUTTON);
 				
 				button.setBox2DPosition(newButtonPos);
 			}
