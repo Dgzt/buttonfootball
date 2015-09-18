@@ -49,9 +49,6 @@ public class BaseMenuWindow extends RectangleShape{
 	/** The shader. */
 	private final ShaderProgram shader;
 	
-	/** The batch. */
-	private final Batch batch;
-	
 	/** The multi input processor. */
 	private final MultiInputProcessor multiInputProcessor;
 	
@@ -76,7 +73,6 @@ public class BaseMenuWindow extends RectangleShape{
 	public BaseMenuWindow(final ShaderProgram shader, final Batch batch, final Viewport viewport, final MultiInputProcessor multiInputProcessor) {
 		super(shader, BACKGROUND_COLOR);
 		this.shader = shader;
-		this.batch = batch;
 		
 		stage = new Stage(viewport, batch);
 		

@@ -19,7 +19,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.dgzt.core.GameControl;
-import com.dgzt.core.Player;
 import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
