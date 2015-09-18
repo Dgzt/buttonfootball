@@ -15,6 +15,8 @@
 package com.dgzt.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -106,4 +108,15 @@ public final class MapTest extends BaseShapeTester{
 		assertEquals(map.getBottomRightCornerBox2DPosition(), new Vector2(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT));
 	}
 
+	/**
+	 * Test for {@link Map#containsBox2DPosition(Vector2)} method.
+	 */
+	@Test
+	public void test_containsBox2DPosition(){
+		final Vector2 containsPoint = new Vector2(map.getBox2DX() + 10, map.getBox2DY() + 30);
+		final Vector2 notContainsPoint = new Vector2(map.getBox2DX() - 4, map.getBox2DY() + 30);
+		
+		assertTrue(map.containsBox2DPosition(containsPoint));
+		assertFalse(map.containsBox2DPosition(notContainsPoint));
+	}
 }

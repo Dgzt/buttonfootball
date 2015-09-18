@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.shape.ArcShape;
@@ -70,11 +71,8 @@ public class Map extends RectangleShape{
 	// ~ Private members
 	// --------------------------------------------------	
 	
-	/** The x coordinate value in box2D */
-	private final float box2DX;
-	
-	/** The y coordinate value in box2D */
-	private final float box2DY;
+	/** The rectangle of map in Box2D world. */
+	private final Rectangle box2DRectangle;
 	
 	/** The border of the map. */
 	private final RectangleBorderShape mapBorder;
@@ -138,8 +136,7 @@ public class Map extends RectangleShape{
 	 */
 	public Map(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
 		super(shader, Color.GREEN);
-		this.box2DX = box2DX;
-		this.box2DY = box2DY;
+		this.box2DRectangle = new Rectangle(box2DX, box2DY, WIDTH, HEIGHT);
 		
 		this.mapBorder = getRectangleBorderShape(shader, Color.WHITE);
 		
@@ -186,8 +183,8 @@ public class Map extends RectangleShape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final float tableX, final float tableY, final double scale ) {
-		final float x = tableX + (float)(box2DX * scale);
-		final float y = tableY + (float)(box2DY * scale);
+		final float x = tableX + (float)(box2DRectangle.getX() * scale);
+		final float y = tableY + (float)(box2DRectangle.getY() * scale);
 		final float width = (float)(Map.WIDTH * scale);
 		final float height = (float)(Map.HEIGHT * scale);
 		
@@ -245,28 +242,37 @@ public class Map extends RectangleShape{
 	 * Return with the position of the top left corner in Box2D.
 	 */
 	public Vector2 getTopLeftCornerBox2DPosition(){
-		return new Vector2(box2DX, box2DY);
+		return new Vector2(box2DRectangle.getX(), box2DRectangle.getY());
 	}
 	
 	/**
 	 * Return with the position of the top right corner in Box2D.
 	 */
 	public Vector2 getTopRightCornerBox2DPosition(){
-		return new Vector2(box2DX + Map.WIDTH, box2DY);
+		return new Vector2(box2DRectangle.getX() + box2DRectangle.getWidth(), box2DRectangle.getY());
 	}
 	
 	/**
 	 * Return with the position of the bottom left corner in Box2D.
 	 */
 	public Vector2 getBottomLeftCornerBox2DPosition(){
-		return new Vector2(box2DX, box2DY + Map.HEIGHT);
+		return new Vector2(box2DRectangle.getX(), box2DRectangle.getY() + box2DRectangle.getHeight());
 	}
 	
 	/**
 	 * Return with the position of the bottom right corner in Box2D.
 	 */
 	public Vector2 getBottomRightCornerBox2DPosition(){
-		return new Vector2(box2DX + Map.WIDTH, box2DY + Map.HEIGHT);
+		return new Vector2(box2DRectangle.getX() + box2DRectangle.getWidth(), box2DRectangle.getY() + box2DRectangle.getHeight());
+	}
+	
+	/**
+	 * Return true when the map contains the given position.
+	 * 
+	 * @param box2DPosition - The position in box2D coordinate system.
+	 */
+	public boolean containsBox2DPosition(final Vector2 box2DPosition){
+		return box2DRectangle.contains(box2DPosition);
 	}
 	
 	// --------------------------------------------------
@@ -400,7 +406,7 @@ public class Map extends RectangleShape{
 	 * @param box2DWorld - The world of the Box2D.
 	 */
 	private void addSensor(final World box2DWorld){
-		Box2DUtil.addSensor(box2DWorld, box2DX, box2DY, Map.WIDTH, Map.HEIGHT, this, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
+		Box2DUtil.addSensor(box2DWorld, box2DRectangle.getX(), box2DRectangle.getY(), box2DRectangle.getWidth(), box2DRectangle.getHeight(), this, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
 	}
 	
 	/**
@@ -640,13 +646,13 @@ public class Map extends RectangleShape{
 	 * Return with the x coordinate value in Box2D.
 	 */
 	public float getBox2DX() {
-		return box2DX;
+		return box2DRectangle.getX();
 	}
 	
 	/**
 	 * Return with the y coordinate value in Box2D.
 	 */
 	public float getBox2DY() {
-		return box2DY;
+		return box2DRectangle.getY();
 	}
 }

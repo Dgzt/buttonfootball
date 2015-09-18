@@ -565,6 +565,7 @@ public final class GameControlTest extends BaseShapeTester{
 		table.getPlayerButtons().add(playerButton);
 		table.getOpponentButtons().add(opponentButton);
 		
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
 		gameControl.buttonContactButton(playerButton, opponentButton);
 		
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
@@ -596,6 +597,7 @@ public final class GameControlTest extends BaseShapeTester{
 		table.getPlayerButtons().add(playerButton);
 		table.getOpponentButtons().add(opponentButton);
 		
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
 		gameControl.buttonContactButton(playerButton, opponentButton);
 		
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
@@ -606,4 +608,35 @@ public final class GameControlTest extends BaseShapeTester{
 		assertEquals(ballEndPos, ball.getBox2DPosition());
 	}
 	
+	/**
+	 * Test for fault out of map.
+	 */
+	@Test
+	public void test_faultOutOfMap(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(40, 3);
+		final Vector2 opponentButtonPos = new Vector2(45, 3);
+		final Vector2 ballPos = new Vector2(100,100);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballPos.x, ballPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+		
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.FALSE);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus()); // Show ball area
+		assertEquals(ballPos, ball.getBox2DPosition());
+	}
 }

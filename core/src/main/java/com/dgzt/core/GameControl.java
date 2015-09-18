@@ -290,8 +290,10 @@ public final class GameControl {
 	public void buttonContactButton(final Button button1, final Button button2){
 		Gdx.app.log(GameControl.class.getName() + ".buttonContactButton", "init");
 		
-		if(buttonContactBallLastTime == null){
-			faultBox2DPosition = MathUtil.midPoint(button1.getBox2DPosition(), button2.getBox2DPosition());
+		final Vector2 contactPoint = MathUtil.midPoint(button1.getBox2DPosition(), button2.getBox2DPosition());
+		
+		if(buttonContactBallLastTime == null && table.getMap().containsBox2DPosition(contactPoint)){
+			faultBox2DPosition = contactPoint.cpy();
 		}
 	}
 	
