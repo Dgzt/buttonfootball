@@ -225,12 +225,12 @@ public class Table extends RectangleShape{
 	}
 	
 	/**
-	 * Create 18 meter free space for given position.
+	 * Create 18 centimeter free space for given position.
 	 * 
 	 * @param box2DPosition - The box2D position.
 	 */
-	public void create18MeterFreeSpace(final Vector2 box2DPosition){
-		Gdx.app.log(getClass().getName() + ".create18MeterFreeSpace", "init");
+	public void create18CentimeterFreeSpace(final Vector2 box2DPosition){
+		Gdx.app.log(getClass().getName() + ".create18CentimeterFreeSpace", "init");
 		
 		final List<Button> buttons = new ArrayList<Button>();
 		buttons.addAll(playerButtons);

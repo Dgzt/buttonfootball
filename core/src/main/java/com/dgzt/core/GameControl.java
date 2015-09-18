@@ -631,7 +631,7 @@ public final class GameControl {
 	private void fault(){
 		Gdx.app.log(GameControl.class.getName() + ".fault", "init");
 		
-		table.create18MeterFreeSpace(faultBox2DPosition);
+		table.create18CentimeterFreeSpace(faultBox2DPosition);
 		table.getBall().setBox2DPosition(faultBox2DPosition.x, faultBox2DPosition.y);
 		
 		switch (gameStatus) {
@@ -702,7 +702,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
 					}
 					
-					table.create18MeterFreeSpace(newBallPos);
+					table.create18CentimeterFreeSpace(newBallPos);
 					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveOneButton();
 				}
@@ -723,7 +723,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
 					}
 					
-					table.create18MeterFreeSpace(newBallPos);
+					table.create18CentimeterFreeSpace(newBallPos);
 					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					playerMoveOneButton();
 				}
@@ -747,7 +747,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
 					}
 					
-					table.create18MeterFreeSpace(newBallPos);
+					table.create18CentimeterFreeSpace(newBallPos);
 					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					playerMoveOneButton();
 				}
@@ -769,7 +769,7 @@ public final class GameControl {
 						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
 					}
 					
-					table.create18MeterFreeSpace(newBallPos);
+					table.create18CentimeterFreeSpace(newBallPos);
 					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveOneButton();
 				}
