@@ -119,4 +119,28 @@ public final class MapTest extends BaseShapeTester{
 		assertTrue(map.containsBox2DPosition(containsPoint));
 		assertFalse(map.containsBox2DPosition(notContainsPoint));
 	}
+	
+	/**
+	 * Test for {@link Map#containsLeftSector16Box2DPosition(Vector2)} method.
+	 */
+	@Test
+	public void test_containsLeftSector16Box2DPosition(){
+		final Vector2 inLeftSector16 = new Vector2(MAP_BOX2D_X + 10, MAP_BOX2D_Y + Map.HEIGHT / 2);
+		final Vector2 notInLeftSector16 = new Vector2(MAP_BOX2D_X + 40, MAP_BOX2D_Y + Map.HEIGHT / 2);
+		
+		assertTrue(map.containsLeftSector16Box2DPosition(inLeftSector16));
+		assertFalse(map.containsLeftSector16Box2DPosition(notInLeftSector16));
+	}
+	
+	/**
+	 * Test for {@link Map#containsRightSector16Box2DPosition(Vector2)} method.
+	 */
+	@Test
+	public void test_containsRightSector16Box2DPosition(){
+		final Vector2 inRightSector16 = new Vector2(MAP_BOX2D_X + Map.WIDTH - 10, MAP_BOX2D_Y + Map.HEIGHT / 2);
+		final Vector2 notInRightSector16 = new Vector2(MAP_BOX2D_X + Map.WIDTH - 40, MAP_BOX2D_Y + Map.HEIGHT / 2);
+		
+		assertTrue(map.containsRightSector16Box2DPosition(inRightSector16));
+		assertFalse(map.containsRightSector16Box2DPosition(notInRightSector16));
+	}
 }

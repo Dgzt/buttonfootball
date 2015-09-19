@@ -74,6 +74,12 @@ public class Map extends RectangleShape{
 	/** The rectangle of map in Box2D world. */
 	private final Rectangle box2DRectangle;
 	
+	/** The rectangle of left sector 16 in Box2D world. */
+	private final Rectangle leftSector16Box2DRectangle;
+	
+	/** The rectangle of right sector 16 in Box2D world. */
+	private final Rectangle rightSector16Box2DRectangle;
+	
 	/** The border of the map. */
 	private final RectangleBorderShape mapBorder;
 
@@ -137,6 +143,8 @@ public class Map extends RectangleShape{
 	public Map(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
 		super(shader, Color.GREEN);
 		this.box2DRectangle = new Rectangle(box2DX, box2DY, WIDTH, HEIGHT);
+		this.leftSector16Box2DRectangle = new Rectangle(box2DX, box2DY + (HEIGHT - SECTOR_16_HEIGHT) / 2, SECTOR_16_WIDTH, SECTOR_16_HEIGHT);
+		this.rightSector16Box2DRectangle = new Rectangle(box2DX + WIDTH - SECTOR_16_WIDTH, leftSector16Box2DRectangle.getY(), SECTOR_16_WIDTH, SECTOR_16_HEIGHT);
 		
 		this.mapBorder = getRectangleBorderShape(shader, Color.WHITE);
 		
@@ -178,13 +186,12 @@ public class Map extends RectangleShape{
 	/**
 	 * Resize the map and the child objects.
 	 * 
-	 * @param tableX - The x coordinate value of table.
-	 * @param tableY - The y coordinate value of table.
+	 * @param tablePos - The position of table on screen.
 	 * @param scale - The scale value.
 	 */
-	public void resize(final float tableX, final float tableY, final double scale ) {
-		final float x = tableX + (float)(box2DRectangle.getX() * scale);
-		final float y = tableY + (float)(box2DRectangle.getY() * scale);
+	public void resize(final Vector2 tablePos, final double scale ) {
+		final float x = tablePos.x + (float)(box2DRectangle.getX() * scale);
+		final float y = tablePos.y + (float)(box2DRectangle.getY() * scale);
 		final float width = (float)(Map.WIDTH * scale);
 		final float height = (float)(Map.HEIGHT * scale);
 		
@@ -194,8 +201,6 @@ public class Map extends RectangleShape{
 		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
 		final float smallCircleRadius = (float) (LineShape.LINE_WIDTH * scale);
 		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_CIRCLE_DISTANCE * scale);
-		final float sector16Width = (float)((double)SECTOR_16_WIDTH * scale);
-		final float sector16Height = (float)((double)SECTOR_16_HEIGHT * scale);
 		final float sector5Width = (float)((double)SECTOR_5_WIDTH * scale);
 		final float sector5Height = (float)((double)SECTOR_5_HEIGHT * scale);
 		
@@ -215,8 +220,8 @@ public class Map extends RectangleShape{
 		
 		resizeMapBorder(x, y, width, height, scale);
 		
-		resizeLeftSector16(x, sector16Width, sector16Height, y, height, scale);
-		resizeRightSector16(leftSector16.getY(), leftSector16.getWidth(), leftSector16.getHeight(), x, width, scale);
+		resizeLeftSector16(tablePos, scale);
+		resizeRightSector16(tablePos, scale);
 		
 		resizeLeftSector5(x, sector5Width, sector5Height, y, height, scale);
 		resizeRightSector5(leftSector5.getY(), sector5Width, sector5Height, x, width, scale);
@@ -273,6 +278,24 @@ public class Map extends RectangleShape{
 	 */
 	public boolean containsBox2DPosition(final Vector2 box2DPosition){
 		return box2DRectangle.contains(box2DPosition);
+	}
+	
+	/**
+	 * Return true when the left sector 16 contains the given box2D position else false.
+	 * 
+	 * @param box2DPosition - The Box2D position.
+	 */
+	public boolean containsLeftSector16Box2DPosition(final Vector2 box2DPosition){
+		return leftSector16Box2DRectangle.contains(box2DPosition);
+	}
+	
+	/**
+	 * Return true when the right sector 16 contains the given box2D position else false.
+	 * 
+	 * @param box2DPosition - The Box2D position.
+	 */
+	public boolean containsRightSector16Box2DPosition(final Vector2 box2DPosition){
+		return rightSector16Box2DRectangle.contains(box2DPosition);
 	}
 	
 	// --------------------------------------------------
@@ -560,32 +583,25 @@ public class Map extends RectangleShape{
 	/**
 	 * Resize left sector 16.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param mapY - The y coordinate value of the map.
-	 * @param mapHeight - The height value of the map.
+	 * @param tablePosition - The position of the table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeLeftSector16(final float x, final float width, final float height, final float mapY, final float mapHeight, final double scale){
-		final float y = mapY + (mapHeight - height) / 2;
-		leftSector16.resize(x, y, width, height, scale);
+	private void resizeLeftSector16(final Vector2 tablePosition, final double scale){
+		final Rectangle rec = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, leftSector16Box2DRectangle, scale);
+		
+		leftSector16.resize(rec.getX(), rec.getY(), rec.getWidth(), rec.getHeight(), scale);
 	}
 	
 	/**
 	 * Resize right sector 16.
 	 * 
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param mapX - The x coordinate value of the map.
-	 * @param mapWidth - The width value of the map.
+	 * @param tablePosition - The position of the table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeRightSector16(final float y, final float width, final float height, final float mapX, final float mapWidth, final double scale){
-		final float x = mapX + mapWidth - width;
+	private void resizeRightSector16(final Vector2 tablePosition, final double scale){
+		final Rectangle rec = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, rightSector16Box2DRectangle, scale);
 		
-		rightSector16.resize(x, y, width, height, scale);
+		rightSector16.resize(rec.getX(), rec.getY(), rec.getWidth(), rec.getHeight(), scale);
 	}
 	
 	/**

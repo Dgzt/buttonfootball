@@ -127,4 +127,15 @@ public class MathUtilTest {
 		assertEquals(result, MathUtil.midPoint(point1, point2));
 	}
 
+	/**
+	 * Test for {@link MathUtil#scale(Rectangle, double)} method.
+	 */
+	@Test
+	public void test_scale(){
+		final Rectangle rectangle = new Rectangle(1, 2, 10, 20);
+		final double scale = 3.0;
+		final Rectangle rectangleResult = new Rectangle(3, 6, 30, 60);
+		
+		assertEquals(rectangleResult, MathUtil.scale(rectangle, scale));
+	}
 }

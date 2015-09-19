@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.util;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -92,6 +93,22 @@ public class Box2DUtil {
 		box2DPos.y /= scale;
 		
 		return box2DPos;
+	}
+	
+	/**
+	 * The Box2D rectangle convert to screen rectangle.
+	 * 
+	 * @param tablePosition - The position of table on screen.
+	 * @param rec - The converting rectangle.
+	 * @param scale - The scale.
+	 * @return The converted rectangle.
+	 */
+	public static Rectangle box2DRectangleToScreenRectangle(final Vector2 tablePosition, final Rectangle rec, final double scale){
+		final Rectangle scaledRec = MathUtil.scale(rec, scale);
+		scaledRec.setPosition(scaledRec.getPosition(new Vector2()).add(tablePosition));
+		
+		return scaledRec;
+		
 	}
 	
 	/**

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
@@ -128,6 +129,19 @@ public class Box2DUtilTest {
 		final Vector2 box2DPos = Box2DUtil.screenPositionToBox2DPosition(screenPosition, tablePosition, scale);
 		
 		assertEquals(result, box2DPos);
+	}
+	
+	/**
+	 * Test for {@link Box2DUtil#box2DRectangleToScreenRectangle(Vector2, Rectangle, double)} method.
+	 */
+	@Test
+	public void test_box2DRectangleToScreenRectangle(){
+		final Vector2 tablePosition = new Vector2(50, 60);
+		final Rectangle box2DRectangle = new Rectangle(10, 20, 100, 200);
+		final double scale = 1.5;
+		final Rectangle result = new Rectangle(65, 90, 150, 300);
+		
+		assertEquals(result, Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, box2DRectangle, scale));
 	}
 	
 	/**

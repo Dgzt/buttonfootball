@@ -118,4 +118,20 @@ public class MathUtil {
 		
 		return new Vector2(x, y);
 	}
+	
+	/**
+	 * Return with the scaled rectangle.
+	 * 
+	 * @param rec - The rectangle.
+	 * @param scale - The scale value.
+	 */
+	public static Rectangle scale(final Rectangle rec, final double scale){
+		final Rectangle retRec = new Rectangle(rec);
+		retRec.x *= scale;
+		retRec.y *= scale;
+		retRec.width *= scale;
+		retRec.height *= scale;
+		
+		return retRec;
+	}
 }

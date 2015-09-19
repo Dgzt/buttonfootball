@@ -633,18 +633,26 @@ public final class GameControl {
 	private void fault(){
 		Gdx.app.log(GameControl.class.getName() + ".fault", "init");
 		
-		table.create18CentimeterFreeSpace(faultBox2DPosition);
-		table.getBall().setBox2DPosition(faultBox2DPosition.x, faultBox2DPosition.y);
-		
-		switch (gameStatus) {
-			case WAITING_AFTER_PLAYER : 
-				opponentMoveSomeButton();
-				break;
-			case WAITING_AFTER_OPPONENT :
-				playerMoveSomeButton();
-				break;
-			default : 
-				throw new IllegalGameStatusException();
+		if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
+			// TODO implement later
+			throw new RuntimeException("Implement later.");
+		}else if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
+			// TODO implement later
+			throw new RuntimeException("Implement later.");
+		}else{
+			table.create18CentimeterFreeSpace(faultBox2DPosition);
+			table.getBall().setBox2DPosition(faultBox2DPosition.x, faultBox2DPosition.y);
+			
+			switch (gameStatus) {
+				case WAITING_AFTER_PLAYER : 
+					opponentMoveSomeButton();
+					break;
+				case WAITING_AFTER_OPPONENT :
+					playerMoveSomeButton();
+					break;
+				default : 
+					throw new IllegalGameStatusException();
+			}
 		}
 	}
 	

@@ -136,7 +136,7 @@ public class Table extends RectangleShape{
 		super.resize(x, y, width, height);
 		this.scale = scale;
 		
-		map.resize(x, y, scale);
+		map.resize(new Vector2(x, y), scale);
 		
 		leftGate.resize(x, y, scale);
 		
