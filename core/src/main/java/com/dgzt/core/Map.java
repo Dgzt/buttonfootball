@@ -16,6 +16,7 @@ package com.dgzt.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -26,6 +27,7 @@ import com.dgzt.core.shape.LineShape;
 import com.dgzt.core.shape.RectangleBorderShape;
 import com.dgzt.core.shape.RectangleShape;
 import com.dgzt.core.util.BitsUtil;
+import com.dgzt.core.util.Box2DDataUtil;
 import com.dgzt.core.util.Box2DUtil;
 
 /**
@@ -34,51 +36,10 @@ import com.dgzt.core.util.Box2DUtil;
  * @author Dgzt
  */
 public class Map extends RectangleShape{
-
-	// --------------------------------------------------
-	// ~ Public static members
-	// --------------------------------------------------
-	
-	/** The width value in cm. */
-	public static final float WIDTH = 167.0f;
-	
-	/** The height value in cm. */
-	public static final float HEIGHT = 104.0f;
-	
-	// --------------------------------------------------
-	// ~ Private static members
-	// --------------------------------------------------
-	
-	/** The width value of the sector 16 in cm. */
-	private static final float SECTOR_16_WIDTH = 30.0f;
-	
-	/** The height value of the sector 16 in cm. */
-	private static final float SECTOR_16_HEIGHT = 60.0f;
-	
-	/** The width value of the sector 5 in cm. */
-	private static final float SECTOR_5_WIDTH = 11.0f;
-	
-	/** The height value of the sector 5 in cm. */
-	private static final float SECTOR_5_HEIGHT = 30.0f;
-	
-	/** The radius of the big circle. */
-	private static final float BIG_CIRCLE_RADIUS = 16.0f;
-	
-	/** The left and right small circle distance from border of map. */
-	private static final float LEFT_RIGHT_CIRCLE_DISTANCE = 20.5f;
 	
 	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------	
-	
-	/** The rectangle of map in Box2D world. */
-	private final Rectangle box2DRectangle;
-	
-	/** The rectangle of left sector 16 in Box2D world. */
-	private final Rectangle leftSector16Box2DRectangle;
-	
-	/** The rectangle of right sector 16 in Box2D world. */
-	private final Rectangle rightSector16Box2DRectangle;
 	
 	/** The border of the map. */
 	private final RectangleBorderShape mapBorder;
@@ -95,14 +56,14 @@ public class Map extends RectangleShape{
 	/** The right sector 5. */
 	private final RectangleBorderShape rightSector5;
 	
-	/** The center big circle border. */
-	private final CircleBorderShape centerBigCircle;
+	/** The central big circle border. */
+	private final CircleBorderShape centralBigCircle;
 	
 	/** The center line. */
 	private final LineShape centerLine;
 	
-	/** The center small filled circle. */
-	private final FilledCircleShape centerSmallCircle;
+	/** The central small filled circle. */
+	private final FilledCircleShape centralSmallCircle;
 	
 	/** The left small filled circle. */
 	private final FilledCircleShape leftSmallCircle;
@@ -110,17 +71,17 @@ public class Map extends RectangleShape{
 	/** The right small filled circle. */
 	private final FilledCircleShape rightSmallCircle;
 	
-	/** The top left small arc. */
-	private final ArcShape topLeftSmallArc;
-	
-	/** The top right small arc. */
-	private final ArcShape topRightSmallArc;
+	/** The bottom left small arc. */
+	private final ArcShape bottomLeftSmallArc;
 	
 	/** The bottom right small arc. */
 	private final ArcShape bottomRightSmallArc;
 	
-	/** The bottom left small arc. */
-	private final ArcShape bottomLeftSmallArc;
+	/** The top right small arc. */
+	private final ArcShape topRightSmallArc;
+	
+	/** The top left small arc. */
+	private final ArcShape topLeftSmallArc;
 	
 	/** The left big arc. */
 	private final ArcShape leftBigArc;
@@ -137,15 +98,10 @@ public class Map extends RectangleShape{
 	 * 
 	 * @param shader - The shader.
 	 * @param box2DWorld - The world of the Box2D.
-	 * @param box2DX - The x coordinate value in Box2D.
-	 * @param box2DY - The y coordinate value in Box2D.
 	 */
-	public Map(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY){
+	public Map(final ShaderProgram shader, final World box2DWorld){
 		super(shader, Color.GREEN);
-		this.box2DRectangle = new Rectangle(box2DX, box2DY, WIDTH, HEIGHT);
-		this.leftSector16Box2DRectangle = new Rectangle(box2DX, box2DY + (HEIGHT - SECTOR_16_HEIGHT) / 2, SECTOR_16_WIDTH, SECTOR_16_HEIGHT);
-		this.rightSector16Box2DRectangle = new Rectangle(box2DX + WIDTH - SECTOR_16_WIDTH, leftSector16Box2DRectangle.getY(), SECTOR_16_WIDTH, SECTOR_16_HEIGHT);
-		
+
 		this.mapBorder = getRectangleBorderShape(shader, Color.WHITE);
 		
 		this.leftSector16 = getRectangleBorderShape(shader, Color.WHITE);
@@ -154,23 +110,23 @@ public class Map extends RectangleShape{
 		this.leftSector5 = getRectangleBorderShape(shader, Color.WHITE);
 		this.rightSector5 = getRectangleBorderShape(shader, Color.WHITE);
 
-		this.centerBigCircle = getCircleBorderShape(shader, Color.WHITE);
+		this.centralBigCircle = getCircleBorderShape(shader, Color.WHITE);
 		
 		this.centerLine = getLineShape(shader, Color.WHITE);
 		
-		this.centerSmallCircle = getFilledCircleShape(shader, Color.WHITE);
+		this.centralSmallCircle = getFilledCircleShape(shader, Color.WHITE);
 		
 		this.leftSmallCircle = getFilledCircleShape(shader, Color.WHITE);
 		
 		this.rightSmallCircle = getFilledCircleShape(shader, Color.WHITE);
 		
-		this.topLeftSmallArc = getArcShape(shader, 0, 90, Color.WHITE);
+		this.bottomLeftSmallArc = getArcShape(shader, 0, 90, Color.WHITE);
 		
-		this.topRightSmallArc = getArcShape(shader, 270, 90, Color.WHITE);
+		this.bottomRightSmallArc = getArcShape(shader, 270, 90, Color.WHITE);
 		
-		this.bottomRightSmallArc = getArcShape(shader, 180, 90, Color.WHITE);
+		this.topRightSmallArc = getArcShape(shader, 180, 90, Color.WHITE);
 		
-		this.bottomLeftSmallArc = getArcShape(shader, 90, 90, Color.WHITE);
+		this.topLeftSmallArc = getArcShape(shader, 90, 90, Color.WHITE);
 		
 		this.leftBigArc = getArcShape(shader, 37, 109, Color.WHITE);
 		
@@ -190,85 +146,85 @@ public class Map extends RectangleShape{
 	 * @param scale - The scale value.
 	 */
 	public void resize(final Vector2 tablePos, final double scale ) {
-		final float x = tablePos.x + (float)(box2DRectangle.getX() * scale);
-		final float y = tablePos.y + (float)(box2DRectangle.getY() * scale);
-		final float width = (float)(Map.WIDTH * scale);
-		final float height = (float)(Map.HEIGHT * scale);
+		final Rectangle mapRectangle = Box2DUtil.box2DRectangleToScreenRectangle(tablePos, Box2DDataUtil.MAP_RECTANGLE, scale);
 		
-		super.resize(x, y, width, height);
+		super.resize(mapRectangle.x, mapRectangle.y, mapRectangle.width, mapRectangle.height);
 		
-		final float smallArcRadius = (float)(ArcShape.SMALL_RADIUS * scale);
-		final float bigCircleRadius = (float)((double)BIG_CIRCLE_RADIUS * scale);
-		final float smallCircleRadius = (float) (LineShape.LINE_WIDTH * scale);
-		final float leftRightSmallCircleDistance = (float)(LEFT_RIGHT_CIRCLE_DISTANCE * scale);
-		final float sector5Width = (float)((double)SECTOR_5_WIDTH * scale);
-		final float sector5Height = (float)((double)SECTOR_5_HEIGHT * scale);
+		resizeBottomLeftSmallArc(tablePos, scale);
+		resizeBottomRightSmallArc(tablePos, scale);
+		resizeTopRightSmallArc(tablePos, scale);
+		resizeTopLeftSmallArc(tablePos, scale);
 		
-		resizeTopLeftSmallArc(x, y, smallArcRadius, scale);
-		resizeTopRightSmallArc(y, x, width, smallArcRadius, scale);
-		resizeBottomRightSmallArc(topRightSmallArc.getX(), y, height, smallArcRadius, scale);
-		resizeBottomLeftSmallArc(x, bottomRightSmallArc.getY(), smallArcRadius, scale);
+		resizeCentralBigCircle(tablePos, scale);
+		resizeCentralSmallCircle(tablePos, scale);
 		
-		resizeCenterBigCircle(x, y, width, height, bigCircleRadius, scale);
-		resizeCenterSmallCircle(centerBigCircle.getX(), centerBigCircle.getY(), smallCircleRadius);
+		resizeLeftSmallCircle(tablePos, scale);
+		resizeRightSmallCircle(tablePos, scale);
 		
-		resizeLeftSmallCircle(centerSmallCircle.getY(), x, leftRightSmallCircleDistance, smallCircleRadius);
-		resizeRightSmallCircle(leftSmallCircle.getY(), x, width, leftRightSmallCircleDistance, smallCircleRadius);
+		resizeLeftBigArc(tablePos, scale);
+		resizeRightBigArc(tablePos, scale);
 		
-		resizeLeftBigArc(leftSmallCircle.getX(), leftSmallCircle.getY(), bigCircleRadius, scale);
-		resizeRightBigArc(rightSmallCircle.getX(), rightSmallCircle.getY(), bigCircleRadius, scale);
-		
-		resizeMapBorder(x, y, width, height, scale);
+		resizeMapBorder(mapRectangle, scale);
 		
 		resizeLeftSector16(tablePos, scale);
 		resizeRightSector16(tablePos, scale);
 		
-		resizeLeftSector5(x, sector5Width, sector5Height, y, height, scale);
-		resizeRightSector5(leftSector5.getY(), sector5Width, sector5Height, x, width, scale);
+		resizeLeftSector5(tablePos, scale);
+		resizeRightSector5(tablePos, scale);
 		
-		resizeCenterLine(x, y, width, height, scale);
+		resizeCenterLine(mapRectangle, scale);
 	}
 	
 	/**
 	 * Return with the left goal kick position in Box2D coordinate system.
 	 */
 	public Vector2 getLeftGoalKickBox2DPosition(){
-		return new Vector2(getBox2DX() + SECTOR_5_WIDTH, getBox2DY() + (HEIGHT / 2));
+		final Rectangle leftSector5Box2DRectangle = Box2DDataUtil.LEFT_SECTOR_5_RECTANGLE;
+		
+		return new Vector2(
+				leftSector5Box2DRectangle.getX() + leftSector5Box2DRectangle.getWidth(), 
+				leftSector5Box2DRectangle.getY() + leftSector5Box2DRectangle.getHeight() / 2
+		);
 	}
 	
 	/**
 	 * Return with the eight goal kick position in Box2D coordinate system.
 	 */
 	public Vector2 getRightGoalKickBox2DPosition(){
-		return new Vector2(getBox2DX() + Map.WIDTH - SECTOR_5_WIDTH, getBox2DY() + (HEIGHT / 2));
+		final Rectangle rightSector5Box2DRectangle = Box2DDataUtil.RIGHT_SECTOR_5_RECTANGLE;
+		
+		return new Vector2(
+				rightSector5Box2DRectangle.getX(), 
+				rightSector5Box2DRectangle.getY() + rightSector5Box2DRectangle.getHeight() / 2
+		);
 	}
 	
 	/**
 	 * Return with the position of the top left corner in Box2D.
 	 */
 	public Vector2 getTopLeftCornerBox2DPosition(){
-		return new Vector2(box2DRectangle.getX(), box2DRectangle.getY());
+		return new Vector2(Box2DDataUtil.MAP_RECTANGLE.getX(), Box2DDataUtil.MAP_RECTANGLE.getY());
 	}
 	
 	/**
 	 * Return with the position of the top right corner in Box2D.
 	 */
 	public Vector2 getTopRightCornerBox2DPosition(){
-		return new Vector2(box2DRectangle.getX() + box2DRectangle.getWidth(), box2DRectangle.getY());
+		return new Vector2(Box2DDataUtil.MAP_RECTANGLE.getX() + Box2DDataUtil.MAP_RECTANGLE.getWidth(), Box2DDataUtil.MAP_RECTANGLE.getY());
 	}
 	
 	/**
 	 * Return with the position of the bottom left corner in Box2D.
 	 */
 	public Vector2 getBottomLeftCornerBox2DPosition(){
-		return new Vector2(box2DRectangle.getX(), box2DRectangle.getY() + box2DRectangle.getHeight());
+		return new Vector2(Box2DDataUtil.MAP_RECTANGLE.getX(), Box2DDataUtil.MAP_RECTANGLE.getY() + Box2DDataUtil.MAP_RECTANGLE.getHeight());
 	}
 	
 	/**
 	 * Return with the position of the bottom right corner in Box2D.
 	 */
 	public Vector2 getBottomRightCornerBox2DPosition(){
-		return new Vector2(box2DRectangle.getX() + box2DRectangle.getWidth(), box2DRectangle.getY() + box2DRectangle.getHeight());
+		return new Vector2(Box2DDataUtil.MAP_RECTANGLE.getX() + Box2DDataUtil.MAP_RECTANGLE.getWidth(), Box2DDataUtil.MAP_RECTANGLE.getY() + Box2DDataUtil.MAP_RECTANGLE.getHeight());
 	}
 	
 	/**
@@ -277,7 +233,7 @@ public class Map extends RectangleShape{
 	 * @param box2DPosition - The position in box2D coordinate system.
 	 */
 	public boolean containsBox2DPosition(final Vector2 box2DPosition){
-		return box2DRectangle.contains(box2DPosition);
+		return Box2DDataUtil.MAP_RECTANGLE.contains(box2DPosition);
 	}
 	
 	/**
@@ -286,7 +242,7 @@ public class Map extends RectangleShape{
 	 * @param box2DPosition - The Box2D position.
 	 */
 	public boolean containsLeftSector16Box2DPosition(final Vector2 box2DPosition){
-		return leftSector16Box2DRectangle.contains(box2DPosition);
+		return Box2DDataUtil.LEFT_SECTOR_16_RECTANGLE.contains(box2DPosition);
 	}
 	
 	/**
@@ -295,7 +251,7 @@ public class Map extends RectangleShape{
 	 * @param box2DPosition - The Box2D position.
 	 */
 	public boolean containsRightSector16Box2DPosition(final Vector2 box2DPosition){
-		return rightSector16Box2DRectangle.contains(box2DPosition);
+		return Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE.contains(box2DPosition);
 	}
 	
 	// --------------------------------------------------
@@ -370,9 +326,9 @@ public class Map extends RectangleShape{
 		bottomRightSmallArc.draw();
 		bottomLeftSmallArc.draw();
 		
-		centerBigCircle.draw();
+		centralBigCircle.draw();
 		
-		centerSmallCircle.draw();
+		centralSmallCircle.draw();
 		
 		leftBigArc.draw();
 		
@@ -404,9 +360,9 @@ public class Map extends RectangleShape{
 		rightSector16.dispose();
 		leftSector5.dispose();
 		rightSector5.dispose();
-		centerBigCircle.dispose();
+		centralBigCircle.dispose();
 		centerLine.dispose();
-		centerSmallCircle.dispose();
+		centralSmallCircle.dispose();
 		leftSmallCircle.dispose();
 		rightSmallCircle.dispose();
 		topLeftSmallArc.dispose();
@@ -429,155 +385,137 @@ public class Map extends RectangleShape{
 	 * @param box2DWorld - The world of the Box2D.
 	 */
 	private void addSensor(final World box2DWorld){
-		Box2DUtil.addSensor(box2DWorld, box2DRectangle.getX(), box2DRectangle.getY(), box2DRectangle.getWidth(), box2DRectangle.getHeight(), this, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
-	}
-	
-	/**
-	 * Resize the top left small arc.
-	 * 
-	 * @param x - The x coordinate value of the arc.
-	 * @param y - The y coordinate value of the arc.
-	 * @param radius - The radius value.
-	 * @param scale - The scale value.
-	 */
-	private void resizeTopLeftSmallArc(final float x, final float y, final float radius, final double scale){
-		topLeftSmallArc.resize(x, y, radius, scale);
-	}
-	
-	/**
-	 * Resize the top right small arc.
-	 * 
-	 * @param y - The y coordinate value of the arc.
-	 * @param mapX - The x coordinate value of the map.
-	 * @param mapWidth - The width value of the map.
-	 * @param radius The radius value.
-	 * @param scale - The scale value.
-	 */
-	private void resizeTopRightSmallArc(final float y, final float mapX, final float mapWidth, final float radius, final double scale){
-		final float x = mapX + mapWidth;
-		
-		topRightSmallArc.resize(x, y, radius, scale);
-	}
-	
-	/**
-	 * Resize the bottom right small arc.
-	 * 
-	 * @param x - The x coordinate value of the arc.
-	 * @param mapY - The y coordinate value of the map.
-	 * @param mapHeight - The height value of the map.
-	 * @param radius - The radius value.
-	 * @param scale - The scale value.
-	 */
-	private void resizeBottomRightSmallArc(final float x, final float mapY, final float mapHeight, final float radius, final double scale){
-		final float y = mapY + mapHeight;
-		
-		bottomRightSmallArc.resize(x, y, radius, scale);
+		Box2DUtil.addSensor(box2DWorld, Box2DDataUtil.MAP_RECTANGLE.getX(), Box2DDataUtil.MAP_RECTANGLE.getY(), Box2DDataUtil.MAP_RECTANGLE.getWidth(), Box2DDataUtil.MAP_RECTANGLE.getHeight(), this, BitsUtil.MAP_SENSOR_BITS, BitsUtil.BALL_BITS);
 	}
 	
 	/**
 	 * Resize the bottom left small arc.
 	 * 
-	 * @param x - The x coordinate value of the arc.
-	 * @param y - The y coordinate value of the arc.
-	 * @param radius - The radius value.
+	 * @param tablePosition - The position of table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeBottomLeftSmallArc(final float x, final float y, final float radius, final double scale){
-		bottomLeftSmallArc.resize(x, y, radius, scale);
+	private void resizeBottomLeftSmallArc(final Vector2 tablePosition, final double scale){
+		final Circle arc = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.BOTTOM_LEFT_ARC, scale);
+		
+		bottomLeftSmallArc.resize(arc.x, arc.y, arc.radius, scale);
+	}
+	
+	/**
+	 * Resize the bottom right small arc.
+	 * 
+	 * @param tablePosition - The position of table on screen.
+	 * @param scale - The scale value.
+	 */
+	private void resizeBottomRightSmallArc(final Vector2 tablePosition, final double scale){
+		final Circle arc = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.BOTTOM_RIGHT_ARC, scale);
+		
+		bottomRightSmallArc.resize(arc.x, arc.y, arc.radius, scale);
+	}
+	
+	/**
+	 * Resize the top right small arc.
+	 * 
+	 * @param tablePosition - The position of table on screen.
+	 * @param scale - The scale value.
+	 */
+	private void resizeTopRightSmallArc(final Vector2 tablePosition, final double scale){
+		final Circle arc = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.TOP_RIGHT_ARC, scale);
+		
+		topRightSmallArc.resize(arc.x, arc.y, arc.radius, scale);
+	}
+	
+	/**
+	 * Resize the top left small arc.
+	 * 
+	 * @param tablePosition - The position of table on screen.
+	 * @param scale - The scale value.
+	 */
+	private void resizeTopLeftSmallArc(final Vector2 tablePosition, final double scale){
+		final Circle arc = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.TOP_LEFT_ARC, scale);
+		
+		topLeftSmallArc.resize(arc.x, arc.y, arc.radius, scale);
 	}
 	
 	/**
 	 * Resize the center big circle.
 	 * 
-	 * @param mapX - The x coordinate value of the map.
-	 * @param mapY - The y coordinate value of the map.
-	 * @param mapWidth - The width value of the map.
-	 * @param mapHeight - The height value of the map.
-	 * @param radius - The radius value.
+	 * @param tablePosition - The position of the table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeCenterBigCircle(final float mapX, final float mapY, final float mapWidth, final float mapHeight, final float radius, final double scale){
-		final float x = mapX + mapWidth / 2;
-		final float y = mapY + mapHeight / 2;
+	private void resizeCentralBigCircle(final Vector2 tablePosition, final double scale){
+		final Circle circle = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.CENTRAL_BIG_CIRCLE, scale);
 		
-		centerBigCircle.resize(x, y, radius, scale);
+		centralBigCircle.resize(circle.x, circle.y, circle.radius, scale);
 	}
 	
 	/**
 	 * Resize the center small circle.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordiante value.
+	 * @param tablePosition - The position of table on screen.
 	 * @param radius - The radius value.
 	 */
-	private void resizeCenterSmallCircle(final float x, final float y, final float radius){
-		centerSmallCircle.resize(x, y, radius);
+	private void resizeCentralSmallCircle(final Vector2 tablePosition, final double scale){
+		final Circle circle = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.CENTRAL_SMALL_CIRCLE, scale);
+		
+		centralSmallCircle.resize(circle.x, circle.y, circle.radius);
 	}
 	
 	/**
 	 * Resize the left small circle.
 	 * 
-	 * @param y - The y coordinate value.
-	 * @param mapX - The x coordinate value of the map.
-	 * @param distance - The distance from the left border of map.
+	 * @param tablePosition - The position of table on screen.
 	 * @param radius - The radius value.
 	 */
-	private void resizeLeftSmallCircle(final float y, final float mapX, final float distance, final float radius){
-		final float x = mapX + distance;
+	private void resizeLeftSmallCircle(final Vector2 tablePosition, final double scale){
+		final Circle circle = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.LEFT_SMALL_CIRCLE, scale);
 		
-		leftSmallCircle.resize(x, y, radius);
+		leftSmallCircle.resize(circle.x, circle.y, circle.radius);
 	}
 	
 	/**
 	 * Resize the right small circle.
 	 * 
-	 * @param y - The y coordinate value.
-	 * @param mapX - The x coordinate value of map.
-	 * @param mapWidth - The width value of map.
-	 * @param distance - The distance from the right border of map.
+	 * @param tablePosition - The position of table on screen.
 	 * @param radius - The radius value.
 	 */
-	private void resizeRightSmallCircle(final float y, final float mapX, final float mapWidth, final float distance, final float radius){
-		final float x = mapX + mapWidth - distance;
+	private void resizeRightSmallCircle(final Vector2 tablePosition, final double scale){
+		final Circle circle = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.RIGHT_SMALL_CIRCLE, scale);
 		
-		rightSmallCircle.resize(x, y, radius);
+		rightSmallCircle.resize(circle.x, circle.y, circle.radius);
 	}
 	
 	/**
 	 * Resize left big arc.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param radius - The radius value.
+	 * @param tablePosition - The position of the table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeLeftBigArc(final float x, final float y, final float radius, final double scale){
-		leftBigArc.resize(x, y, radius, scale);
+	private void resizeLeftBigArc(final Vector2 tablePosition, final double scale){
+		final Circle circle = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.LEFT_BIG_CIRCLE, scale);
+		
+		leftBigArc.resize(circle.x, circle.y, circle.radius, scale);
 	}
 	
 	/**
 	 * Resize right big arc.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param radius - The radius value.
+	 * @param tablePosition - The position of the table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeRightBigArc(final float x, final float y, final float radius, final double scale){
-		rightBigArc.resize(x, y, radius, scale);
+	private void resizeRightBigArc(final Vector2 tablePosition, final double scale){
+		final Circle circle = Box2DUtil.box2DCircleToScreenCircle(tablePosition, Box2DDataUtil.RIGHT_BIG_CIRCLE, scale);
+		
+		rightBigArc.resize(circle.x, circle.y, circle.radius, scale);
 	}
 	
 	/**
 	 * Resize border of map.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
+	 * @param mapRectangle - The rectangle of map on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeMapBorder(final float x, final float y, final float width, final float height, final double scale){
-		mapBorder.resize(x, y, width, height, scale);
+	private void resizeMapBorder(final Rectangle mapRectangle, final double scale){
+		mapBorder.resize(mapRectangle.x, mapRectangle.y, mapRectangle.width, mapRectangle.height, scale);
 	}
 	
 	/**
@@ -587,7 +525,7 @@ public class Map extends RectangleShape{
 	 * @param scale - The scale value.
 	 */
 	private void resizeLeftSector16(final Vector2 tablePosition, final double scale){
-		final Rectangle rec = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, leftSector16Box2DRectangle, scale);
+		final Rectangle rec = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, Box2DDataUtil.LEFT_SECTOR_16_RECTANGLE, scale);
 		
 		leftSector16.resize(rec.getX(), rec.getY(), rec.getWidth(), rec.getHeight(), scale);
 	}
@@ -599,7 +537,7 @@ public class Map extends RectangleShape{
 	 * @param scale - The scale value.
 	 */
 	private void resizeRightSector16(final Vector2 tablePosition, final double scale){
-		final Rectangle rec = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, rightSector16Box2DRectangle, scale);
+		final Rectangle rec = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE, scale);
 		
 		rightSector16.resize(rec.getX(), rec.getY(), rec.getWidth(), rec.getHeight(), scale);
 	}
@@ -607,68 +545,39 @@ public class Map extends RectangleShape{
 	/**
 	 * Resize the left sector 5.
 	 * 
-	 * @param x - The x coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param mapY - The y coordinate value of the map.
-	 * @param mapHeight - The height value of the map.
+	 * @param tablePosition - The position of table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeLeftSector5(final float x, final float width, final float height, final float mapY, final float mapHeight, final double scale){
-		final float y = mapY + ( mapHeight - height ) / 2;
+	private void resizeLeftSector5(final Vector2 tablePosition, final double scale){
+		final Rectangle rectangle = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, Box2DDataUtil.LEFT_SECTOR_5_RECTANGLE, scale);
 		
-		leftSector5.resize(x, y, width, height, scale);
+		leftSector5.resize(rectangle.x, rectangle.y, rectangle.width, rectangle.height, scale);
 	}
 	
 	/**
 	 * Resize the right sector 5.
 	 * 
-	 * @param y - The y coordinate value.
-	 * @param width - The width value.
-	 * @param height - The height value.
-	 * @param mapX - The x coordinate value of the map.
-	 * @param mapWidth - The width value of the map.
+	 * @param tablePosition - The position of table on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeRightSector5(final float y, final float width, final float height, final float mapX, final float mapWidth, final double scale){
-		final float x = mapX + mapWidth - width;
+	private void resizeRightSector5(final Vector2 tablePosition, final double scale){
+		final Rectangle rectangle = Box2DUtil.box2DRectangleToScreenRectangle(tablePosition, Box2DDataUtil.RIGHT_SECTOR_5_RECTANGLE, scale);
 		
-		rightSector5.resize(x, y, width, height, scale);
-		
+		rightSector5.resize(rectangle.x, rectangle.y, rectangle.width, rectangle.height, scale);
 	}
 	
 	/**
 	 * Resize the center line.
 	 * 
-	 * @param mapX - The x coordinate value of the map.
-	 * @param mapY - The y coordinate value of the map.
-	 * @param mapWidth - The width value of the map.
-	 * @param mapHeight - The height value of the map.
+	 * @param mapRectangle - The rectangle of map on screen.
 	 * @param scale - The scale value.
 	 */
-	private void resizeCenterLine(final float mapX, final float mapY, final float mapWidth, final float mapHeight, final double scale){
-		final float x1 = mapX + mapWidth / 2;
-		final float y1 = mapY;
+	private void resizeCenterLine(final Rectangle mapRectangle, final double scale){
+		final float x1 = mapRectangle.getX() + mapRectangle.getWidth() / 2;
+		final float y1 = mapRectangle.getY();
 		final float x2 = x1;
-		final float y2 = y1 + mapHeight;
+		final float y2 = y1 + mapRectangle.getHeight();
 		centerLine.resize(x1, y1, x2, y2, scale);
 	}
 
-	// --------------------------------------------------
-	// ~ Getter methods
-	// --------------------------------------------------
-	
-	/**
-	 * Return with the x coordinate value in Box2D.
-	 */
-	public float getBox2DX() {
-		return box2DRectangle.getX();
-	}
-	
-	/**
-	 * Return with the y coordinate value in Box2D.
-	 */
-	public float getBox2DY() {
-		return box2DRectangle.getY();
-	}
 }

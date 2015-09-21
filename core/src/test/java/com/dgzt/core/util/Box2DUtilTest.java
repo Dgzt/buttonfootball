@@ -22,12 +22,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.dgzt.core.Table;
 
 /**
  * Test for {@link Box2DUtil}.
@@ -39,6 +39,8 @@ public class Box2DUtilTest {
 	// --------------------------------------------------
 	// ~ Private static members
 	// --------------------------------------------------
+	
+	private final static Rectangle TABLE_RECTANGLE = Box2DDataUtil.TABLE_RECTANGLE;
 	
 	private final static double DELTA = 0.01;
 	
@@ -145,6 +147,19 @@ public class Box2DUtilTest {
 	}
 	
 	/**
+	 * Test for {@link Box2DUtil#box2DCircleToScreenCircle(Vector2, Circle, double)} method.
+	 */
+	@Test
+	public void test_box2DCircleToScreenCircle(){
+		final Vector2 tablePosition = new Vector2(50, 60);
+		final Circle box2DCircle = new Circle(10, 20, 100);
+		final double scale = 1.5;
+		final Circle result = new Circle(65, 90, 150);
+		
+		assertEquals(result, Box2DUtil.box2DCircleToScreenCircle(tablePosition, box2DCircle, scale));
+	}
+	
+	/**
 	 * Test for {@link Box2DUtil#newDistancePosition(Vector2, Vector2, float)} method.
 	 */
 	@Test
@@ -166,33 +181,33 @@ public class Box2DUtilTest {
 		assertEquals(p2Result, Box2DUtil.newDistancePosition(origin, p2, distance));
 		
 		// Top border of table
-		origin.set(30, Table.RECTANGLE.y + Table.RECTANGLE.height - originDistanceFromBorder);
+		origin.set(30, TABLE_RECTANGLE.y + TABLE_RECTANGLE.height - originDistanceFromBorder);
 		
-		final Vector2 pTop = new Vector2(30, Table.RECTANGLE.y + Table.RECTANGLE.height - pointDistanceFromBorder);
+		final Vector2 pTop = new Vector2(30, TABLE_RECTANGLE.y + TABLE_RECTANGLE.height - pointDistanceFromBorder);
 		final Vector2 pTopResult = new Vector2(30, origin.y - distance);
 		
 		assertEquals(pTopResult, Box2DUtil.newDistancePosition(origin, pTop, distance));
 		
 		// Right border of table
-		origin.set(Table.RECTANGLE.x + Table.RECTANGLE.width - originDistanceFromBorder, 30);
+		origin.set(TABLE_RECTANGLE.x + TABLE_RECTANGLE.width - originDistanceFromBorder, 30);
 		
-		final Vector2 pRight = new Vector2(Table.RECTANGLE.x + Table.RECTANGLE.width - pointDistanceFromBorder, 30);
+		final Vector2 pRight = new Vector2(TABLE_RECTANGLE.x + TABLE_RECTANGLE.width - pointDistanceFromBorder, 30);
 		final Vector2 pRightResult = new Vector2(origin.x - distance, 30);
 		
 		assertEquals(pRightResult, Box2DUtil.newDistancePosition(origin, pRight, distance));
 		
 		// Bottom border of table
-		origin.set(30, Table.RECTANGLE.y + originDistanceFromBorder);
+		origin.set(30, TABLE_RECTANGLE.y + originDistanceFromBorder);
 		
-		final Vector2 pBottom = new Vector2(30, Table.RECTANGLE.y + pointDistanceFromBorder);
+		final Vector2 pBottom = new Vector2(30, TABLE_RECTANGLE.y + pointDistanceFromBorder);
 		final Vector2 pBottomResult = new Vector2(origin.x, origin.y + distance);
 		
 		assertEquals(pBottomResult, Box2DUtil.newDistancePosition(origin, pBottom, distance));
 		
 		// Left border of table
-		origin.set(Table.RECTANGLE.x + originDistanceFromBorder, 30);
+		origin.set(TABLE_RECTANGLE.x + originDistanceFromBorder, 30);
 		
-		final Vector2 pLeft = new Vector2(Table.RECTANGLE.x + pointDistanceFromBorder, 30);
+		final Vector2 pLeft = new Vector2(TABLE_RECTANGLE.x + pointDistanceFromBorder, 30);
 		final Vector2 pLeftResult = new Vector2(origin.x + distance, 30);
 		
 		assertEquals(pLeftResult, Box2DUtil.newDistancePosition(origin, pLeft, distance));

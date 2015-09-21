@@ -48,6 +48,9 @@ public enum GameStatus {
 	/** The opponent move some button. */
 	OPPONENT_MOVE_SOME_BUTTON,
 	
+	/** Penalty kick. */
+	PENALTY_KICK,
+	
 	/** Player goal. */
 	PLAYER_GOAL,
 	

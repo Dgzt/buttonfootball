@@ -27,6 +27,7 @@ import com.dgzt.core.scoreboard.GoalBoard;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
 import com.dgzt.core.setting.StepMode;
+import com.dgzt.core.util.Box2DDataUtil;
 import com.dgzt.core.util.Box2DUtil;
 import com.dgzt.core.util.MathUtil;
 
@@ -630,12 +631,14 @@ public final class GameControl {
 		}
 	}
 	
+	/**
+	 * The fault method.
+	 */
 	private void fault(){
 		Gdx.app.log(GameControl.class.getName() + ".fault", "init");
 		
 		if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
-			// TODO implement later
-			throw new RuntimeException("Implement later.");
+			leftPenaltyKick();
 		}else if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
 			// TODO implement later
 			throw new RuntimeException("Implement later.");
@@ -653,6 +656,26 @@ public final class GameControl {
 				default : 
 					throw new IllegalGameStatusException();
 			}
+		}
+	}
+
+	/**
+	 * The left penalty kick.
+	 */
+	private void leftPenaltyKick() {
+		gameStatus = GameStatus.PENALTY_KICK;
+		final Player whoIsOnLeftSide = whoIsOnLeftSide();
+		
+		table.createFreeSpaceForLeftPenaltyKick(whoIsOnLeftSide);
+		
+		table.moveGoalkeeperToLeftGate(whoIsOnLeftSide);
+		
+		table.moveBallToLeftPenaltyPosition();
+		
+		if(whoIsOnLeftSide == Player.PLAYER){
+			opponentMoveOneButton();
+		}else{
+			playerMoveOneButton();
 		}
 	}
 	
@@ -689,10 +712,15 @@ public final class GameControl {
 	private void ballLeavedMap(){
 		Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "init");
 		
+		final float mapBox2DX = Box2DDataUtil.MAP_RECTANGLE.getX();
+		final float mapBox2DY = Box2DDataUtil.MAP_RECTANGLE.getY();
+		final float mapBox2DWidth = Box2DDataUtil.MAP_RECTANGLE.getWidth();
+		final float mapBox2DHeight = Box2DDataUtil.MAP_RECTANGLE.getHeight();
+		
 		final Map map = table.getMap();
 		final Vector2 newBallPos = ballLeavedMapCoordinate.cpy();
 		
-		if(ballLeavedMapCoordinate.x < map.getBox2DX()){
+		if(ballLeavedMapCoordinate.x < mapBox2DX){
 			// The ball leaved the map on the left side
 			if(whoIsOnLeftSide() == Player.PLAYER){
 				// The player is on the left side
@@ -704,12 +732,12 @@ public final class GameControl {
 					playerMoveSomeButton();
 				}else{ 
 					// Corner kick from opponent
-					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+					if(ballLeavedMapCoordinate.y < (mapBox2DY + mapBox2DHeight / 2)){
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top left by opponent.");
-						newBallPos.set(map.getBox2DX(), map.getBox2DY());
+						newBallPos.set(mapBox2DX, mapBox2DY);
 					}else{
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom left by opponent.");
-						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
+						newBallPos.set(mapBox2DX, mapBox2DY + mapBox2DHeight);
 					}
 					
 					table.create18CentimeterFreeSpace(newBallPos);
@@ -725,12 +753,12 @@ public final class GameControl {
 					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveSomeButton();
 				}else{
-					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+					if(ballLeavedMapCoordinate.y < (mapBox2DY + mapBox2DHeight / 2)){
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top left by player.");
-						newBallPos.set(map.getBox2DX(), map.getBox2DY());
+						newBallPos.set(mapBox2DX, mapBox2DY);
 					}else{
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom left by player.");
-						newBallPos.set(map.getBox2DX(), map.getBox2DY() + Map.HEIGHT);
+						newBallPos.set(mapBox2DX, mapBox2DY + mapBox2DHeight);
 					}
 					
 					table.create18CentimeterFreeSpace(newBallPos);
@@ -738,7 +766,7 @@ public final class GameControl {
 					playerMoveOneButton();
 				}
 			}
-		}else if(ballLeavedMapCoordinate.x > map.getBox2DX() + Map.WIDTH){
+		}else if(ballLeavedMapCoordinate.x > mapBox2DX + mapBox2DWidth){
 			// The ball leaved the map on the right side
 			if(whoIsOnRightSide() == Player.BOT){
 				// The opponent is on the right side
@@ -749,12 +777,12 @@ public final class GameControl {
 					table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);
 					opponentMoveSomeButton();
 				}else{
-					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+					if(ballLeavedMapCoordinate.y < (mapBox2DY + mapBox2DHeight / 2)){
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top right by player.");
-						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+						newBallPos.set(mapBox2DX + mapBox2DWidth, mapBox2DY);
 					}else{
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom right by player.");
-						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+						newBallPos.set(mapBox2DX + mapBox2DWidth, mapBox2DY + mapBox2DHeight);
 					}
 					
 					table.create18CentimeterFreeSpace(newBallPos);
@@ -771,12 +799,12 @@ public final class GameControl {
 					playerMoveSomeButton();
 				}else{ 
 					// Corner kick from opponent
-					if(ballLeavedMapCoordinate.y < (map.getBox2DY() + Map.HEIGHT / 2)){
+					if(ballLeavedMapCoordinate.y < (mapBox2DY + mapBox2DHeight / 2)){
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on top right by opponent.");
-						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY());
+						newBallPos.set(mapBox2DX + mapBox2DWidth, mapBox2DY);
 					}else{
 						Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Corner kick on bottom right by opponent.");
-						newBallPos.set(map.getBox2DX() + Map.WIDTH, map.getBox2DY() + Map.HEIGHT);
+						newBallPos.set(mapBox2DX + mapBox2DWidth, mapBox2DY + mapBox2DHeight);
 					}
 					
 					table.create18CentimeterFreeSpace(newBallPos);
@@ -786,16 +814,16 @@ public final class GameControl {
 			}
 		}else{
 			// Throw in
-			if(ballLeavedMapCoordinate.y < map.getBox2DY()){
+			if(ballLeavedMapCoordinate.y < mapBox2DY){
 				// The ball leaved the map on top side
 				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the top side.");
 	
-				newBallPos.y = map.getBox2DY();
+				newBallPos.y = mapBox2DY;
 			}else{
 				// THe ball leaved the map on the bottom side
 				Gdx.app.log(GameControl.class.getName() + ".ballLeavedMap()", "Throw in on the bottom side.");
 	
-				newBallPos.y = map.getBox2DY() + Map.HEIGHT;
+				newBallPos.y = mapBox2DY + mapBox2DHeight;
 			}
 			
 			table.getBall().setBox2DPosition(newBallPos.x, newBallPos.y);

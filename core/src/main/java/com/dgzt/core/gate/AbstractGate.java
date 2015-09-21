@@ -70,11 +70,8 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	// ~ Private members
 	// --------------------------------------------------
 	
-	/** The x coordinate value in Box2D. */
-	private final float box2DX;
-	
-	/** The y coordiante value in Box2D. */
-	private final float box2DY;
+	/** The position in Box2D. */
+	private final Vector2 box2DPosition;
 	
 	/** The column lines. */
 	private final List<LineShape> columnLines;
@@ -91,13 +88,11 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	 * 
 	 * @param shader - The shader.
 	 * @param box2DWorld - The world in the Box2D.
-	 * @param box2DX - The x coordinate value in Box2D.
-	 * @param box2DY - The y coordinate value in Box2D.
+	 * @param box2DPosition - The position on Box2D.
 	 */
-	public AbstractGate(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY) {
+	public AbstractGate(final ShaderProgram shader, final World box2DWorld, final Vector2 box2DPosition) {
 		super(shader, COLOR);
-		this.box2DX = box2DX;
-		this.box2DY = box2DY;
+		this.box2DPosition = box2DPosition;
 
 		columnLines = new ArrayList<LineShape>();
 		for(int i=0; i < COLUMN_LINES; ++i){
@@ -136,8 +131,8 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	public void resize(final float tableX, final float tableY, final double scale){
 		final float lineWidth = (float)(LineShape.LINE_WIDTH * scale);
 		
-		final float x = tableX + (float)(box2DX * scale);
-		final float y = tableY + (float)(box2DY * scale);
+		final float x = tableX + (float)(box2DPosition.x * scale);
+		final float y = tableY + (float)(box2DPosition.y * scale);
 		final float width = (float)(AbstractGate.WIDTH * scale);
 		final float height = (float)(AbstractGate.HEIGHT * scale);
 		
@@ -182,13 +177,6 @@ public abstract class AbstractGate extends RectangleBorderShape{
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Return with the Box2D position.
-	 */
-	public Vector2 getBox2DPosition(){
-		return new Vector2(box2DX, box2DY);
 	}
 	
 	// --------------------------------------------------
@@ -236,7 +224,7 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	 * @param box2DWorld - The world of the Box2D.
 	 */
 	private void addBox2DSensor(final World box2DWorld){
-		Box2DUtil.addSensor(box2DWorld, box2DX, box2DY, AbstractGate.WIDTH, AbstractGate.HEIGHT, this, BitsUtil.GATE_SENSOR_BITS, BitsUtil.BALL_BITS);
+		Box2DUtil.addSensor(box2DWorld, box2DPosition.x, box2DPosition.y, AbstractGate.WIDTH, AbstractGate.HEIGHT, this, BitsUtil.GATE_SENSOR_BITS, BitsUtil.BALL_BITS);
 	}
 	
 	/** 
@@ -295,28 +283,28 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	 * Return with the rectangle of the top wall in Box2D world.
 	 */
 	private Rectangle getTopBox2DWallRectangle(){
-		return new Rectangle(box2DX, box2DY, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
+		return new Rectangle(box2DPosition.x, box2DPosition.y, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
 	}
 	
 	/**
 	 * Return with the rectangle of the bottom wall in Box2D world.
 	 */
 	private Rectangle getBottomBox2DWallRectangle(){
-		return new Rectangle(box2DX, box2DY + AbstractGate.HEIGHT - LineShape.LINE_WIDTH, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
+		return new Rectangle(box2DPosition.x, box2DPosition.y + AbstractGate.HEIGHT - LineShape.LINE_WIDTH, AbstractGate.WIDTH, LineShape.LINE_WIDTH);
 	}
 	
 	/**
 	 * Return with the rectangle of the left wall in Box2D world.
 	 */
 	private Rectangle getLeftBox2DWallRectangle(){
-		return new Rectangle(box2DX, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
+		return new Rectangle(box2DPosition.x, box2DPosition.y, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
 	}
 	
 	/**
 	 * Return with the rectangle of the right wall in Box2D world.
 	 */
 	private Rectangle getRightBox2DWallRectangle(){
-		return new Rectangle(box2DX + AbstractGate.WIDTH - LineShape.LINE_WIDTH, box2DY, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
+		return new Rectangle(box2DPosition.x + AbstractGate.WIDTH - LineShape.LINE_WIDTH, box2DPosition.y, LineShape.LINE_WIDTH, AbstractGate.HEIGHT);
 	}
 	
 	// --------------------------------------------------
@@ -327,13 +315,20 @@ public abstract class AbstractGate extends RectangleBorderShape{
 	 * Return with the x coordinate value in Box2D.
 	 */
 	public float getBox2DX() {
-		return box2DX;
+		return box2DPosition.x;
 	}
 
 	/**
 	 * Return with the y coordinate value in Box2D.
 	 */
 	public float getBox2DY() {
-		return box2DY;
+		return box2DPosition.y;
+	}
+	
+	/**
+	 * Return with the Box2D position.
+	 */
+	public Vector2 getBox2DPosition(){
+		return box2DPosition;
 	}
 }

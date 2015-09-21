@@ -14,6 +14,7 @@
  */
 package com.dgzt.core.util;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -22,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.dgzt.core.Table;
 
 /**
  * Util for Box2D.
@@ -112,6 +112,22 @@ public class Box2DUtil {
 	}
 	
 	/**
+	 * The box2D circle convert to screen circle.
+	 * 
+	 * @param tablePosition - The position of table on screen.
+	 * @param circle - The converting circle.
+	 * @param scale - The scale.
+	 * @return The converted circle.
+	 */
+	public static Circle box2DCircleToScreenCircle(final Vector2 tablePosition, final Circle circle, final double scale){
+		final Circle scaledCircle = MathUtil.scale(circle, scale);
+		scaledCircle.x += tablePosition.x;
+		scaledCircle.y += tablePosition.y;
+		
+		return scaledCircle;
+	}
+	
+	/**
 	 * Return with the new position.
 	 * 
 	 * @param originPosition - The origin position.
@@ -121,24 +137,29 @@ public class Box2DUtil {
 	public static Vector2 newDistancePosition(final Vector2 originPosition, final Vector2 oldPosition, final float newDistance){
 		// TODO originPosition and oldPosition equals
 		
+		final float tableBox2DX = Box2DDataUtil.TABLE_RECTANGLE.getX();
+		final float tableBox2DY = Box2DDataUtil.TABLE_RECTANGLE.getY();
+		final float tableBox2DWidth = Box2DDataUtil.TABLE_RECTANGLE.getWidth();
+		final float tableBox2DHeight = Box2DDataUtil.TABLE_RECTANGLE.getHeight();
+		
 		final Vector2 newPosition = oldPosition.cpy();
 		newPosition.sub(originPosition);
 		newPosition.setLength(newDistance);
 		newPosition.add(originPosition);
 		
-		if(newPosition.x < Table.RECTANGLE.x){
+		if(newPosition.x < tableBox2DX){
 			newPosition.x = originPosition.x + (originPosition.x - newPosition.x);
 		}
 
-		if(Table.RECTANGLE.x + Table.RECTANGLE.getWidth() < newPosition.x){
+		if(tableBox2DX + tableBox2DWidth < newPosition.x){
 			newPosition.x = originPosition.x - (newPosition.x - originPosition.x);
 		}
 		
-		if(newPosition.y < Table.RECTANGLE.y){
+		if(newPosition.y < tableBox2DY){
 			newPosition.y = originPosition.y + (originPosition.y - newPosition.y);
 		}
 
-		if(Table.RECTANGLE.y + Table.RECTANGLE.getHeight() < newPosition.y){
+		if(tableBox2DY + tableBox2DHeight < newPosition.y){
 			newPosition.y = originPosition.y - (newPosition.y - originPosition.y);
 		}
 		

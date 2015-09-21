@@ -16,6 +16,7 @@ package com.dgzt.core.gate;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dgzt.core.util.Box2DDataUtil;
 
 /**
  * The left gate.
@@ -33,11 +34,9 @@ public class LeftGate extends AbstractGate{
 	 * 
 	 * @param shader - The shader.
 	 * @param box2DWorld - The world of the Box2D.
-	 * @param box2DX - The x coordinate value in the Box2D.
-	 * @param box2DY - The y coordinate value in the Box2D.
 	 */
-	public LeftGate(final ShaderProgram shader, final World box2DWorld, final float box2DX, final float box2DY) {
-		super(shader, box2DWorld, box2DX, box2DY);
+	public LeftGate(final ShaderProgram shader, final World box2DWorld) {
+		super(shader, box2DWorld, Box2DDataUtil.LEFT_GATE_POSITION);
 	}
 
 	// --------------------------------------------------

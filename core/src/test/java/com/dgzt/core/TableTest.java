@@ -17,6 +17,9 @@ package com.dgzt.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +29,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -33,6 +37,7 @@ import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.gate.RightGate;
+import com.dgzt.core.util.Box2DDataUtil;
 
 /**
  * Test for {@link Table}.
@@ -48,9 +53,9 @@ public final class TableTest extends BaseShapeTester{
 	private static final Rectangle TABLE_RECTANGLE = new Rectangle(100.0f, 200.0f, 80.0f, 60.0f);
 	private static final double SCALE = 1.0f;
 	private static final float DISTANCE = 11.0f;
-	private static final Vector2 MAP_BOX2D_POSITION = new Vector2(10.0f, 15.0f);
-	private static final Vector2 MAP_LEFT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT / 2);
-	private static final Vector2 MAP_RIGHT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH - DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT / 2);
+	private static final Rectangle MAP_BOX2D_RECTANGLE = Box2DDataUtil.MAP_RECTANGLE;
+	private static final Vector2 MAP_LEFT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height / 2);
+	private static final Vector2 MAP_RIGHT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width - DISTANCE, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.getHeight() / 2);
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -78,12 +83,10 @@ public final class TableTest extends BaseShapeTester{
 		
 		// Map
 		final Map map = Mockito.mock(Map.class);
-		Mockito.when(map.getBox2DX()).thenReturn(MAP_BOX2D_POSITION.x);
-		Mockito.when(map.getBox2DY()).thenReturn(MAP_BOX2D_POSITION.y);
-		Mockito.when(map.getTopLeftCornerBox2DPosition()).thenReturn(MAP_BOX2D_POSITION);
-		Mockito.when(map.getTopRightCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y));
-		Mockito.when(map.getBottomLeftCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_POSITION.x, MAP_BOX2D_POSITION.y + Map.HEIGHT));
-		Mockito.when(map.getBottomRightCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y + Map.HEIGHT));
+		Mockito.when(map.getTopLeftCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_RECTANGLE.x, MAP_BOX2D_RECTANGLE.y));
+		Mockito.when(map.getTopRightCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width, MAP_BOX2D_RECTANGLE.y));
+		Mockito.when(map.getBottomLeftCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_RECTANGLE.x, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height));
+		Mockito.when(map.getBottomRightCornerBox2DPosition()).thenReturn(new Vector2(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height));
 		Mockito.when(map.getLeftGoalKickBox2DPosition()).thenReturn(MAP_LEFT_GOAL_KICK_BOX2D_POSITION);
 		Mockito.when(map.getRightGoalKickBox2DPosition()).thenReturn(MAP_RIGHT_GOAL_KICK_BOX2D_POSITION);
 		
@@ -95,23 +98,23 @@ public final class TableTest extends BaseShapeTester{
 			}
 			
 			@Override
-			protected Map createMap(final ShaderProgram shader, final World box2dWorld, final float box2dx, final float box2dy) {
+			protected Map createMap(final ShaderProgram shader, final World box2dWorld) {
 				return map;
 			}
 			
 			@Override
-			protected LeftGate createLeftGate(final ShaderProgram shader, final World box2dWorld, final float box2dx, final float box2dy) {
+			protected LeftGate createLeftGate(final ShaderProgram shader, final World box2dWorld) {
 				return Mockito.mock(LeftGate.class);
 			}
 			
 			@Override
-			protected RightGate createRightGate(final ShaderProgram shader, final World box2dWorld, final float box2dx, final float box2dy) {
+			protected RightGate createRightGate(final ShaderProgram shader, final World box2dWorld) {
 				return Mockito.mock(RightGate.class);
 			}
 			
 			@Override
 			protected Button createButton(final ShaderProgram shader, final EventListener eventListener, final World box2dWorld, final Color color) {
-				return Mockito.mock(Button.class);
+				return getMockButton();
 			}
 			
 			@Override
@@ -124,6 +127,54 @@ public final class TableTest extends BaseShapeTester{
 	// --------------------------------------------------
 	// ~ Test methods
 	// --------------------------------------------------
+	
+	/**
+	 * Test for {@link Table#moveGoalkeeperToLeftGate(Player)} method.
+	 */
+	@Test
+	public void test_moveGoalkeeperToLeftGate(){
+		final Vector2 basePosition = new Vector2(10, 20);
+		final List<Button> buttons = table.getPlayerButtons();
+		
+		for(final Button button : buttons){
+			button.setBox2DPosition(basePosition);
+		}
+		
+		table.moveGoalkeeperToLeftGate(Player.PLAYER);
+		
+		Assert.assertEquals(table.getPlayerButtons().get(0).getBox2DPosition(), Box2DDataUtil.LEFT_GOALKEEPER_POSITION);
+		for(int i = 1; i < buttons.size(); ++i){
+			Assert.assertEquals(table.getPlayerButtons().get(i).getBox2DPosition(), basePosition);
+		}
+	}
+	
+	/**
+	 * Test for {@link Table#moveBallToCenter()} method.
+	 */
+	@Test
+	public void test_moveBallToCenter(){
+		final Vector2 ballPos = new Vector2(23,32);
+		final Ball ball = table.getBall();
+		
+		ball.setBox2DPosition(ballPos);
+		table.moveBallToCenter();
+		
+		Assert.assertEquals(ball.getBox2DPosition(), new Vector2(Box2DDataUtil.CENTRAL_SMALL_CIRCLE.x, Box2DDataUtil.CENTRAL_SMALL_CIRCLE.y));
+	}
+	
+	/**
+	 * Test for {@link Table#moveBallToLeftPenaltyPosition()} method.
+	 */
+	@Test
+	public void test_moveBallToLeftPenaltyPosition(){
+		final Vector2 ballPos = new Vector2(23,32);
+		final Ball ball = table.getBall();
+		
+		ball.setBox2DPosition(ballPos);
+		table.moveBallToLeftPenaltyPosition();
+		
+		Assert.assertEquals(ball.getBox2DPosition(), new Vector2(Box2DDataUtil.LEFT_SMALL_CIRCLE.x, Box2DDataUtil.LEFT_SMALL_CIRCLE.y));
+	}
 	
 	/**
 	 * Test for {@link Table#create18CentimeterFreeSpace(Vector2)} method.
@@ -159,16 +210,147 @@ public final class TableTest extends BaseShapeTester{
 	}
 	
 	/**
+	 * Test for {@link Table#createFreeSpaceForLeftPenaltyKick(Player)} method. 
+	 * The player is on left side.
+	 */
+	@Test
+	public void test_createFreeSpaceForLeftPenaltyKickByOpponent(){
+		final float threshold = 0.1f;
+		final Rectangle rectangle = Box2DDataUtil.LEFT_SECTOR_16_RECTANGLE;
+		final Circle circle = Box2DDataUtil.LEFT_BIG_CIRCLE;
+		
+		// Contains positions
+		final Vector2 containsPlayer1Point = new Vector2(rectangle.x , rectangle.y);
+		final Vector2 containsOpponent0Point = new Vector2(rectangle.x + rectangle.width, rectangle.y);
+		final Vector2 containsPlayer2Point = new Vector2(circle.x + circle.radius - Button.RADIUS, circle.y);
+		
+		// Not contains positions
+		final Vector2 notContainsPlayer3Point = new Vector2(rectangle.x, rectangle.y + rectangle.height + Button.RADIUS + threshold);
+		final Vector2 notContainsOpponent1Point = new Vector2(rectangle.x + rectangle.width + Button.RADIUS + threshold, rectangle.y + rectangle.height);
+		final Vector2 notContainsOpponent2Point = new Vector2(circle.x + circle.radius + Button.RADIUS + 1.0f, circle.y);
+		
+		final List<Button> playerButtons = table.getPlayerButtons();
+		final List<Button> opponentButtons = table.getOpponentButtons();
+		
+		table.moveGoalkeeperToLeftGate(Player.PLAYER);
+		playerButtons.get(1).setBox2DPosition(containsPlayer1Point);
+		playerButtons.get(2).setBox2DPosition(containsPlayer2Point);
+		playerButtons.get(3).setBox2DPosition(notContainsPlayer3Point);
+		
+		opponentButtons.get(0).setBox2DPosition(containsOpponent0Point);
+		opponentButtons.get(1).setBox2DPosition(notContainsOpponent1Point);
+		opponentButtons.get(2).setBox2DPosition(notContainsOpponent2Point);
+		
+		table.createFreeSpaceForLeftPenaltyKick(Player.PLAYER);
+		
+		Assert.assertNotEquals(containsPlayer1Point, playerButtons.get(1).getBox2DPosition());
+		Assert.assertNotEquals(containsPlayer2Point, playerButtons.get(2).getBox2DPosition());
+		Assert.assertNotEquals(containsOpponent0Point, opponentButtons.get(0).getBox2DPosition());
+		
+		Assert.assertEquals(Box2DDataUtil.LEFT_GOALKEEPER_POSITION, playerButtons.get(0).getBox2DPosition());
+		Assert.assertEquals(notContainsPlayer3Point, playerButtons.get(3).getBox2DPosition());
+		Assert.assertEquals(notContainsOpponent1Point, opponentButtons.get(1).getBox2DPosition());
+		Assert.assertEquals(notContainsOpponent2Point, opponentButtons.get(2).getBox2DPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#createFreeSpaceForLeftPenaltyKick(Player)} method. 
+	 * The opponent is on left side.
+	 */
+	@Test
+	public void test_createFreeSpaceForLeftPenaltyKickByPlayer(){
+		final float threshold = 0.1f;
+		final Rectangle rectangle = Box2DDataUtil.LEFT_SECTOR_16_RECTANGLE;
+		final Circle circle = Box2DDataUtil.LEFT_BIG_CIRCLE;
+		
+		// Contains positions
+		final Vector2 containsOpponent1Point = new Vector2(rectangle.x , rectangle.y);
+		final Vector2 containsPlayer0Point = new Vector2(rectangle.x + rectangle.width, rectangle.y);
+		final Vector2 containsOpponent2Point = new Vector2(circle.x + circle.radius - Button.RADIUS, circle.y);
+		
+		// Not contains positions
+		final Vector2 notContainsOpponent3Point = new Vector2(rectangle.x, rectangle.y + rectangle.height + Button.RADIUS + threshold);
+		final Vector2 notContainsPlayer1Point = new Vector2(rectangle.x + rectangle.width + Button.RADIUS + threshold, rectangle.y + rectangle.height);
+		final Vector2 notContainsPlayer2Point = new Vector2(circle.x + circle.radius + Button.RADIUS + 1.0f, circle.y);
+		
+		final List<Button> playerButtons = table.getPlayerButtons();
+		final List<Button> opponentButtons = table.getOpponentButtons();
+		
+		table.moveGoalkeeperToLeftGate(Player.BOT);
+		opponentButtons.get(1).setBox2DPosition(containsOpponent1Point);
+		opponentButtons.get(2).setBox2DPosition(containsOpponent2Point);
+		opponentButtons.get(3).setBox2DPosition(notContainsOpponent3Point);
+		
+		playerButtons.get(0).setBox2DPosition(containsPlayer0Point);
+		playerButtons.get(1).setBox2DPosition(notContainsPlayer1Point);
+		playerButtons.get(2).setBox2DPosition(notContainsPlayer2Point);
+		
+		table.createFreeSpaceForLeftPenaltyKick(Player.BOT);
+		
+		Assert.assertNotEquals(containsOpponent1Point, opponentButtons.get(1).getBox2DPosition());
+		Assert.assertNotEquals(containsOpponent2Point, opponentButtons.get(2).getBox2DPosition());
+		Assert.assertNotEquals(containsPlayer0Point, playerButtons.get(0).getBox2DPosition());
+		
+		Assert.assertEquals(Box2DDataUtil.LEFT_GOALKEEPER_POSITION, opponentButtons.get(0).getBox2DPosition());
+		Assert.assertEquals(notContainsOpponent3Point, opponentButtons.get(3).getBox2DPosition());
+		Assert.assertEquals(notContainsPlayer1Point, playerButtons.get(1).getBox2DPosition());
+		Assert.assertEquals(notContainsPlayer2Point, playerButtons.get(2).getBox2DPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#isFreeBox2DPosition(Button, Vector2)} method.
+	 */
+	@Test
+	public void test_isFreeBox2DPosition(){
+		final float treshold = 1.0f;
+		
+		table.moveButtonsToLeftPartOfMap(Player.PLAYER);
+		table.moveButtonsToRightPartOfMap(Player.BOT);
+		
+		final List<Button> allButton = new ArrayList<Button>(table.getPlayerButtons());
+		allButton.addAll(table.getOpponentButtons());
+		
+		for(final Button buttonA : allButton){
+			// Check the other buttons
+			for(final Button buttonB : allButton){
+				final Vector2 contaisPoint = new Vector2(buttonB.getBox2DPosition());
+				contaisPoint.x += Button.DIAMETER;
+				
+				final Vector2 notContaisPoint = new Vector2(buttonB.getBox2DPosition());
+				notContaisPoint.x += Button.DIAMETER + treshold;
+				
+				if(buttonA != buttonB){
+					Assert.assertFalse(table.isFreeBox2DPosition(buttonA, contaisPoint));
+					Assert.assertTrue(table.isFreeBox2DPosition(buttonA, notContaisPoint));
+				}else{
+					Assert.assertTrue(table.isFreeBox2DPosition(buttonA, contaisPoint));
+					Assert.assertTrue(table.isFreeBox2DPosition(buttonA, notContaisPoint));
+				}
+			}
+			
+			// Check the ball
+			final Vector2 contaisPoint = new Vector2(table.getBall().getBox2DPosition());
+			contaisPoint.x += Ball.RADIUS + Button.RADIUS;
+			
+			final Vector2 notContaisPoint = new Vector2(table.getBall().getBox2DPosition());
+			notContaisPoint.x += Ball.RADIUS + Button.RADIUS + treshold;
+			
+			Assert.assertFalse(table.isFreeBox2DPosition(buttonA, contaisPoint));
+			Assert.assertTrue(table.isFreeBox2DPosition(buttonA, notContaisPoint));
+		}
+	}
+	
+	/**
 	 * Test for {@link Table#isBallOnTopLeftCornerOfMap()} method.
 	 */
 	@Test
 	public void test_isBallOnTopLeftCornerOfMap(){
 		final Ball ball = table.getBall();
 		
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y);
 		assertFalse(table.isBallOnTopLeftCornerOfMap());
 		
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x, MAP_BOX2D_RECTANGLE.y);
 		assertTrue(table.isBallOnTopLeftCornerOfMap());
 	}
 	
@@ -180,19 +362,19 @@ public final class TableTest extends BaseShapeTester{
 		final Ball ball = table.getBall();
 
 		// False on the top left corner of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x, MAP_BOX2D_RECTANGLE.y);
 		assertFalse(table.isBallOnTopBorderOfMap());
 		
 		// False on the top right corner of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width, MAP_BOX2D_RECTANGLE.y);
 		assertFalse(table.isBallOnTopBorderOfMap());
 		
 		// True on top border of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y);
 		assertTrue(table.isBallOnTopBorderOfMap());
 		
 		// False on bottom border of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertFalse(table.isBallOnTopBorderOfMap());
 	}
 	
@@ -204,11 +386,11 @@ public final class TableTest extends BaseShapeTester{
 		final Ball ball = table.getBall();
 
 		// False on top border of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH - DISTANCE, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width - DISTANCE, MAP_BOX2D_RECTANGLE.y);
 		assertFalse(table.isBallOnTopRightCornerOfMap());
 		
 		// True on top right corner of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width, MAP_BOX2D_RECTANGLE.y);
 		assertTrue(table.isBallOnTopRightCornerOfMap());
 	}
 	
@@ -219,10 +401,10 @@ public final class TableTest extends BaseShapeTester{
 	public void test_isBallOnBottomLeftCornerOfMap(){
 		final Ball ball = table.getBall();
 		
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertFalse(table.isBallOnBottomLeftCornerOfMap());
 		
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertTrue(table.isBallOnBottomLeftCornerOfMap());
 	}
 	
@@ -234,19 +416,19 @@ public final class TableTest extends BaseShapeTester{
 		final Ball ball = table.getBall();
 
 		// False on the bottom left corner of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertFalse(table.isBallOnBottomBorderOfMap());
 		
 		// False on the bottom right corner of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertFalse(table.isBallOnBottomBorderOfMap());
 		
 		// True on bottom border of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertTrue(table.isBallOnBottomBorderOfMap());
 		
 		// False on top border of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + DISTANCE, MAP_BOX2D_POSITION.y);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + DISTANCE, MAP_BOX2D_RECTANGLE.y);
 		assertFalse(table.isBallOnBottomBorderOfMap());
 	}
 	
@@ -258,11 +440,11 @@ public final class TableTest extends BaseShapeTester{
 		final Ball ball = table.getBall();
 
 		// False on bottom border of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH - DISTANCE, MAP_BOX2D_POSITION.y +Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width - DISTANCE, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertFalse(table.isBallOnBottomRightCornerOfMap());
 		
 		// True on bottom right corner of map
-		ball.setBox2DPosition(MAP_BOX2D_POSITION.x + Map.WIDTH, MAP_BOX2D_POSITION.y + Map.HEIGHT);
+		ball.setBox2DPosition(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width, MAP_BOX2D_RECTANGLE.y + MAP_BOX2D_RECTANGLE.height);
 		assertTrue(table.isBallOnBottomRightCornerOfMap());
 	}
 
@@ -317,5 +499,20 @@ public final class TableTest extends BaseShapeTester{
 		
 		ball.setBox2DPosition(MAP_RIGHT_GOAL_KICK_BOX2D_POSITION.x, MAP_RIGHT_GOAL_KICK_BOX2D_POSITION.y);
 		assertTrue(table.isBallOnRightGoalKickPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#isBallOnLeftPenaltyPosition()} method.
+	 */
+	@Test
+	public void test_isBallOnLeftPenaltyPosition(){
+		final Vector2 otherPosition = new Vector2(100, 200);
+		final Vector2 leftPenaltyPosition = new Vector2(Box2DDataUtil.LEFT_SMALL_CIRCLE.x, Box2DDataUtil.LEFT_SMALL_CIRCLE.y);
+		
+		table.getBall().setBox2DPosition(otherPosition);
+		assertFalse(table.isBallOnLeftPenaltyPosition());
+		
+		table.getBall().setBox2DPosition(leftPenaltyPosition);
+		assertTrue(table.isBallOnLeftPenaltyPosition());
 	}
 }

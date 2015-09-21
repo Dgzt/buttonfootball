@@ -131,11 +131,47 @@ public class MathUtilTest {
 	 * Test for {@link MathUtil#scale(Rectangle, double)} method.
 	 */
 	@Test
-	public void test_scale(){
+	public void test_scaleRectangle(){
 		final Rectangle rectangle = new Rectangle(1, 2, 10, 20);
 		final double scale = 3.0;
 		final Rectangle rectangleResult = new Rectangle(3, 6, 30, 60);
 		
 		assertEquals(rectangleResult, MathUtil.scale(rectangle, scale));
+	}
+	
+	/**
+	 * Test for {@link MathUtil#scale(Circle, double)} method.
+	 */
+	@Test
+	public void test_scaleCircle(){
+		final Circle circle = new Circle(10, 15, 20);
+		final double scale = 2.0f;
+		final Circle circleResult = new Circle(20, 30, 40);
+		
+		assertEquals(circleResult, MathUtil.scale(circle, scale));
+	}
+	
+	/**
+	 * Test for {@link MathUtil#extend(Rectangle, float)} method.
+	 */
+	@Test
+	public void test_extendRectangle(){
+		final Rectangle rectangle = new Rectangle(10, 20, 100, 200);
+		final float extendValue = 5;
+		final Rectangle rectangleResult = new Rectangle(5, 15, 110, 210);
+		
+		assertEquals(rectangleResult, MathUtil.extend(rectangle, extendValue));
+	}
+	
+	/**
+	 * Test for {@link MathUtil#extend(Circle, float)} method.
+	 */
+	@Test
+	public void test_extendCircle(){
+		final Circle circle = new Circle(10, 20, 50);
+		final float extendValue = 5;
+		final Circle circleResult = new Circle(10, 20, 55);
+		
+		assertEquals(circleResult, MathUtil.extend(circle, extendValue));
 	}
 }
