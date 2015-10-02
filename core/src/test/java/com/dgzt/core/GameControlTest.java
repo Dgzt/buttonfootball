@@ -709,4 +709,74 @@ public final class GameControlTest extends BaseShapeTester{
 		gameControl.allButtonIsStoppedEvent();
 		assertEquals(GameStatus.PLAYER_MOVE_ONE_BUTTON, gameControl.getGameStatus());
 	}
+	
+	/**
+	 * Test for penalty on right side by player.
+	 */
+	@Test
+	public void test_rightPenaltyKickByPlayer(){
+		final Rectangle rightSector16Box2DRectangle = Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE;
+		
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(rightSector16Box2DRectangle.x + 5, rightSector16Box2DRectangle.y + 5);
+		final Vector2 opponentButtonPos = new Vector2(rightSector16Box2DRectangle.x + 15, rightSector16Box2DRectangle.y + 15);
+		final Vector2 ballPos = new Vector2(100,100);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballPos.x, ballPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+		
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.getMap().containsRightSector16Box2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.isBallOnRightPenaltyPosition()).thenReturn(Boolean.TRUE);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		
+		gameControl.allButtonIsStoppedEvent();
+		assertEquals(GameStatus.PLAYER_MOVE_ONE_BUTTON, gameControl.getGameStatus());
+	}
+	
+	/**
+	 * Test for penalty on right side by opponent.
+	 */
+	@Test
+	public void test_rightPenaltyKickByOpponent(){
+		final Rectangle rightSector16Box2DRectangle = Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE;
+		
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(rightSector16Box2DRectangle.x + 5, rightSector16Box2DRectangle.y + 5);
+		final Vector2 opponentButtonPos = new Vector2(rightSector16Box2DRectangle.x + 15, rightSector16Box2DRectangle.y + 15);
+		final Vector2 ballPos = new Vector2(100,100);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballPos.x, ballPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+		
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.getMap().containsRightSector16Box2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.isBallOnRightPenaltyPosition()).thenReturn(Boolean.TRUE);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.SECOND_HALF);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
+		
+		gameControl.allButtonIsStoppedEvent();
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
+	}
 }

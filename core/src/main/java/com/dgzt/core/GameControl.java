@@ -639,9 +639,8 @@ public final class GameControl {
 		
 		if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
 			leftPenaltyKick();
-		}else if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
-			// TODO implement later
-			throw new RuntimeException("Implement later.");
+		}else if(table.getMap().containsRightSector16Box2DPosition(faultBox2DPosition)){
+			rightPenaltyKick();
 		}else{
 			table.create18CentimeterFreeSpace(faultBox2DPosition);
 			table.getBall().setBox2DPosition(faultBox2DPosition.x, faultBox2DPosition.y);
@@ -676,6 +675,26 @@ public final class GameControl {
 			opponentMoveOneButton();
 		}else{
 			playerMoveOneButton();
+		}
+	}
+	
+	/**
+	 * The right penalty kick.
+	 */
+	private void rightPenaltyKick() {
+		gameStatus = GameStatus.PENALTY_KICK;
+		final Player whoIsOnRightSide = whoIsOnRightSide();
+		
+		table.createFreeSpaceForRightPenaltyKick(whoIsOnRightSide);
+		
+		table.moveGoalkeeperToRightGate(whoIsOnRightSide);
+		
+		table.moveBallToRightPenaltyPosition();
+		
+		if(whoIsOnRightSide == Player.BOT){
+			playerMoveOneButton();
+		}else{
+			opponentMoveOneButton();
 		}
 	}
 	

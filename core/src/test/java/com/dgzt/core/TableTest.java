@@ -149,6 +149,26 @@ public final class TableTest extends BaseShapeTester{
 	}
 	
 	/**
+	 * Test for {@link Table#moveGoalkeeperToRightGate(Player)} method.
+	 */
+	@Test
+	public void test_moveGoalkeeperToRightGate(){
+		final Vector2 basePosition = new Vector2(10, 20);
+		final List<Button> buttons = table.getOpponentButtons();
+		
+		for(final Button button : buttons){
+			button.setBox2DPosition(basePosition);
+		}
+		
+		table.moveGoalkeeperToRightGate(Player.BOT);
+		
+		Assert.assertEquals(table.getOpponentButtons().get(0).getBox2DPosition(), Box2DDataUtil.RIGHT_GOALKEEPER_POSITION);
+		for(int i = 1; i < buttons.size(); ++i){
+			Assert.assertEquals(table.getOpponentButtons().get(i).getBox2DPosition(), basePosition);
+		}
+	}
+	
+	/**
 	 * Test for {@link Table#moveBallToCenter()} method.
 	 */
 	@Test
@@ -174,6 +194,20 @@ public final class TableTest extends BaseShapeTester{
 		table.moveBallToLeftPenaltyPosition();
 		
 		Assert.assertEquals(ball.getBox2DPosition(), new Vector2(Box2DDataUtil.LEFT_SMALL_CIRCLE.x, Box2DDataUtil.LEFT_SMALL_CIRCLE.y));
+	}
+	
+	/**
+	 * Test for {@link Table#moveBallToRightPenaltyPosition()} method.
+	 */
+	@Test
+	public void test_moveBallToRightPenaltyPosition(){
+		final Vector2 ballPos = new Vector2(23,32);
+		final Ball ball = table.getBall();
+		
+		ball.setBox2DPosition(ballPos);
+		table.moveBallToRightPenaltyPosition();
+		
+		Assert.assertEquals(ball.getBox2DPosition(), new Vector2(Box2DDataUtil.RIGHT_SMALL_CIRCLE.x, Box2DDataUtil.RIGHT_SMALL_CIRCLE.y));
 	}
 	
 	/**
@@ -295,6 +329,94 @@ public final class TableTest extends BaseShapeTester{
 		Assert.assertEquals(notContainsOpponent3Point, opponentButtons.get(3).getBox2DPosition());
 		Assert.assertEquals(notContainsPlayer1Point, playerButtons.get(1).getBox2DPosition());
 		Assert.assertEquals(notContainsPlayer2Point, playerButtons.get(2).getBox2DPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#createFreeSpaceForRightPenaltyKick(Player)} method. 
+	 * The opponent is on right side.
+	 */
+	@Test
+	public void test_createFreeSpaceForRightPenaltyKickByPlayer(){
+		final float threshold = 0.1f;
+		final Rectangle rectangle = Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE;
+		final Circle circle = Box2DDataUtil.RIGHT_BIG_CIRCLE;
+		
+		// Contains positions
+		final Vector2 containsOpponent1Point = new Vector2(rectangle.x, rectangle.y);
+		final Vector2 containsPlayer0Point = new Vector2(rectangle.x + rectangle.width, rectangle.y);
+		final Vector2 containsOpponent2Point = new Vector2(circle.x - circle.radius + Button.RADIUS, circle.y);
+		
+		// Not contains positions
+		final Vector2 notContainsOpponent3Point = new Vector2(rectangle.x, rectangle.y + rectangle.height + Button.RADIUS + threshold);
+		final Vector2 notContainsPlayer1Point = new Vector2(rectangle.x + rectangle.width + Button.RADIUS + threshold, rectangle.y + rectangle.height);
+		final Vector2 notContainsPlayer2Point = new Vector2(circle.x - circle.radius - Button.RADIUS - 1.0f, circle.y);
+		
+		final List<Button> playerButtons = table.getPlayerButtons();
+		final List<Button> opponentButtons = table.getOpponentButtons();
+		
+		table.moveGoalkeeperToRightGate(Player.BOT);
+		opponentButtons.get(1).setBox2DPosition(containsOpponent1Point);
+		opponentButtons.get(2).setBox2DPosition(containsOpponent2Point);
+		opponentButtons.get(3).setBox2DPosition(notContainsOpponent3Point);
+		
+		playerButtons.get(0).setBox2DPosition(containsPlayer0Point);
+		playerButtons.get(1).setBox2DPosition(notContainsPlayer1Point);
+		playerButtons.get(2).setBox2DPosition(notContainsPlayer2Point);
+		
+		table.createFreeSpaceForRightPenaltyKick(Player.BOT);
+		
+		Assert.assertNotEquals(containsOpponent1Point, opponentButtons.get(1).getBox2DPosition());
+		Assert.assertNotEquals(containsOpponent2Point, opponentButtons.get(2).getBox2DPosition());
+		Assert.assertNotEquals(containsPlayer0Point, playerButtons.get(0).getBox2DPosition());
+		
+		Assert.assertEquals(Box2DDataUtil.RIGHT_GOALKEEPER_POSITION, opponentButtons.get(0).getBox2DPosition());
+		Assert.assertEquals(notContainsOpponent3Point, opponentButtons.get(3).getBox2DPosition());
+		Assert.assertEquals(notContainsPlayer1Point, playerButtons.get(1).getBox2DPosition());
+		Assert.assertEquals(notContainsPlayer2Point, playerButtons.get(2).getBox2DPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#createFreeSpaceForRightPenaltyKick(Player)} method. 
+	 * The player is on right side.
+	 */
+	@Test
+	public void test_createFreeSpaceForRightPenaltyKickByOpponent(){
+		final float threshold = 0.1f;
+		final Rectangle rectangle = Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE;
+		final Circle circle = Box2DDataUtil.RIGHT_BIG_CIRCLE;
+		
+		// Contains positions
+		final Vector2 containsPlayer1Point = new Vector2(rectangle.x , rectangle.y);
+		final Vector2 containsOpponent0Point = new Vector2(rectangle.x + rectangle.width, rectangle.y);
+		final Vector2 containsPlayer2Point = new Vector2(circle.x - circle.radius + Button.RADIUS, circle.y);
+		
+		// Not contains positions
+		final Vector2 notContainsPlayer3Point = new Vector2(rectangle.x, rectangle.y + rectangle.height + Button.RADIUS + threshold);
+		final Vector2 notContainsOpponent1Point = new Vector2(rectangle.x + rectangle.width + Button.RADIUS + threshold, rectangle.y + rectangle.height);
+		final Vector2 notContainsOpponent2Point = new Vector2(circle.x - circle.radius - Button.RADIUS - 1.0f, circle.y);
+		
+		final List<Button> playerButtons = table.getPlayerButtons();
+		final List<Button> opponentButtons = table.getOpponentButtons();
+		
+		table.moveGoalkeeperToRightGate(Player.PLAYER);
+		playerButtons.get(1).setBox2DPosition(containsPlayer1Point);
+		playerButtons.get(2).setBox2DPosition(containsPlayer2Point);
+		playerButtons.get(3).setBox2DPosition(notContainsPlayer3Point);
+		
+		opponentButtons.get(0).setBox2DPosition(containsOpponent0Point);
+		opponentButtons.get(1).setBox2DPosition(notContainsOpponent1Point);
+		opponentButtons.get(2).setBox2DPosition(notContainsOpponent2Point);
+		
+		table.createFreeSpaceForRightPenaltyKick(Player.PLAYER);
+		
+		Assert.assertNotEquals(containsPlayer1Point, playerButtons.get(1).getBox2DPosition());
+		Assert.assertNotEquals(containsPlayer2Point, playerButtons.get(2).getBox2DPosition());
+		Assert.assertNotEquals(containsOpponent0Point, opponentButtons.get(0).getBox2DPosition());
+		
+		Assert.assertEquals(Box2DDataUtil.RIGHT_GOALKEEPER_POSITION, playerButtons.get(0).getBox2DPosition());
+		Assert.assertEquals(notContainsPlayer3Point, playerButtons.get(3).getBox2DPosition());
+		Assert.assertEquals(notContainsOpponent1Point, opponentButtons.get(1).getBox2DPosition());
+		Assert.assertEquals(notContainsOpponent2Point, opponentButtons.get(2).getBox2DPosition());
 	}
 	
 	/**
@@ -514,5 +636,20 @@ public final class TableTest extends BaseShapeTester{
 		
 		table.getBall().setBox2DPosition(leftPenaltyPosition);
 		assertTrue(table.isBallOnLeftPenaltyPosition());
+	}
+	
+	/**
+	 * Test for {@link Table#isBallOnRightPenaltyPosition()} method.
+	 */
+	@Test
+	public void test_isBallOnRightPenaltyPosition(){
+		final Vector2 otherPosition = new Vector2(100, 200);
+		final Vector2 rightPenaltyPosition = new Vector2(Box2DDataUtil.RIGHT_SMALL_CIRCLE.x, Box2DDataUtil.LEFT_SMALL_CIRCLE.y);
+		
+		table.getBall().setBox2DPosition(otherPosition);
+		assertFalse(table.isBallOnRightPenaltyPosition());
+		
+		table.getBall().setBox2DPosition(rightPenaltyPosition);
+		assertTrue(table.isBallOnRightPenaltyPosition());
 	}
 }

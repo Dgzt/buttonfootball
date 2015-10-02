@@ -152,12 +152,23 @@ public class Table extends RectangleShape{
 	/**
 	 * Move the goalkeeper to the left gate.
 	 * 
-	 * @param player - The player who is on the left gate.
+	 * @param player - The player who is on the left side.
 	 */
 	public void moveGoalkeeperToLeftGate(final Player player){
 		final List<Button> buttons = player == Player.PLAYER ? playerButtons : opponentButtons;
 		
 		buttons.get(GOALKEEPER_ID).setBox2DPosition(Box2DDataUtil.LEFT_GOALKEEPER_POSITION);
+	}
+	
+	/**
+	 * Move the goalkeeper to the right gate.
+	 * 
+	 * @param player - The player who is on the right side.
+	 */
+	public void moveGoalkeeperToRightGate(final Player player){
+		final List<Button> buttons = player == Player.BOT ? opponentButtons : playerButtons;
+		
+		buttons.get(GOALKEEPER_ID).setBox2DPosition(Box2DDataUtil.RIGHT_GOALKEEPER_POSITION);
 	}
 	
 	/**
@@ -203,7 +214,7 @@ public class Table extends RectangleShape{
 		final List<Button> buttons = player.equals(Player.PLAYER) ? playerButtons : opponentButtons;
 		
 		// Add right goalkeeper
-		buttons.get(0).setBox2DPosition(Box2DDataUtil.RIGHT_GOALKEEPER_POSITION);
+		moveGoalkeeperToRightGate(player);
 		
 		// Add right defenders
 		for(int i=1; i <= 4; ++i){
@@ -234,6 +245,15 @@ public class Table extends RectangleShape{
 		final Circle leftSmallCircle = Box2DDataUtil.LEFT_SMALL_CIRCLE; 
 		
 		ball.setBox2DPosition(leftSmallCircle.x, leftSmallCircle.y);
+	}
+	
+	/**
+	 * Move ball to the right penalty position.
+	 */
+	public void moveBallToRightPenaltyPosition(){
+		final Circle rightSmallCircle = Box2DDataUtil.RIGHT_SMALL_CIRCLE;
+		
+		ball.setBox2DPosition(rightSmallCircle.x, rightSmallCircle.y);
 	}
 	
 	/**
@@ -275,32 +295,27 @@ public class Table extends RectangleShape{
 		buttons.addAll(leftPlayerButtons.subList(1, leftPlayerButtons.size()));
 		buttons.addAll(rightPlayerButtons);
 		
-		for(final Button button : buttons){
-			if(rectangle.contains(button.getBox2DPosition()) || circle.contains(button.getBox2DPosition())){
-				final Vector2 defaultPos = new Vector2(newX, button.getBox2DY());
-				final Vector2 newPos = new Vector2(defaultPos);
-				
-				boolean isUp = true;
-				final float treshold = 0.1f;
-				float up = treshold;
-				float down = treshold;
-				
-				while(!isFreeBox2DPosition(button, newPos) || circle.contains(newPos)){
-					newPos.set(defaultPos);
-					if(isUp){
-						newPos.y += up;
-						up += treshold;
-					}else{
-						newPos.y -= down;
-						down += treshold;
-					}
-					
-					isUp = !isUp;
-				}
-				
-				button.setBox2DPosition(newPos);
-			}
-		}
+		moveButtonsToFreeSpace(rectangle, circle, newX, buttons);
+	}
+	
+	/**
+	 * Create free space for right penalty kick.
+	 * 
+	 * @param whoIsOnRightSide - The player who is on right side.
+	 */
+	public void createFreeSpaceForRightPenaltyKick(final Player whoIsOnRightSide){
+		final Rectangle rectangle = MathUtil.extend(Box2DDataUtil.RIGHT_SECTOR_16_RECTANGLE, Button.RADIUS);
+		final Circle circle = MathUtil.extend(Box2DDataUtil.RIGHT_BIG_CIRCLE, Button.RADIUS);
+		final float newX = rectangle.getX();
+		
+		final List<Button> rightPlayerButtons = whoIsOnRightSide == Player.BOT ? opponentButtons : playerButtons;
+		final List<Button> leftPlayerButtons = whoIsOnRightSide == Player.BOT ? playerButtons : opponentButtons;
+		
+		final List<Button> buttons = new ArrayList<Button>();
+		buttons.addAll(rightPlayerButtons.subList(1, rightPlayerButtons.size()));
+		buttons.addAll(leftPlayerButtons);
+		
+		moveButtonsToFreeSpace(rectangle, circle, newX, buttons);
 	}
 	
 	/**
@@ -398,6 +413,15 @@ public class Table extends RectangleShape{
 		final Circle leftSmallCircle = Box2DDataUtil.LEFT_SMALL_CIRCLE;
 		
 		return ball.getBox2DPosition().equals(new Vector2(leftSmallCircle.x, leftSmallCircle.y));
+	}
+	
+	/**
+	 * Return true when the ball is on the right penalty position else false.
+	 */
+	public boolean isBallOnRightPenaltyPosition(){
+		final Circle rightSmallCircle = Box2DDataUtil.RIGHT_SMALL_CIRCLE;
+		
+		return ball.getBox2DPosition().equals(new Vector2(rightSmallCircle.x, rightSmallCircle.y));
 	}
 	
 	/**
@@ -564,6 +588,43 @@ public class Table extends RectangleShape{
 		
 		// Add left Wall
 		Box2DUtil.addWall(box2DWorld, 0 - BOX2D_WALL_SIZE, 0, BOX2D_WALL_SIZE, tableBox2DHeight);
+	}
+	
+	/**
+	 * Move the left or right sector 16 contains buttons to the free space.
+	 * 
+	 * @param rectangle - The left or right sector 16 box2D rectangle.
+	 * @param circle - The left or right big box2D circle.
+	 * @param newX - The new x box2D coordinate value.
+	 * @param buttons - The moving buttons.
+	 */
+	private void moveButtonsToFreeSpace(final Rectangle rectangle, final Circle circle, final float newX, final List<Button> buttons) {
+		for(final Button button : buttons){
+			if(rectangle.contains(button.getBox2DPosition()) || circle.contains(button.getBox2DPosition())){
+				final Vector2 defaultPos = new Vector2(newX, button.getBox2DY());
+				final Vector2 newPos = new Vector2(defaultPos);
+				
+				boolean isUp = true;
+				final float treshold = 0.1f;
+				float up = treshold;
+				float down = treshold;
+				
+				while(!isFreeBox2DPosition(button, newPos) || circle.contains(newPos)){
+					newPos.set(defaultPos);
+					if(isUp){
+						newPos.y += up;
+						up += treshold;
+					}else{
+						newPos.y -= down;
+						down += treshold;
+					}
+					
+					isUp = !isUp;
+				}
+				
+				button.setBox2DPosition(newPos);
+			}
+		}
 	}
 	
 	// --------------------------------------------------
