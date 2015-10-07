@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
+import com.dgzt.core.exception.IllegalBotButtonMoveException;
 import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.gate.RightGate;
@@ -234,6 +235,67 @@ public final class BotTest extends BaseShapeTester{
 		Assert.assertEquals(table.getOpponentButtons().get(0).getBox2DPosition(), SECOND_NEAREST_BUTTON_BOX2D_POS);
 		Assert.assertEquals(table.getOpponentButtons().get(1).getBox2DPosition(), nearestButtonNewBox2DPosition);
 		Assert.assertEquals(table.getOpponentButtons().get(2).getBox2DPosition(), THIRD_NEAREST_BUTTON_BOX2D_POS);
+	}
+	
+	/**
+	 * Test for move one button to left penalty kick.
+	 */
+	@Test
+	public void test_moveOneButtonToLeftPenaltyPosition(){
+		bot = createBot();
+		
+		table.getBall().setBox2DPosition(BALL_BOX2D_X, BALL_BOX2D_Y);
+		table.getOpponentButtons().get(0).setBox2DPosition(SECOND_NEAREST_BUTTON_BOX2D_POS.x, SECOND_NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(1).setBox2DPosition(NEAREST_BUTTON_BOX2D_POS.x, NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(2).setBox2DPosition(THIRD_NEAREST_BUTTON_BOX2D_POS.x, THIRD_NEAREST_BUTTON_BOX2D_POS.y);
+		
+		Mockito.when(table.isBallOnLeftPenaltyPosition()).thenReturn(Boolean.TRUE);
+		
+		bot.moveOneButton();
+		
+		final Vector2 nearestButtonNewBox2DPosition = new Vector2(BALL_BOX2D_X + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D, BALL_BOX2D_Y);
+		
+		Assert.assertEquals(table.getOpponentButtons().get(0).getBox2DPosition(), SECOND_NEAREST_BUTTON_BOX2D_POS);
+		Assert.assertEquals(table.getOpponentButtons().get(1).getBox2DPosition(), nearestButtonNewBox2DPosition);
+		Assert.assertEquals(table.getOpponentButtons().get(2).getBox2DPosition(), THIRD_NEAREST_BUTTON_BOX2D_POS);
+	}
+	
+	/**
+	 * Test for move one button to right penalty kick.
+	 */
+	@Test
+	public void test_moveOneButtonToRightPenaltyPosition(){
+		bot = createBot();
+		
+		table.getBall().setBox2DPosition(BALL_BOX2D_X, BALL_BOX2D_Y);
+		table.getOpponentButtons().get(0).setBox2DPosition(SECOND_NEAREST_BUTTON_BOX2D_POS.x, SECOND_NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(1).setBox2DPosition(NEAREST_BUTTON_BOX2D_POS.x, NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(2).setBox2DPosition(THIRD_NEAREST_BUTTON_BOX2D_POS.x, THIRD_NEAREST_BUTTON_BOX2D_POS.y);
+		
+		Mockito.when(table.isBallOnRightPenaltyPosition()).thenReturn(Boolean.TRUE);
+		
+		bot.moveOneButton();
+		
+		final Vector2 nearestButtonNewBox2DPosition = new Vector2(BALL_BOX2D_X - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D, BALL_BOX2D_Y);
+		
+		Assert.assertEquals(table.getOpponentButtons().get(0).getBox2DPosition(), SECOND_NEAREST_BUTTON_BOX2D_POS);
+		Assert.assertEquals(table.getOpponentButtons().get(1).getBox2DPosition(), nearestButtonNewBox2DPosition);
+		Assert.assertEquals(table.getOpponentButtons().get(2).getBox2DPosition(), THIRD_NEAREST_BUTTON_BOX2D_POS);
+	}
+	
+	/**
+	 * Test for move one button and unhandled ball position.
+	 */
+	@Test(expected = IllegalBotButtonMoveException.class)
+	public void test_moveOneButtonUnhandledPosition(){
+		bot = createBot();
+		
+		table.getBall().setBox2DPosition(BALL_BOX2D_X, BALL_BOX2D_Y);
+		table.getOpponentButtons().get(0).setBox2DPosition(SECOND_NEAREST_BUTTON_BOX2D_POS.x, SECOND_NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(1).setBox2DPosition(NEAREST_BUTTON_BOX2D_POS.x, NEAREST_BUTTON_BOX2D_POS.y);
+		table.getOpponentButtons().get(2).setBox2DPosition(THIRD_NEAREST_BUTTON_BOX2D_POS.x, THIRD_NEAREST_BUTTON_BOX2D_POS.y);
+		
+		bot.moveOneButton();
 	}
 	
 	/**

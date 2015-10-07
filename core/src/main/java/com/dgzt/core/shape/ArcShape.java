@@ -29,16 +29,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 public class ArcShape extends Shape{
 	
 	// --------------------------------------------------
-	// ~ Static members
-	// --------------------------------------------------
-	
-	/** The radius of the small arcs. */
-	public static final float SMALL_RADIUS = 4.0f;
-
-	/** The radius of the small arcs. */
-	public static final float BIG_RADIUS = 30.0f;
-	
-	// --------------------------------------------------
 	// ~ Private members
 	// --------------------------------------------------
 	

@@ -41,6 +41,9 @@ public class Button extends AbstractButton{
 	/** The radius of the players's and opponent's buttons in cm. */
 	public static final float RADIUS = 2.5f;
 	
+	/** The diameter in Box2D. */
+	public static final float DIAMETER = 2 * RADIUS;
+	
 	// --------------------------------------------------
 	// ~ Constructors
 	// --------------------------------------------------

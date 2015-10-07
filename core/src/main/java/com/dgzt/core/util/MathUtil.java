@@ -118,4 +118,64 @@ public class MathUtil {
 		
 		return new Vector2(x, y);
 	}
+	
+	/**
+	 * Return with the scaled rectangle.
+	 * 
+	 * @param rec - The rectangle.
+	 * @param scale - The scale value.
+	 */
+	public static Rectangle scale(final Rectangle rec, final double scale){
+		final Rectangle retRec = new Rectangle(rec);
+		retRec.x *= scale;
+		retRec.y *= scale;
+		retRec.width *= scale;
+		retRec.height *= scale;
+		
+		return retRec;
+	}
+	
+	/**
+	 * Return with the scaled circle.
+	 * 
+	 * @param circle - The circle.
+	 * @param scale - The scale.
+	 */
+	public static Circle scale(final Circle circle, final double scale){
+		final Circle retCircle = new Circle(circle);
+		retCircle.x *= scale;
+		retCircle.y *= scale;
+		retCircle.radius *= scale;
+		
+		return retCircle;
+	}
+	
+	/**
+	 * Return with the extended rectangle.
+	 * 
+	 * @param rec - The rectangle.
+	 * @param value - The extend value.
+	 */
+	public static Rectangle extend(final Rectangle rec, final float value){
+		final Rectangle retRec = new Rectangle(rec);
+		retRec.x -= value;
+		retRec.y -= value;
+		retRec.width += 2 * value;
+		retRec.height += 2 * value;
+		
+		return retRec;
+	}
+	
+	/**
+	 * Return with the extended circle.
+	 * 
+	 * @param circle - The circle.
+	 * @param value - The extend value.
+	 */
+	public static Circle extend(final Circle circle, final float value){
+		final Circle retCircle = new Circle(circle);
+		retCircle.radius += value;
+		
+		return retCircle;
+	}
 }

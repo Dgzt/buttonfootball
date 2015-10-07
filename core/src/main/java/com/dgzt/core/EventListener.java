@@ -24,6 +24,7 @@ import com.dgzt.core.button.Button;
 import com.dgzt.core.gate.AbstractGate;
 import com.dgzt.core.gate.LeftGate;
 import com.dgzt.core.gate.RightGate;
+import com.dgzt.core.util.Box2DDataUtil;
 
 /**
  * The event listener.
@@ -144,13 +145,14 @@ public class EventListener implements ContactListener{
 				Gdx.app.log(EventListener.class.getName() + ".endContact", "The ball leaved map.");
 				gameWindow.getGameControl().ballLeaveMapEvent();
 			}else{
-				final Map map = gameWindow.getTable().getMap();
+				final float mapBox2DX = Box2DDataUtil.MAP_RECTANGLE.getX();
+				final float rightGateBox2DX = Box2DDataUtil.RIGHT_GATE_POSITION.x;
 				
-				if(ball.getBox2DX() < map.getBox2DX()){
+				if(ball.getBox2DX() < mapBox2DX ){
 					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in left gate!");
 					
 					gameWindow.getGameControl().leftGateGoalEvent();
-				}else if(ball.getBox2DX() > map.getBox2DX() + Map.WIDTH){
+				}else if(ball.getBox2DX() > rightGateBox2DX){
 					Gdx.app.log(EventListener.class.getName() + ".endContact", "Goal in right gate!");
 					
 					gameWindow.getGameControl().rightGateGoalEvent();

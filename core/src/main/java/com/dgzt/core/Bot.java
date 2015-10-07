@@ -126,6 +126,16 @@ public abstract class Bot {
 					ball.getBox2DX() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D,
 					ball.getBox2DY() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D
 			);
+		}else if(table.isBallOnLeftPenaltyPosition()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() + MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D, 
+					ball.getBox2DY()
+			);
+		}else if(table.isBallOnRightPenaltyPosition()){
+			selectedButton.setBox2DPosition(
+					ball.getBox2DX() - MOVE_ONE_BUTTON_DISTANCE_IN_BOX2D, 
+					ball.getBox2DY()
+			);
 		}else{
 			throw new IllegalBotButtonMoveException("Unhandled ball position on 'moveOneButton' function.");
 		}

@@ -22,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.setting.Settings;
+import com.dgzt.core.util.Box2DDataUtil;
 import com.dgzt.core.util.MathUtil;
 
 /**
@@ -36,10 +37,10 @@ public class GameWindow{
 	// --------------------------------------------------
 	
 	/** The width of main window in cm. */
-	public static final float WIDTH = Table.RECTANGLE.getWidth();
+	public static final float WIDTH = Box2DDataUtil.TABLE_RECTANGLE.getWidth();
 
 	/** The height of main window in cm. */
-	public static final float HEIGHT = ScoreBoard.HEIGHT + Table.RECTANGLE.getHeight();
+	public static final float HEIGHT = ScoreBoard.HEIGHT + Box2DDataUtil.TABLE_RECTANGLE.getHeight();
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -117,8 +118,8 @@ public class GameWindow{
 	public void resize(final float x, final float y, final float width, final float height, final double scale){
 		this.scale = scale;
 		
-		final float tableWidth = (float)(Table.RECTANGLE.getWidth() * scale);
-		final float tableHeight = (float)(Table.RECTANGLE.getHeight() * scale);
+		final float tableWidth = (float)(Box2DDataUtil.TABLE_RECTANGLE.getWidth() * scale);
+		final float tableHeight = (float)(Box2DDataUtil.TABLE_RECTANGLE.getHeight() * scale);
 		final float tableX = x  + (width - tableWidth) / 2;
 		final float tableY = y;
 		

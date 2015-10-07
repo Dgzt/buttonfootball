@@ -39,7 +39,7 @@ public abstract class AbstractButton extends FilledCircleShape{
 	// --------------------------------------------------
 	// ~ Private static members
 	// --------------------------------------------------
-	
+
 	/** The density of the fixture definition. */
 	private static final float FIXTURE_DEFINITION_DENSITY = 1.0f;
 	
@@ -54,6 +54,9 @@ public abstract class AbstractButton extends FilledCircleShape{
 	
 	/** The length of linear velocity when the button is stopped. */
 	private static final float STOPPEP_LINEAR_VELOCITY_LENGTH = 0.01f;
+	
+	/** The epsilon for equals to {@link Vector2}. */
+	private static final float VECTOR2_EQUALS_EPSILON = 0.05f;
 	
 	// --------------------------------------------------
 	// ~ Private members
@@ -133,8 +136,8 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 * @param box2DY - The y coordinate value in box2D.
 	 */
 	public void setBox2DPosition(final float box2DX, final float box2DY){
-		box2DPosition.set(box2DX, box2DY);
 		box2DBody.setTransform(box2DX, box2DY, box2DBody.getAngle());
+		box2DPosition.set(box2DBody.getPosition());
 		resize();
 	}
 	
@@ -213,7 +216,7 @@ public abstract class AbstractButton extends FilledCircleShape{
 	 */
 	@Override
 	public void draw() {
-		if( !box2DPosition.equals(box2DBody.getPosition()) ){
+		if( !box2DPosition.epsilonEquals(box2DBody.getPosition(), VECTOR2_EQUALS_EPSILON) ){ // TODO need more test!
 			box2DPosition.set(box2DBody.getPosition());
 
 			resize();
