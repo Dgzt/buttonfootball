@@ -28,7 +28,7 @@ public final class MainWindowButton extends BaseButton{
 	// --------------------------------------------------
 	
 	/** The color for background. */
-	private static final Color BACKGROUND_COLOR = Color.LIGHT_GRAY;
+	private static final Color BACKGROUND_COLOR = new Color(150, 150, 150, 0.8f);
 	
 	/** The color for text. */
 	private static final Color TEXT_COLOR = Color.BLACK;
