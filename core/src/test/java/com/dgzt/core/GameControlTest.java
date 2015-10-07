@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.dgzt.core.button.Ball;
 import com.dgzt.core.button.Button;
 import com.dgzt.core.gate.LeftGate;
+import com.dgzt.core.gate.RightGate;
 import com.dgzt.core.scoreboard.HalfTimeBoard;
 import com.dgzt.core.scoreboard.ScoreBoard;
 import com.dgzt.core.scoreboard.TimeLeftBoard;
@@ -47,6 +48,7 @@ public final class GameControlTest extends BaseShapeTester{
 	
 	private static final Rectangle MAP_BOX2D_RECTANGLE = Box2DDataUtil.MAP_RECTANGLE;
 	private static final Vector2 LEFT_GATE_BOX2D_POSITION = new Vector2(5, MAP_BOX2D_RECTANGLE.y + 50);
+	private static final Vector2 RIGHT_GATE_BOX2D_POSITION = new Vector2(500, MAP_BOX2D_RECTANGLE.y + 50);
 	
 	private static final Vector2 LEFT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_RECTANGLE.x + 10, 10);
 	private static final Vector2 RIGHT_GOAL_KICK_BOX2D_POSITION = new Vector2(MAP_BOX2D_RECTANGLE.x + MAP_BOX2D_RECTANGLE.width - 10, 10);
@@ -119,6 +121,11 @@ public final class GameControlTest extends BaseShapeTester{
 		LeftGate leftGate = Mockito.mock(LeftGate.class);
 		Mockito.when(leftGate.getBox2DPosition()).thenReturn(LEFT_GATE_BOX2D_POSITION);
 		Mockito.when(table.getLeftGate()).thenReturn(leftGate);
+		
+		// Right gate
+		RightGate rightGate = Mockito.mock(RightGate.class);
+		Mockito.when(rightGate.getBox2DPosition()).thenReturn(RIGHT_GATE_BOX2D_POSITION);
+		Mockito.when(table.getRightGate()).thenReturn(rightGate);	
 		
 		// Half time board
 		HalfTimeBoard halfTimeBoard = Mockito.mock(HalfTimeBoard.class);
@@ -543,10 +550,10 @@ public final class GameControlTest extends BaseShapeTester{
 	}
 	
 	/**
-	 * Test for fault by player.
+	 * Test for free kick by opponent.
 	 */
 	@Test
-	public void test_faultByPlayer(){
+	public void test_freeKickByOpponent(){
 		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
 		
 		final Ball ball = table.getBall();
@@ -577,10 +584,10 @@ public final class GameControlTest extends BaseShapeTester{
 	}
 	
 	/**
-	 * Test for fault by Opponent.
+	 * Test for free kick by player.
 	 */
 	@Test
-	public void test_faultByOpponent(){
+	public void test_freeKickByPlayer(){
 		final Ball ball = table.getBall();
 		final Vector2 playerButtonPos = new Vector2(10, 20);
 		final Vector2 opponentButtonPos = new Vector2(20, 40);
@@ -598,6 +605,146 @@ public final class GameControlTest extends BaseShapeTester{
 		table.getOpponentButtons().add(opponentButton);
 		
 		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.PLAYER_MOVE_SOME_BUTTON, gameControl.getGameStatus());
+		assertEquals(ballEndPos, ball.getBox2DPosition());
+	}
+	
+	/**
+	 * Test for free kick in left sector 16 by player.
+	 */
+	@Test
+	public void test_freeKickInLeftSector16ByPlayer(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(10, 20);
+		final Vector2 opponentButtonPos = new Vector2(20, 40);
+		final Vector2 ballStartPos = new Vector2(0,0);
+		final Vector2 ballEndPos = new Vector2(15, 30);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballStartPos.x, ballStartPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.getMap().containsLeftSector16Box2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.PLAYER_MOVE_SOME_BUTTON, gameControl.getGameStatus());
+		assertEquals(ballEndPos, ball.getBox2DPosition());
+	}
+	
+	/**
+	 * Test for free kick in left sector 16 by opponent.
+	 */
+	@Test
+	public void test_freeKickInLeftSector16ByOpponent(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(10, 20);
+		final Vector2 opponentButtonPos = new Vector2(20, 40);
+		final Vector2 ballStartPos = new Vector2(0,0);
+		final Vector2 ballEndPos = new Vector2(15, 30);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballStartPos.x, ballStartPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.getMap().containsLeftSector16Box2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.SECOND_HALF);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
+		assertEquals(ballEndPos, ball.getBox2DPosition());
+	}
+	
+	/**
+	 * Test for free kick in right sector 16 by opponent.
+	 */
+	@Test
+	public void test_freeKickInRightSector16ByOpponent(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(10, 20);
+		final Vector2 opponentButtonPos = new Vector2(20, 40);
+		final Vector2 ballStartPos = new Vector2(0,0);
+		final Vector2 ballEndPos = new Vector2(15, 30);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballStartPos.x, ballStartPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.getMap().containsRightSector16Box2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.FIRST_HALF);
+		
+		gameControl.buttonContactButton(playerButton, opponentButton);
+		
+		gameControl.setGameStatus(GameStatus.WAITING_AFTER_PLAYER);
+		
+		gameControl.allButtonIsStoppedEvent();
+		
+		assertEquals(GameStatus.WAITING_AFTER_OPPONENT, gameControl.getGameStatus());
+		assertEquals(ballEndPos, ball.getBox2DPosition());
+	}
+	
+	/**
+	 * Test for free kick in right sector 16 by player.
+	 */
+	@Test
+	public void test_freeKickInRightSector16ByPlayer(){
+		final Ball ball = table.getBall();
+		final Vector2 playerButtonPos = new Vector2(10, 20);
+		final Vector2 opponentButtonPos = new Vector2(20, 40);
+		final Vector2 ballStartPos = new Vector2(0,0);
+		final Vector2 ballEndPos = new Vector2(15, 30);
+		
+		final Button playerButton = getMockButton();
+		final Button opponentButton = getMockButton();
+		
+		playerButton.setBox2DPosition(playerButtonPos.x, playerButtonPos.y);
+		opponentButton.setBox2DPosition(opponentButtonPos.x, opponentButtonPos.y);
+		ball.setBox2DPosition(ballStartPos.x, ballStartPos.y);
+		
+		table.getPlayerButtons().add(playerButton);
+		table.getOpponentButtons().add(opponentButton);
+
+		Mockito.when(table.getMap().containsBox2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(table.getMap().containsRightSector16Box2DPosition(Mockito.any(Vector2.class))).thenReturn(Boolean.TRUE);
+		Mockito.when(scoreBoard.getHalfTimeBoard().getHalfTimeType()).thenReturn(HalfTimeType.SECOND_HALF);
+		
 		gameControl.buttonContactButton(playerButton, opponentButton);
 		
 		gameControl.setGameStatus(GameStatus.WAITING_AFTER_OPPONENT);

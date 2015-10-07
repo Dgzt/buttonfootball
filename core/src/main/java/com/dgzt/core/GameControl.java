@@ -293,7 +293,7 @@ public final class GameControl {
 		
 		final Vector2 contactPoint = MathUtil.midPoint(button1.getBox2DPosition(), button2.getBox2DPosition());
 		
-		if(buttonContactBallLastTime == null && table.getMap().containsBox2DPosition(contactPoint)){
+		if(buttonContactBallLastTime == null && faultBox2DPosition == null && table.getMap().containsBox2DPosition(contactPoint)){
 			faultBox2DPosition = contactPoint.cpy();
 		}
 	}
@@ -637,9 +637,9 @@ public final class GameControl {
 	private void fault(){
 		Gdx.app.log(GameControl.class.getName() + ".fault", "init");
 		
-		if(table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition)){
+		if(isLeftPenaltyKick()){
 			leftPenaltyKick();
-		}else if(table.getMap().containsRightSector16Box2DPosition(faultBox2DPosition)){
+		}else if(isRightPenaltyKick()){
 			rightPenaltyKick();
 		}else{
 			table.create18CentimeterFreeSpace(faultBox2DPosition);
@@ -656,6 +656,28 @@ public final class GameControl {
 					throw new IllegalGameStatusException();
 			}
 		}
+	}
+	
+	/**
+	 * Return true when is penalty kick on left side else false.
+	 */
+	private boolean isLeftPenaltyKick(){
+		final boolean containsSector16 = table.getMap().containsLeftSector16Box2DPosition(faultBox2DPosition);
+		final boolean isPlayerFaultOnLeftSide = gameStatus == GameStatus.WAITING_AFTER_PLAYER && whoIsOnLeftSide() == Player.PLAYER;
+		final boolean isOpponentFaultOnLeftSide = gameStatus == GameStatus.WAITING_AFTER_OPPONENT && whoIsOnLeftSide() == Player.BOT;
+		
+		return containsSector16 && (isPlayerFaultOnLeftSide || isOpponentFaultOnLeftSide);
+	}
+	
+	/**
+	 * Return true when is penalty kick on right side else false.
+	 */
+	private boolean isRightPenaltyKick(){
+		final boolean containsSector16 = table.getMap().containsRightSector16Box2DPosition(faultBox2DPosition);
+		final boolean isOpponentFaultOnRightSide = gameStatus == GameStatus.WAITING_AFTER_OPPONENT && whoIsOnRightSide() == Player.BOT;
+		final boolean isPlayerFaultOnRightSide = gameStatus == GameStatus.WAITING_AFTER_PLAYER && whoIsOnRightSide() == Player.PLAYER;
+		
+		return containsSector16 && (isOpponentFaultOnRightSide || isPlayerFaultOnRightSide);
 	}
 
 	/**
